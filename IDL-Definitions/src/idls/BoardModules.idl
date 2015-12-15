@@ -1,0 +1,62 @@
+
+// Version 0.1, von Tobias Müller, 15.12.2015
+
+module BoardModules {
+    
+    struct Message {
+        string content;
+        string author;
+        string timestamp;
+    };
+
+    struct User {
+        string name;
+    };
+
+    struct Board {
+        string groupname;
+    };
+
+    struct VirtualGroup {
+        string vgoupname;
+        sequence<Board> members;
+    };
+
+    exception DestinationUnreachable {
+        string unreachableBoard;
+    };
+
+    exception UnknownUser {
+        string username;
+    };
+
+    typedef sequence<string> StringList;
+    typedef sequence<Message> MessageList;
+
+    module BasicServices {
+        interface AdministrationService {
+            void createVirtualGroup(in string vgroupname);
+            void loginToVirtualGroup(in string vgroupname);
+            StringList getAllVirtualGroups();
+
+            void forwardMessageToBoards(in StringList boards, in Message message) raises (DestinationUnreachable);
+            void createUser(in User newuser);
+        };
+
+        interface BoardService {
+            void sendMessage(in User user, in Message message, in string destination) raises (DestinationUnreachable, UnknownUser);
+            StringList getAllVirtualGroups();
+            void checkUser(in User user) raises (UnknownUser);
+        };
+
+        interface ViewService {
+            MessageList getAllMessageByDestination(in string destination) raises (DestinationUnreachable);
+        };
+    };
+
+    module AdvancedServices {
+        interface VirtualBoardService {
+            StringList getAllMembers();
+        };
+    };
+};
