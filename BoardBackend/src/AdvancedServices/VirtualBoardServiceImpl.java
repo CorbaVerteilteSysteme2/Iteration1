@@ -3,20 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package BasicServices;
+package AdvancedServices;
 
-import BoardModules.BasicServices.ViewServicePOA;
-import BoardModules.DestinationUnreachable;
-import BoardModules.Message;
+import BoardModules.AdvancedServices.VirtualBoardServicePOA;
 
 /**
  *
  * @author Tobias
  */
-public class ViewService extends ViewServicePOA {
+public class VirtualBoardServiceImpl extends VirtualBoardServicePOA {
 
     @Override
-    public Message[] getAllMessageByDestination(String destination) throws DestinationUnreachable {
+    public String[] getAllMembers() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     

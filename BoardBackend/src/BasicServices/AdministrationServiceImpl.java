@@ -14,7 +14,7 @@ import BoardModules.User;
  *
  * @author Tobias
  */
-public class AdministrationService extends AdministrationServicePOA {
+public class AdministrationServiceImpl extends AdministrationServicePOA {
 
     @Override
     public void createVirtualGroup(String vgroupname) {

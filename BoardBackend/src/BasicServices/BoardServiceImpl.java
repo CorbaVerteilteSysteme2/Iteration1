@@ -15,8 +15,8 @@ import BoardModules.User;
  *
  * @author Tobias
  */
-public class BoardService extends BoardServicePOA {
-
+public class BoardServiceImpl extends BoardServicePOA {
+    
     @Override
     public void sendMessage(User user, Message message, String destination) throws DestinationUnreachable, UnknownUser {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
