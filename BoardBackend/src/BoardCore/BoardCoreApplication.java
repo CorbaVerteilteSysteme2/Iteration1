@@ -24,5 +24,6 @@ public class BoardCoreApplication {
         */
          
          core = new BoardCore(args);
+         core.run();
     }
 }
