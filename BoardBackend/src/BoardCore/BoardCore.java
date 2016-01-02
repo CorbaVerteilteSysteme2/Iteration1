@@ -11,14 +11,11 @@ import BasicServices.*;
 import BoardModules.BasicServices.*;
 import BoardModules.AdvancedServices.*;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.omg.CORBA.ORB;
 import org.omg.CORBA.ORBPackage.InvalidName;
 import org.omg.CosNaming.*;
 import org.omg.CosNaming.NamingContextPackage.AlreadyBound;
 import org.omg.CosNaming.NamingContextPackage.CannotProceed;
-import org.omg.CosNaming.NamingContextPackage.NotEmpty;
 import org.omg.CosNaming.NamingContextPackage.NotFound;
 import org.omg.PortableServer.POA;
 import org.omg.PortableServer.POAHelper;
@@ -96,29 +93,8 @@ public class BoardCore {
             registerObjWithNameService(initContext, path3, viewServiceRef);
             registerObjWithNameService(initContext, path4, virtualBoardServiceRef);
             
-            
-            
-            
         } catch (Exception ex) {
-//            try {
-                
-                ex.printStackTrace();
-//                org.omg.CORBA.Object objRef = _orb.resolve_initial_references("NameService");
-//                NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
-//                ncRef.unbind(ncRef.to_name(_boardIdentifer));
-//                int i = 1;
-//                BindingListHolder blh = new BindingListHolder();
-//                BindingIteratorHolder bih = new BindingIteratorHolder();
-//                ncRef.list(i, blh, bih);
-//            } catch (InvalidName ex1) {
-//                Logger.getLogger(BoardCore.class.getName()).log(Level.SEVERE, null, ex1);
-//            } catch (NotFound ex1) {
-//                Logger.getLogger(BoardCore.class.getName()).log(Level.SEVERE, null, ex1);
-//            } catch (CannotProceed ex1) {
-//                Logger.getLogger(BoardCore.class.getName()).log(Level.SEVERE, null, ex1);
-//            } catch (org.omg.CosNaming.NamingContextPackage.InvalidName ex1) {
-//                Logger.getLogger(BoardCore.class.getName()).log(Level.SEVERE, null, ex1);
-//            }
+            ex.printStackTrace();
         } 
     }
     
@@ -154,12 +130,4 @@ public class BoardCore {
         singleElement[0] = serverName[serverName.length - 1];
         currentContext.rebind(singleElement, obj);
     }
-    
-    /*
-    private void initializeService(Servant servant, String serviceName, Class<?> serviceClass, Class<?> helperClass) throws ServantNotActive, WrongPolicy, InstantiationException, IllegalAccessException {
-        org.omg.CORBA.Object ref = _rootPOA.servant_to_reference(servant);
-        
-        //serviceClass service = helperClass.;
-    }
-    */
 }

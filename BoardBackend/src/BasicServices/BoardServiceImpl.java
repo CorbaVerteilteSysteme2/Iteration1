@@ -19,17 +19,18 @@ public class BoardServiceImpl extends BoardServicePOA {
     
     @Override
     public void sendMessage(User user, Message message, String destination) throws DestinationUnreachable, UnknownUser {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        System.out.println("Testausgabe auf dem Server!");
     }
 
     @Override
     public String[] getAllVirtualGroups() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        System.out.println("Testausgabe auf dem Server!");
+        return null;
     }
 
     @Override
     public void checkUser(User user) throws UnknownUser {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        System.out.println("Testausgabe auf dem Server!");
     }
     
 }
