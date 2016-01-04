@@ -15,7 +15,6 @@ import java.util.Date;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.print.attribute.standard.DateTimeAtCompleted;
 import org.omg.CORBA.ORB;
 import org.omg.CORBA.ORBPackage.InvalidName;
 import org.omg.CosNaming.NamingContextExt;
@@ -24,8 +23,10 @@ import org.omg.CosNaming.NamingContextPackage.CannotProceed;
 import org.omg.CosNaming.NamingContextPackage.NotFound;
 
 /**
- *
- * @author Tobias
+ * Dies ist nur eine Testbench, jedoch kann daraus die benötigten
+ * Funktionen des BoardFronted gezogen werden!
+ * 
+ * @author Tobias Müller
  */
 public class BoardCoreTestbench {
     public static void main(String[] args) {
@@ -47,6 +48,7 @@ public class BoardCoreTestbench {
             
             User _user1 = new User("Username1");
             boardServiceObj.sendMessage(_user1, new Message("Hallo Test-Tafel no. 1", _user1.name, new Date().toString()), tableID);
+        
         } catch (InvalidName ex) {
             Logger.getLogger(BoardCoreTestbench.class.getName()).log(Level.SEVERE, null, ex);
         } catch (NotFound ex) {

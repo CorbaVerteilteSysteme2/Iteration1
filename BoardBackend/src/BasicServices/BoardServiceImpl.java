@@ -5,6 +5,7 @@
  */
 package BasicServices;
 
+import BoardCore.MessageStorage;
 import BoardModules.BasicServices.BoardServicePOA;
 import BoardModules.DestinationUnreachable;
 import BoardModules.Message;
@@ -17,20 +18,47 @@ import BoardModules.User;
  */
 public class BoardServiceImpl extends BoardServicePOA {
     
+    /**
+     * 
+     * @param user
+     * @param message
+     * @param destination
+     * @throws DestinationUnreachable
+     * @throws UnknownUser 
+     */
     @Override
     public void sendMessage(User user, Message message, String destination) throws DestinationUnreachable, UnknownUser {
-        System.out.println("Testausgabe auf dem Server!");
+        // Benutzer überprüfen
+        
+        // Ziel unterscheiden zwischen lokale Tafel oder VirtualBoardService
+        // destination == "" --> Ziel ist die lokale Tafel! 
+        if (destination.equals("")) {
+            MessageStorage.getInstance().addMessage(message);
+        } else {
+            // hier wird an eine virtuelle Gruppe gesendet
+        }
     }
 
+    /**
+     * 
+     * @return 
+     */
     @Override
     public String[] getAllVirtualGroups() {
+        // TODO
         System.out.println("Testausgabe auf dem Server!");
         return null;
     }
 
+    /**
+     * 
+     * @param user
+     * @throws UnknownUser 
+     */
     @Override
     public void checkUser(User user) throws UnknownUser {
+        // TODO
         System.out.println("Testausgabe auf dem Server!");
     }
-    
+
 }

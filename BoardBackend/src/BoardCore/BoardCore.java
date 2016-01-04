@@ -1,7 +1,5 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ *
  */
 package BoardCore;
 
@@ -27,8 +25,8 @@ import org.omg.PortableServer.POAHelper;
  *      - auf den Namensdienst zugegriffen
  *      - die Services gestartet
  *      - ...
- * 
- * @author Tobias
+ * Der BoardCore ist kein Thread.
+ * @author Tobias Müller
  */
 public class BoardCore {
     
@@ -39,22 +37,21 @@ public class BoardCore {
     private ViewServiceImpl _viewService;
     private VirtualBoardServiceImpl _virtualBoardService;
     
-    
-    public BoardCore(String[] args) {
+    /**
+     * Konstruktor
+     * 
+     * @param boardID Tafel-Identifier
+     * @param orbPort Port, auf dem der ORB läuft
+     * @param orbHost Host, auf dem der ORB läuft
+     */
+    public BoardCore(String boardID, String orbPort, String orbHost) throws RuntimeException {
         try {
-            this._boardIdentifer = "Test-Table1";
+            this._boardIdentifer = boardID;
             
-            // initialisierung ORB
-            //String[] orbInitial = {"-ORBInitialPort ",  orbInitialPort, " -ORBInitialHost ", orbInitialHost };
-            Properties props = new Properties();
-            props.put("org.omg.CORBA.ORBInitialPort", "1050");
-            props.put("org.omg.CORBA.ORBInitialHost", "localhost");
-            
-            this._orb = ORB.init(args, props);
+            initializeORB(orbPort, orbHost);
             
             POA rootPOA = POAHelper.narrow(_orb.resolve_initial_references("RootPOA"));
             rootPOA.the_POAManager().activate();
-  
             
             org.omg.CORBA.Object objRef = _orb.resolve_initial_references("NameService");
             NamingContextExt initContext = NamingContextExtHelper.narrow(objRef);
@@ -75,19 +72,17 @@ public class BoardCore {
             VirtualBoardService virtualBoardService = VirtualBoardServiceHelper.narrow(virtualBoardServiceRef);
             
             NameComponent boardNC = new NameComponent(_boardIdentifer, "");
+        
             NameComponent boardServiceNC = new NameComponent("BoardService", "");
             NameComponent adminServiceNC = new NameComponent("AdminService", "");
             NameComponent viewServiceNC = new NameComponent("ViewService", "");
             NameComponent virtualBoardServiceNC = new NameComponent("VirtualBoardService", "");
-
             
             NameComponent path1[] = { boardNC, boardServiceNC };
             NameComponent path2[] = { boardNC, adminServiceNC };
             NameComponent path3[] = { boardNC, viewServiceNC, };
             NameComponent path4[] = { boardNC, virtualBoardServiceNC };
-            
-            
-            
+           
             registerObjWithNameService(initContext, path1, boardServiceRef);
             registerObjWithNameService(initContext, path2, adminServiceRef);
             registerObjWithNameService(initContext, path3, viewServiceRef);
@@ -95,39 +90,59 @@ public class BoardCore {
             
         } catch (Exception ex) {
             ex.printStackTrace();
+            // TODO:
+            // hier muss der NamingContext der Tafel wieder aufgelöst werden!
+            
+            throw new RuntimeException();
         } 
     }
     
     public void run() {
+        
         while (true) {
             _orb.run();
         }
+        
     }
     
     /**
      * Methode bindet einen Service in den Namensdienst von CORBA ein.
      * Danach kann auf den Service zugegriffen werden!
      * 
-     * @param serviceName
-     * @param serviceRef
-     * @param namingContextRef
+     * @param root Unterverzeichnis des zu bindenden Dienstes
+     * @param serviceName Name des Dienstes
+     * @param serviceObj Objekt des Dienstes
      * @throws NotFound
      * @throws CannotProceed
      * @throws InvalidName 
      */
-    private void registerObjWithNameService(NamingContext root, NameComponent[] serverName, org.omg.CORBA.Object obj) throws NotFound, AlreadyBound, CannotProceed, org.omg.CosNaming.NamingContextPackage.InvalidName {
+    private void registerObjWithNameService(NamingContext root, NameComponent[] serviceName, org.omg.CORBA.Object serviceObj) throws NotFound, AlreadyBound, CannotProceed, org.omg.CosNaming.NamingContextPackage.InvalidName {
         NamingContext currentContext = root;
         
         NameComponent[] singleElement = new NameComponent[1];
-        for (int i = 0; i < serverName.length - 1; i++) {
+        for (int i = 0; i < serviceName.length - 1; i++) {
             try {
-                singleElement[0] = serverName[i];
+                singleElement[0] = serviceName[i];
                 currentContext = NamingContextHelper.narrow(currentContext.resolve(singleElement));
             } catch (NotFound ex) {
                 currentContext = currentContext.bind_new_context(singleElement);
             } 
         }
-        singleElement[0] = serverName[serverName.length - 1];
-        currentContext.rebind(singleElement, obj);
+        singleElement[0] = serviceName[serviceName.length - 1];
+        currentContext.rebind(singleElement, serviceObj);
+    }
+    
+    /**
+     * Methode dient zum Initialisieren des ORBs.
+     * 
+     * @param port Port des ORBs
+     * @param host Host, auf dem der ORB läuft
+     */
+    private void initializeORB(String port, String host) {
+        Properties props = new Properties();
+        props.put("org.omg.CORBA.ORBInitialPort", port);
+        props.put("org.omg.CORBA.ORBInitialHost", host);
+
+        this._orb = ORB.init(new String[0], props);
     }
 }
