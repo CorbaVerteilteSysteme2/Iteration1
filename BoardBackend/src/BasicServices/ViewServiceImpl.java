@@ -5,6 +5,7 @@
  */
 package BasicServices;
 
+import BoardCore.MessageStorage;
 import BoardModules.BasicServices.ViewServicePOA;
 import BoardModules.DestinationUnreachable;
 import BoardModules.Message;
@@ -17,7 +18,15 @@ public class ViewServiceImpl extends ViewServicePOA {
 
     @Override
     public Message[] getAllMessageByDestination(String destination) throws DestinationUnreachable {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Message[] messages = null;
+        
+        if (destination.equals("")) {
+            messages = (Message[]) MessageStorage.getInstance().getMessages().toArray();
+        } else {
+            // virtuelle Gruppe
+        }
+        
+        return messages;
     }
     
 }

@@ -6,6 +6,7 @@
 package BasicServices;
 
 import BoardCore.MessageStorage;
+import BoardCore.UserStorage;
 import BoardModules.BasicServices.BoardServicePOA;
 import BoardModules.DestinationUnreachable;
 import BoardModules.Message;
@@ -57,8 +58,9 @@ public class BoardServiceImpl extends BoardServicePOA {
      */
     @Override
     public void checkUser(User user) throws UnknownUser {
-        // TODO
-        System.out.println("Testausgabe auf dem Server!");
+        if (!UserStorage.getInstance().checkUser(user)) {
+            throw new UnknownUser(user.name);
+        }
     }
 
 }
