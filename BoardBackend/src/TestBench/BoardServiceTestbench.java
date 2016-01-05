@@ -5,7 +5,6 @@
  */
 package TestBench;
 
-import BoardModules.BasicServices.BoardService;
 import BoardModules.BasicServices.BoardServiceHelper;
 import BoardModules.DestinationUnreachable;
 import BoardModules.Message;
@@ -21,6 +20,7 @@ import org.omg.CosNaming.NamingContextExt;
 import org.omg.CosNaming.NamingContextExtHelper;
 import org.omg.CosNaming.NamingContextPackage.CannotProceed;
 import org.omg.CosNaming.NamingContextPackage.NotFound;
+import BoardModules.BasicServices.*;
 
 /**
  * Dies ist nur eine Testbench, jedoch kann daraus die benötigten
@@ -28,10 +28,10 @@ import org.omg.CosNaming.NamingContextPackage.NotFound;
  * 
  * @author Tobias Müller
  */
-public class BoardCoreTestbench {
+public class BoardServiceTestbench {
     public static void main(String[] args) {
         try {
-            String tableID = "Test-Tafel";
+            String tableID = "VirtualGroup1";
             ORB _orb;
             Properties props = new Properties();
             
@@ -50,17 +50,17 @@ public class BoardCoreTestbench {
             boardServiceObj.sendMessage(_user1, new Message("Hallo Test-Tafel no. 1", _user1.name, new Date().toString()), tableID);
         
         } catch (InvalidName ex) {
-            Logger.getLogger(BoardCoreTestbench.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BoardServiceTestbench.class.getName()).log(Level.SEVERE, null, ex);
         } catch (NotFound ex) {
-            Logger.getLogger(BoardCoreTestbench.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BoardServiceTestbench.class.getName()).log(Level.SEVERE, null, ex);
         } catch (CannotProceed ex) {
-            Logger.getLogger(BoardCoreTestbench.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BoardServiceTestbench.class.getName()).log(Level.SEVERE, null, ex);
         } catch (org.omg.CosNaming.NamingContextPackage.InvalidName ex) {
-            Logger.getLogger(BoardCoreTestbench.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BoardServiceTestbench.class.getName()).log(Level.SEVERE, null, ex);
         } catch (DestinationUnreachable ex) {
-            Logger.getLogger(BoardCoreTestbench.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BoardServiceTestbench.class.getName()).log(Level.SEVERE, null, ex);
         } catch (UnknownUser ex) {
-            Logger.getLogger(BoardCoreTestbench.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BoardServiceTestbench.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }
