@@ -5,22 +5,29 @@
  */
 package BoardCore;
 
+import org.omg.CosNaming.NamingContextPackage.CannotProceed;
+import org.omg.CosNaming.NamingContextPackage.InvalidName;
+import org.omg.PortableServer.POAManagerPackage.AdapterInactive;
+
 /**
+ * 
  * 
  * @author Tobias
  */
 public class BoardCoreApplication {
     
-    public static void main(String[] args) {
+    public static void main(String[] args) throws RuntimeException, CannotProceed, InvalidName, org.omg.CORBA.ORBPackage.InvalidName, AdapterInactive {
         BoardCore core = null;
-         
-        if (args.length == 3) {
-            core = new BoardCore(args[0], args[1], args[2]);
+        
+        if (args.length == 2) {
+            ORBAccessControl.getInstance().setORB("1050", args[0]);
+            core = new BoardCore(args[1]);
         } else {
             // Testausführung!
-            core = new BoardCore("Test-Tafel", "1050", "localhost");
+            ORBAccessControl.getInstance().setORB("1050", "localhost");
+            core = new BoardCore("Test-Tafel");
         }
-        
-         core.run();
+        ORBAccessControl.getInstance().run();
+        //core.run();
     }
 }

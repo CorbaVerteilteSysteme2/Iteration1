@@ -31,14 +31,14 @@ import org.omg.CosNaming.NamingContextPackage.NotFound;
 public class BoardCoreTestbench {
     public static void main(String[] args) {
         try {
-            String tableID = "Test-Table1";
+            String tableID = "Test-Tafel";
             ORB _orb;
             Properties props = new Properties();
             
             props.put("org.omg.CORBA.ORBInitialPort", "1050");
             props.put("org.omg.CORBA.ORBInitialHost", "localhost");
             
-            _orb = ORB.init(args, props);
+            _orb = ORB.init(new String[0], props);
             
             org.omg.CORBA.Object objRef = _orb.resolve_initial_references("NameService");
             NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
