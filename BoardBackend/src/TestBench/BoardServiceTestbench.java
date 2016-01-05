@@ -31,7 +31,7 @@ import BoardModules.BasicServices.*;
 public class BoardServiceTestbench {
     public static void main(String[] args) {
         try {
-            String tableID = "VirtualGroup1";
+            String tableID = "Test-Tafel";
             ORB _orb;
             Properties props = new Properties();
             

@@ -51,6 +51,23 @@ public class AdministrationServiceImpl extends AdministrationServicePOA {
     public void forwardMessageToBoards(String[] boards, Message message) throws DestinationUnreachable {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         
+/*      boards.length in der 2.Schleife ist soll die Anzahl der aktiven Namen
+        im NameService sein
+        equals(boards), boards soll hier ein aktiver Name im NameService sein
+*/
+//        BoardServiceImpl bsi = new BoardServiceImpl();
+//        User user = new User("admin");
+//        for (int i = 0; i < boards.length; i++) {
+//            for (int j = i + 1; j <= boards.length; j++) {
+//                if (boards[i].equals(boards)) {
+//                    try {
+//                        bsi.sendMessage(user, message, boards[i]);
+//                    } catch (UnknownUser ex) {
+//                        System.out.println("User existiert nicht!");
+//                    }
+//                }
+//            }
+//        }
     }
 
     @Override
