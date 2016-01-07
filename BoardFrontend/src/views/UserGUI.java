@@ -214,16 +214,12 @@ public class UserGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_sendMessageActionPerformed
 
     private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
-        try{
         startUserBoardService(userNameInput.getText(),userBoardInput.getText(), IPInput.getText());
            
         destinationList.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] {userBoardInput.getText()}));
                 
         this.setEnabled(true);
         loginDialog.setVisible(false);
-        } catch (Exception e){
-            System.out.println("test");
-        }
     }//GEN-LAST:event_loginButtonActionPerformed
 
     private void loginDialogWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_loginDialogWindowOpened
@@ -305,9 +301,6 @@ public class UserGUI extends javax.swing.JFrame {
             Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
         } catch (UnknownUser ex) {
             Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (RuntimeException e){      
-        } catch (Error e){
-            
         }
     }
 //}    
