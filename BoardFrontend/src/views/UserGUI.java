@@ -222,13 +222,14 @@ public class UserGUI extends javax.swing.JFrame {
 
     private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
         
-        startUserBoardService(userNameInput.getText(),userBoardInput.getText(), IPInput.getText());
-        //TODO Anpassen wenn mehrere Tafeln auswaehlbar werden
-        destinationList.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] {userBoardInput.getText()}));
+        if (startUserBoardService(userNameInput.getText(),userBoardInput.getText(), IPInput.getText())){
+            //TODO Anpassen wenn mehrere Tafeln auswaehlbar werden
+            destinationList.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] {userBoardInput.getText()}));
         
-        //GUI
-        this.setEnabled(true);
-        loginDialog.setVisible(false);
+            //GUI
+            this.setEnabled(true);
+            loginDialog.setVisible(false);
+        }
     }//GEN-LAST:event_loginButtonActionPerformed
 
     private void loginDialogWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_loginDialogWindowOpened
@@ -281,7 +282,8 @@ public class UserGUI extends javax.swing.JFrame {
  * @author Tobias Müller
  */
 //public class UserBoardService{
-    public void startUserBoardService(String username, String tableID, String ipAddress) {
+    public boolean startUserBoardService(String username, String tableID, String ipAddress) {
+        boolean worked = false;
         try {
             ORB _orb;
             Properties props = new Properties();
@@ -298,7 +300,7 @@ public class UserGUI extends javax.swing.JFrame {
             this.user = new User(username);
             //this.tableID = tableID;
             //boardServiceObj.sendMessage(_user1, new Message("Hallo Test-Tafel no. 1", _user1.name, new Date().toString()), tableID);
-            
+            worked = true;
         } catch (InvalidName ex) {
             Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
         } catch (NotFound ex) {
@@ -312,6 +314,7 @@ public class UserGUI extends javax.swing.JFrame {
         //} catch (UnknownUser ex) {
         //    Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return worked;
     }
 //}    
     
