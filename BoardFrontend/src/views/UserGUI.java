@@ -52,6 +52,8 @@ public class UserGUI extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         userBoardInput = new javax.swing.JTextField();
         userNameInput = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        IPInput = new javax.swing.JTextField();
         jScrollPane2 = new javax.swing.JScrollPane();
         sendMessageField = new javax.swing.JTextArea();
         sendMessage = new javax.swing.JButton();
@@ -88,6 +90,12 @@ public class UserGUI extends javax.swing.JFrame {
 
         userBoardInput.setText("Test-Tafel");
 
+        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel2.setText("IP-Adresse");
+
+        IPInput.setText("localhost");
+
         javax.swing.GroupLayout loginPanelLayout = new javax.swing.GroupLayout(loginPanel);
         loginPanel.setLayout(loginPanelLayout);
         loginPanelLayout.setHorizontalGroup(
@@ -99,6 +107,8 @@ public class UserGUI extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, loginPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(IPInput, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(userNameInput, javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(userBoardInput, javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -117,8 +127,12 @@ public class UserGUI extends javax.swing.JFrame {
                 .addGap(8, 8, 8)
                 .addComponent(userBoardInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(IPInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
                 .addComponent(loginButton)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(25, 25, 25))
         );
 
         javax.swing.GroupLayout loginDialogLayout = new javax.swing.GroupLayout(loginDialog.getContentPane());
@@ -135,7 +149,7 @@ public class UserGUI extends javax.swing.JFrame {
             .addGroup(loginDialogLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(loginPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(122, Short.MAX_VALUE))
+                .addContainerGap(53, Short.MAX_VALUE))
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -200,11 +214,16 @@ public class UserGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_sendMessageActionPerformed
 
     private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
-        startUserBoardService(userNameInput.getText(),userBoardInput.getText());
+        try{
+        startUserBoardService(userNameInput.getText(),userBoardInput.getText(), IPInput.getText());
+           
         destinationList.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] {userBoardInput.getText()}));
                 
         this.setEnabled(true);
         loginDialog.setVisible(false);
+        } catch (Exception e){
+            System.out.println("test");
+        }
     }//GEN-LAST:event_loginButtonActionPerformed
 
     private void loginDialogWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_loginDialogWindowOpened
@@ -257,22 +276,20 @@ public class UserGUI extends javax.swing.JFrame {
  * @author Tobias Müller
  */
 //public class UserBoardService{
-    public void startUserBoardService(String username, String tableID) {
+    public void startUserBoardService(String username, String tableID, String ipAddress) {
         try {
             ORB _orb;
             Properties props = new Properties();
             
             props.put("org.omg.CORBA.ORBInitialPort", "1050");
-            props.put("org.omg.CORBA.ORBInitialHost", "localhost");
+            props.put("org.omg.CORBA.ORBInitialHost", ipAddress);
             
             _orb = ORB.init(new String[0], props);
             
             org.omg.CORBA.Object objRef = _orb.resolve_initial_references("NameService");
             NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
         
-        
             BoardService boardServiceObj = (BoardService) BoardServiceHelper.narrow(ncRef.resolve_str(tableID + "/BoardService"));
-            
             User _user1 = new User(username);
             boardServiceObj.sendMessage(_user1, new Message("Hallo Test-Tafel no. 1", _user1.name, new Date().toString()), tableID);
             
@@ -288,14 +305,19 @@ public class UserGUI extends javax.swing.JFrame {
             Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
         } catch (UnknownUser ex) {
             Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (RuntimeException e){      
+        } catch (Error e){
+            
         }
     }
 //}    
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField IPInput;
     private javax.swing.JComboBox<String> destinationList;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
