@@ -13,6 +13,12 @@ import java.util.Set;
 /**
  *
  * @author Matthäus Piechowiak
+ * @version 1.0
+ * Klasse zum speichern der Usernamen in einer .txt Datei
+ * 
+ * Der Speicherort muss letztendlich noch in jeder Methode geändert werden
+ * Die Variable "user_id" u.U. ebenso.
+ * 
  */
 public class StoredUsers {
 
@@ -26,9 +32,9 @@ public class StoredUsers {
         {
             this.user_id = user_id;
         }
-    /*
-    erstellt ein users.txt
-    */
+    /**
+     * Erstellt eine "users.txt" Datei
+     */
     public void createUsers()
     {
         try
@@ -43,14 +49,18 @@ public class StoredUsers {
 //                e.printStackTrace();
             }  
     }
-    /*
-    Nimmt nen user_id String und schreibt ihn, in die .txt Datei.
-    */
+    /**
+     * Bekommt einen String und schreibt diesen in die
+     * users.txt Datei
+     * @param user_id (Name der User)
+     * @return user_id
+     */
     public String pushUsers(String user_id)
     {   
         try
         {
             user_file = new File("users.txt");
+            /*
             if(!user_file.exists())
             {
                 System.out.println("Test, existiert nicht");
@@ -58,11 +68,12 @@ public class StoredUsers {
             
             else
             {
+            */
                 filewriter = new FileWriter(user_file ,true);
                 filewriter.write("\n" + user_id);
                 filewriter.flush();
                 filewriter.close();
-            }
+            //}
         }
         catch (IOException e) {
 //            e.printStackTrace();
@@ -70,9 +81,14 @@ public class StoredUsers {
          return user_id;
         
     }
-    /*
-    Braucht man nicht unbedingt, ich lass es trotzdem drin
-    */
+    /**
+     * Prueft ob bestimmte UserNamen in users.txt bereits vorhanden sind.
+     * War ursprünglich für was anderes gedacht, aber könnte trotzdem
+     * nützlich sein, deshalb hab ich es drin gelassen.
+     * @param user_id
+     * @throws FileNotFoundException
+     * @throws IOException 
+     */
     public void checkIfUserExists(String user_id) throws FileNotFoundException, IOException
     {
         BufferedReader br = new BufferedReader(new FileReader("users.txt"));
@@ -90,19 +106,25 @@ public class StoredUsers {
         }
     }
     
-    /*
-    löscht doppelte usernamen aus der Liste raus
-    */
+    /**
+     * Ruft users.txt auf und prüft auf doppelte Nutzernamen.
+     * Da man am Ende keine Datei haben will, in der 50 mal derselbe user
+     * drin steht, werden doppelte Usernamen auch gleich gelöscht.
+     * @throws FileNotFoundException
+     * @throws IOException 
+     */
 public void stripDuplicatesFromFile() throws FileNotFoundException, IOException 
 {
     Set<String> lines;
-        try (BufferedReader reader = new BufferedReader(new FileReader("users.txt"))) {
-            lines = new HashSet<>(10000); // maybe should be bigger
+        try (BufferedReader reader = new BufferedReader(new FileReader("users.txt")))
+        {
+            lines = new HashSet<>(10000);
             String line;
             while ((line = reader.readLine()) != null)
             {
                 lines.add(line);
-            }   } // maybe should be bigger
+            }   
+        }
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("users.txt"))) 
         {
             for (String unique : lines)
@@ -113,7 +135,12 @@ public void stripDuplicatesFromFile() throws FileNotFoundException, IOException
         }
 }
 
-    //Nur zum testen
+    /**
+     * Main Methode, zum reinen Testzweck dieser Klasse
+     * @param args
+     * @throws FileNotFoundException
+     * @throws IOException 
+     */
     public static void main(String[] args) throws FileNotFoundException, IOException
     {
         StoredUsers test = new StoredUsers();
