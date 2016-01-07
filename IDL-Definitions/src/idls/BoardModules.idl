@@ -1,6 +1,8 @@
 
-// Version 0.1, von Tobias Müller, 15.12.2015
-
+// Version 0.1, von Tobias Mueller, 15.12.2015 - IDL-Definition angelegt
+// Version 0.2, von Tobias Mueller, 07.01.2015 - Aenderung bei VirtualBoardService und unbenannt in VirtualGroupService
+//                                             - Kleinere Aenderung bei BoardService, ViewService
+//                                             - Board und VirtualGroup auskommentiert, UserList eingefügt
 module BoardModules {
     
     struct Message {
@@ -13,14 +15,14 @@ module BoardModules {
         string name;
     };
 
-    struct Board {
-        string groupname;
-    };
-
-    struct VirtualGroup {
-        string vgoupname;
-        sequence<Board> members;
-    };
+    //! Wird nicht benutzt
+    //struct Board {
+    //    string groupname;
+    //};
+    //struct VirtualGroup {
+    //    string vgoupname;
+    //    sequence<Board> members;
+    //};
 
     exception DestinationUnreachable {
         string unreachableBoard;
@@ -32,6 +34,7 @@ module BoardModules {
 
     typedef sequence<string> StringList;
     typedef sequence<Message> MessageList;
+    typedef sequence<User> UserList;
 
     module BasicServices {
         interface AdministrationService {
@@ -45,18 +48,20 @@ module BoardModules {
 
         interface BoardService {
             void sendMessage(in User user, in Message message, in string destination) raises (DestinationUnreachable, UnknownUser);
-            StringList getAllVirtualGroups();
             void checkUser(in User user) raises (UnknownUser);
         };
 
         interface ViewService {
             MessageList getAllMessageByDestination(in string destination) raises (DestinationUnreachable);
+            boolean getState();
         };
     };
 
     module AdvancedServices {
-        interface VirtualBoardService {
-            StringList getAllMembers();
+        interface VirtualGroupService {
+            void addMember(in string boardname, in UserList users);
+            void removeMember(in string boardname);
+            void createBackupOfVirtualGroup(out UserList users, out MessageList messages);
         };
     };
 };
