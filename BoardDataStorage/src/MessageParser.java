@@ -1,8 +1,11 @@
+import BoardModules.Message;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.util.GregorianCalendar;
 /*
     @author Adrian Müller, Dennis Kupfer, Matthäus Piechowiak
 */
@@ -39,10 +42,11 @@ public class MessageParser
 //            e.printStackTrace();
         }
     }
+    
     //Liest aus einer bestehenden Tafel und schreibt den String in ein Array
-    public String ReadMessageFromTextfile(String Group_ID)
+    public String ReadMessageLogFromTextfile(String Group_ID)
     {
-        String zeile="";
+        String zeile;
         String message_return="";
         try
         {
@@ -79,9 +83,11 @@ public class MessageParser
         }
         return message_return;
     }
+    
     //Schreibt in eine bestehende Tafel
-    public void WriteMessageToTextfile(String Group_ID,String User_ID,String Message)
+    public Message WriteMessageToTextfile(String Group_ID,String User_ID,String Message)
     {
+        Message return_Message = null;
         try
         {
             message_file = new File(Group_ID + ".txt");
@@ -91,11 +97,17 @@ public class MessageParser
             }
             else
             {
+                GregorianCalendar now = new GregorianCalendar();
+                DateFormat dateformat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM);
+                return_Message = new Message(Message,User_ID,dateformat.format(now.getTime()));
                 filewriter = new FileWriter(message_file ,true);
                 if(!first_message)
                 {
                     filewriter.write("\n");
                 }
+                filewriter.write("(");
+                filewriter.write(dateformat.format(now.getTime()));
+                filewriter.write(") ");
                 filewriter.write(User_ID);
                 filewriter.write(": ");
                 filewriter.write(Message);
@@ -107,22 +119,24 @@ public class MessageParser
         catch (IOException e) {
 //            e.printStackTrace();
         }
+        return return_Message;
     }
-    public static void main(String[] args) {
-    MessageParser message_instance = new MessageParser();
-    //Gibt eine Warnung aus, da die Gruppe A noch nicht existiert
-    message_instance.WriteMessageToTextfile("A","Fritz","Hoi");
-    message_instance.WriteMessageToTextfile("A","Max","Ho");
-    message_instance.ReadMessageFromTextfile("A");
     
-    message_instance.CreateNewBoard("A");
-    message_instance.WriteMessageToTextfile("A","Fritz","Hallo");
-    message_instance.WriteMessageToTextfile("A","Max","Hi");
-    System.out.println(message_instance.ReadMessageFromTextfile("A"));
-//    Gibt eine Warnung aus, da die Gruppe A schon existiert
-    message_instance.CreateNewBoard("A");
-    
-    message_instance.WriteMessageToTextfile("A","Fritz","Ciao");
-    message_instance.WriteMessageToTextfile("A","Max","Ciao");
-  }
+//    public static void main(String[] args) {
+//    MessageParser message_instance = new MessageParser();
+//    //Gibt eine Warnung aus, da die Gruppe A noch nicht existiert
+//    message_instance.WriteMessageToTextfile("A","Fritz","Hoi");
+//    message_instance.WriteMessageToTextfile("A","Max","Ho");
+//    message_instance.ReadMessageLogFromTextfile("A");
+//    
+//    message_instance.CreateNewBoard("A");
+//    message_instance.WriteMessageToTextfile("A","Fritz","Hallo");
+//    message_instance.WriteMessageToTextfile("A","Max","Hi");
+//    System.out.println(message_instance.ReadMessageFromTextfile("A"));
+////    Gibt eine Warnung aus, da die Gruppe A schon existiert
+//    message_instance.CreateNewBoard("A");
+//    
+//    message_instance.WriteMessageToTextfile("A","Fritz","Ciao");
+//    message_instance.WriteMessageToTextfile("A","Max","Ciao");
+//  }
 }
