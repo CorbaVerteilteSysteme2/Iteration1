@@ -9,7 +9,23 @@ package views;
  *
  * @author Mike
  */
+import BoardModules.BasicServices.BoardService;
+import BoardModules.BasicServices.BoardServiceHelper;
+import BoardModules.DestinationUnreachable;
+import BoardModules.Message;
+import BoardModules.UnknownUser;
+import BoardModules.User;
 import java.util.Date;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.omg.CORBA.ORB;
+import org.omg.CORBA.ORBPackage.InvalidName;
+import org.omg.CosNaming.NamingContextExt;
+import org.omg.CosNaming.NamingContextExtHelper;
+import org.omg.CosNaming.NamingContextPackage.CannotProceed;
+import org.omg.CosNaming.NamingContextPackage.NotFound;
+
 public class UserGUI extends javax.swing.JFrame {
 
     /**
@@ -17,7 +33,7 @@ public class UserGUI extends javax.swing.JFrame {
      */
     public UserGUI() {
         initComponents();
-        loginDialog.setVisible(true);      
+        loginDialog.setVisible(true);
     }
 
     /**
@@ -32,12 +48,10 @@ public class UserGUI extends javax.swing.JFrame {
         loginDialog = new javax.swing.JDialog();
         loginPanel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTextPane1 = new javax.swing.JTextPane();
-        jLabel2 = new javax.swing.JLabel();
-        jScrollPane4 = new javax.swing.JScrollPane();
-        jTextPane2 = new javax.swing.JTextPane();
         loginButton = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
+        userBoardInput = new javax.swing.JTextField();
+        userNameInput = new javax.swing.JTextField();
         jScrollPane2 = new javax.swing.JScrollPane();
         sendMessageField = new javax.swing.JTextArea();
         sendMessage = new javax.swing.JButton();
@@ -61,14 +75,6 @@ public class UserGUI extends javax.swing.JFrame {
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("Tafelname:");
 
-        jScrollPane1.setViewportView(jTextPane1);
-
-        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel2.setText("HostIP:");
-
-        jScrollPane4.setViewportView(jTextPane2);
-
         loginButton.setText("anmelden");
         loginButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -76,35 +82,41 @@ public class UserGUI extends javax.swing.JFrame {
             }
         });
 
+        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel3.setText("Benutzername:");
+
+        userBoardInput.setText("Test-Tafel");
+
         javax.swing.GroupLayout loginPanelLayout = new javax.swing.GroupLayout(loginPanel);
         loginPanel.setLayout(loginPanelLayout);
         loginPanelLayout.setHorizontalGroup(
             loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(loginPanelLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 141, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane4))
-                .addGap(128, 128, 128))
-            .addGroup(loginPanelLayout.createSequentialGroup()
-                .addGap(42, 42, 42)
+                .addGap(41, 41, 41)
                 .addComponent(loginButton)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, loginPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(userNameInput, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(userBoardInput, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(128, 128, 128))
         );
         loginPanelLayout.setVerticalGroup(
             loginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(loginPanelLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, loginPanelLayout.createSequentialGroup()
                 .addContainerGap()
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(userNameInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(13, 13, 13)
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(8, 8, 8)
+                .addComponent(userBoardInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
                 .addComponent(loginButton)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -115,15 +127,15 @@ public class UserGUI extends javax.swing.JFrame {
             loginDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(loginDialogLayout.createSequentialGroup()
                 .addGap(120, 120, 120)
-                .addComponent(loginPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(121, Short.MAX_VALUE))
+                .addComponent(loginPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(118, Short.MAX_VALUE))
         );
         loginDialogLayout.setVerticalGroup(
             loginDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(loginDialogLayout.createSequentialGroup()
-                .addGap(56, 56, 56)
+                .addContainerGap()
                 .addComponent(loginPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(70, Short.MAX_VALUE))
+                .addContainerGap(122, Short.MAX_VALUE))
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -146,11 +158,6 @@ public class UserGUI extends javax.swing.JFrame {
         jScrollPane3.setViewportView(readMessageField);
 
         destinationList.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "eigene Tafel" }));
-        destinationList.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                destinationListActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -184,7 +191,7 @@ public class UserGUI extends javax.swing.JFrame {
     private void sendMessageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendMessageActionPerformed
         String destination;
         destination = (String) destinationList.getSelectedItem();
-        if ("eigene Tafel".equals(destination))
+        //if ("eigene Tafel".equals(destination))
             destination = "";
         //BoardServiceImpl.sendMessage(user,readMessageField.append(sendMessageField.getText()), user.name, new Date().toString(), destination);
         readMessageField.append(sendMessageField.getText());
@@ -192,23 +199,19 @@ public class UserGUI extends javax.swing.JFrame {
         sendMessageField.setText("");
     }//GEN-LAST:event_sendMessageActionPerformed
 
-    private void destinationListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_destinationListActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_destinationListActionPerformed
-
     private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
-        // TODO add your handling code here:
+        startUserBoardService(userNameInput.getText(),userBoardInput.getText());
+        destinationList.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] {userBoardInput.getText()}));
+                
         this.setEnabled(true);
         loginDialog.setVisible(false);
     }//GEN-LAST:event_loginButtonActionPerformed
 
     private void loginDialogWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_loginDialogWindowOpened
-        // TODO add your handling code here:
         this.setEnabled(false);
     }//GEN-LAST:event_loginDialogWindowOpened
 
     private void loginDialogWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_loginDialogWindowClosed
-        // TODO add your handling code here:
         this.dispose();
     }//GEN-LAST:event_loginDialogWindowClosed
 
@@ -239,21 +242,6 @@ public class UserGUI extends javax.swing.JFrame {
         }
         //</editor-fold>
         //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -261,22 +249,63 @@ public class UserGUI extends javax.swing.JFrame {
             }
         });
     }
+    
+/**
+ * Dies ist nur eine Testbench, jedoch kann daraus die benötigten
+ * Funktionen des BoardFronted gezogen werden!
+ * 
+ * @author Tobias Müller
+ */
+//public class UserBoardService{
+    public void startUserBoardService(String username, String tableID) {
+        try {
+            ORB _orb;
+            Properties props = new Properties();
+            
+            props.put("org.omg.CORBA.ORBInitialPort", "1050");
+            props.put("org.omg.CORBA.ORBInitialHost", "localhost");
+            
+            _orb = ORB.init(new String[0], props);
+            
+            org.omg.CORBA.Object objRef = _orb.resolve_initial_references("NameService");
+            NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
+        
+        
+            BoardService boardServiceObj = (BoardService) BoardServiceHelper.narrow(ncRef.resolve_str(tableID + "/BoardService"));
+            
+            User _user1 = new User(username);
+            boardServiceObj.sendMessage(_user1, new Message("Hallo Test-Tafel no. 1", _user1.name, new Date().toString()), tableID);
+            
+        } catch (InvalidName ex) {
+            Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NotFound ex) {
+            Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (CannotProceed ex) {
+            Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (org.omg.CosNaming.NamingContextPackage.InvalidName ex) {
+            Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (DestinationUnreachable ex) {
+            Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (UnknownUser ex) {
+            Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+//}    
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> destinationList;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JTextPane jTextPane1;
-    private javax.swing.JTextPane jTextPane2;
     private javax.swing.JButton loginButton;
     private javax.swing.JDialog loginDialog;
     private javax.swing.JPanel loginPanel;
     private javax.swing.JTextArea readMessageField;
     private javax.swing.JButton sendMessage;
     private javax.swing.JTextArea sendMessageField;
+    private javax.swing.JTextField userBoardInput;
+    private javax.swing.JTextField userNameInput;
     // End of variables declaration//GEN-END:variables
 }
