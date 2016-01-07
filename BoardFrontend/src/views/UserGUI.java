@@ -206,18 +206,27 @@ public class UserGUI extends javax.swing.JFrame {
         String destination;
         destination = (String) destinationList.getSelectedItem();
         //if ("eigene Tafel".equals(destination))
-            destination = "";
-        //BoardServiceImpl.sendMessage(user,readMessageField.append(sendMessageField.getText()), user.name, new Date().toString(), destination);
+        //    destination = "";
+        //Nachricht Senden
+        try{
+        boardServiceObj.sendMessage(user, new Message(sendMessageField.getText(), user.name, new Date().toString()), destination);
+        } catch (DestinationUnreachable ex) {
+            Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (UnknownUser ex) {
+            Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
+        }
         readMessageField.append(sendMessageField.getText());
         readMessageField.append("\n");
         sendMessageField.setText("");
     }//GEN-LAST:event_sendMessageActionPerformed
 
     private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
+        
         startUserBoardService(userNameInput.getText(),userBoardInput.getText(), IPInput.getText());
-           
+        //TODO Anpassen wenn mehrere Tafeln auswaehlbar werden
         destinationList.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] {userBoardInput.getText()}));
-                
+        
+        //GUI
         this.setEnabled(true);
         loginDialog.setVisible(false);
     }//GEN-LAST:event_loginButtonActionPerformed
@@ -285,9 +294,10 @@ public class UserGUI extends javax.swing.JFrame {
             org.omg.CORBA.Object objRef = _orb.resolve_initial_references("NameService");
             NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
         
-            BoardService boardServiceObj = (BoardService) BoardServiceHelper.narrow(ncRef.resolve_str(tableID + "/BoardService"));
-            User _user1 = new User(username);
-            boardServiceObj.sendMessage(_user1, new Message("Hallo Test-Tafel no. 1", _user1.name, new Date().toString()), tableID);
+            this.boardServiceObj = (BoardService) BoardServiceHelper.narrow(ncRef.resolve_str(tableID + "/BoardService"));
+            this.user = new User(username);
+            //this.tableID = tableID;
+            //boardServiceObj.sendMessage(_user1, new Message("Hallo Test-Tafel no. 1", _user1.name, new Date().toString()), tableID);
             
         } catch (InvalidName ex) {
             Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
@@ -297,10 +307,10 @@ public class UserGUI extends javax.swing.JFrame {
             Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
         } catch (org.omg.CosNaming.NamingContextPackage.InvalidName ex) {
             Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (DestinationUnreachable ex) {
-            Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (UnknownUser ex) {
-            Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
+        //} catch (DestinationUnreachable ex) {
+        //    Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
+        //} catch (UnknownUser ex) {
+        //    Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 //}    
@@ -323,4 +333,7 @@ public class UserGUI extends javax.swing.JFrame {
     private javax.swing.JTextField userBoardInput;
     private javax.swing.JTextField userNameInput;
     // End of variables declaration//GEN-END:variables
+    private BoardService boardServiceObj = null;
+    private User user = null;
+    //private String tableID = "";
 }
