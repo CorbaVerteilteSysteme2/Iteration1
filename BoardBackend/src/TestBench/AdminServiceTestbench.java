@@ -6,6 +6,8 @@
 package TestBench;
 
 import BoardModules.BasicServices.*;
+import BoardModules.DestinationUnreachable;
+import BoardModules.Message;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -40,7 +42,12 @@ public class AdminServiceTestbench {
         
             AdministrationService adminServiceObj = (AdministrationService) AdministrationServiceHelper.narrow(ncRef.resolve_str(tableID + "/AdminService"));
         
-            adminServiceObj.createVirtualGroup("VirtualGroup1");
+            //adminServiceObj.createVirtualGroup("VirtualGroup1");
+            String boards[] = new String[2];
+            boards[0] = "Test-Tafel";
+            boards[1] = "nix";
+            Message message = new Message("Hier steht Text", "author", "");
+            adminServiceObj.forwardMessageToBoards(boards, message);
         } catch (InvalidName ex) {
             Logger.getLogger(AdminServiceTestbench.class.getName()).log(Level.SEVERE, null, ex);
         } catch (NotFound ex) {
@@ -48,6 +55,8 @@ public class AdminServiceTestbench {
         } catch (CannotProceed ex) {
             Logger.getLogger(AdminServiceTestbench.class.getName()).log(Level.SEVERE, null, ex);
         } catch (org.omg.CosNaming.NamingContextPackage.InvalidName ex) {
+            Logger.getLogger(AdminServiceTestbench.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (DestinationUnreachable ex) {
             Logger.getLogger(AdminServiceTestbench.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

@@ -8,6 +8,8 @@ package BasicServices;
 import AdvancedServices.VirtualGroupCore;
 import BoardCore.ORBAccessControl;
 import BoardModules.BasicServices.AdministrationServicePOA;
+import BoardModules.BasicServices.BoardService;
+import BoardModules.BasicServices.BoardServiceHelper;
 import BoardModules.DestinationUnreachable;
 import BoardModules.Message;
 import BoardModules.User;
@@ -57,40 +59,33 @@ public class AdministrationServiceImpl extends AdministrationServicePOA {
     @Override
     public void forwardMessageToBoards(String[] boards, Message message) throws DestinationUnreachable {
 	try {
-	    //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-	    ORB _orb;
-	    Properties props = new Properties();
 	    
-	    props.put("org.omg.CORBA.ORBInitialPort", "1050");
-	    props.put("org.omg.CORBA.ORBInitialHost", "localhost");
-	    
-	    _orb = ORB.init(new String[0], props);
-	    org.omg.CORBA.Object objRef = _orb.resolve_initial_references("NameService");
-	    NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
 	    
 	    int batchSize = 100;
 	    BindingListHolder bList = new BindingListHolder();
 	    BindingIteratorHolder bIterator = new BindingIteratorHolder();
 	    
-	    ncRef.list(batchSize, bList, bIterator);
+	    ORBAccessControl.getInstance().getNameService().list(batchSize, bList, bIterator);
 	    /*      boards.length in der 2.Schleife ist soll die Anzahl der aktiven Namen
 	    im NameService sein
 	    equals(boards), boards soll hier ein aktiver Name im NameService sein
 	    */
-	BoardServiceImpl bsi = new BoardServiceImpl();
-        User user = new User("admin");
-        for (int i = 0; i < boards.length; i++) {
-            for (int j = 0; j < bList.value.length; j++) {
-                if (boards[i].equals(bList.value)) {
-                    try {
-                        bsi.sendMessage(user, message, boards[i]);
-                    } catch (UnknownUser ex) {
-                        System.out.println("User existiert nicht!");
-                    }
+            ArrayList<String> strListBoards = new ArrayList<>();
+            for (int i = 0; i < boards.length; i++) {
+                strListBoards.add(boards[i]);
+            }
+            for (int i = 0; i < bList.value.length; i++) {
+                String boardname = bList.value[i].binding_name[0].id;
+                if (strListBoards.contains(boardname)) {
+                    System.out.println(bList.value[i].binding_name[0].id);
+                    BoardService boardServiceObj = (BoardService) BoardServiceHelper.narrow(ORBAccessControl.getInstance().getNameService().resolve_str(boardname + "/BoardService"));
+                    boardServiceObj.sendMessage(new User("."), message, "");
+                } else {
+                    System.err.println("Tafel existiert nicht: " + boardname + "!");
                 }
             }
-        }
-	} catch (org.omg.CORBA.ORBPackage.InvalidName ex) {
+//	
+	} catch (Exception ex) {
 	    Logger.getLogger(AdministrationServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
 	}
     }
