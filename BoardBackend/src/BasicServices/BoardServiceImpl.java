@@ -42,17 +42,6 @@ public class BoardServiceImpl extends BoardServicePOA {
 
     /**
      * 
-     * @return 
-     */
-    @Override
-    public String[] getAllVirtualGroups() {
-        // TODO
-        System.out.println("Testausgabe auf dem Server!");
-        return null;
-    }
-
-    /**
-     * 
      * @param user
      * @throws UnknownUser 
      */

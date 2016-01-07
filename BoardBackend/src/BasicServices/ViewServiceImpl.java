@@ -16,6 +16,8 @@ import BoardModules.Message;
  */
 public class ViewServiceImpl extends ViewServicePOA {
 
+    private boolean state;
+    
     @Override
     public Message[] getAllMessageByDestination(String destination) throws DestinationUnreachable {
         Message[] messages = null;
@@ -27,6 +29,11 @@ public class ViewServiceImpl extends ViewServicePOA {
         }
         
         return messages;
+    }
+
+    @Override
+    public boolean getState() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

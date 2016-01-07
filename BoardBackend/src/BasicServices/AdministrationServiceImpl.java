@@ -43,6 +43,10 @@ public class AdministrationServiceImpl extends AdministrationServicePOA {
             Logger.getLogger(AdministrationServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         } catch (InvalidName ex) {
             Logger.getLogger(AdministrationServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NotFound ex) {
+            Logger.getLogger(AdministrationServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (AlreadyBound ex) {
+            Logger.getLogger(AdministrationServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

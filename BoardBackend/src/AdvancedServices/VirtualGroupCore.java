@@ -6,8 +6,19 @@
 package AdvancedServices;
 
 import BoardCore.AbstractCore;
+import BoardCore.ORBAccessControl;
+import BoardModules.AdvancedServices.*;
+import BoardModules.Message;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.omg.CosNaming.NameComponent;
+import org.omg.CosNaming.NamingContextPackage.AlreadyBound;
 import org.omg.CosNaming.NamingContextPackage.CannotProceed;
 import org.omg.CosNaming.NamingContextPackage.InvalidName;
+import org.omg.CosNaming.NamingContextPackage.NotFound;
+import org.omg.PortableServer.POAPackage.ServantNotActive;
+import org.omg.PortableServer.POAPackage.WrongPolicy;
 
 /**
  *
@@ -15,9 +26,41 @@ import org.omg.CosNaming.NamingContextPackage.InvalidName;
  */
 public class VirtualGroupCore extends AbstractCore {
     
-    public VirtualGroupCore(String groupname) throws CannotProceed, InvalidName {
+    private ArrayList<VirtualGroupMember> members;
+    private ArrayList<Message> messages;
+    
+    public VirtualGroupCore(String groupname) throws CannotProceed, InvalidName, NotFound, AlreadyBound {
         super(groupname);
         
+        try {
+            VirtualGroupServiceImpl _virtualGroupService = new VirtualGroupServiceImpl();
+            
+            org.omg.CORBA.Object virtualGroupServiceRef = ORBAccessControl.getInstance().getRootPOA().servant_to_reference(_virtualGroupService);
+            
+            VirtualGroupService virtualGroupService = VirtualGroupServiceHelper.narrow(virtualGroupServiceRef);
+            
+            NameComponent boardNC = new NameComponent(_identifier, "");
+            NameComponent virtualGroupServiceNC = new NameComponent("VirtualGroupService", "");
+            NameComponent path1[] = { boardNC, virtualGroupServiceNC };
+            
+            registerObjWithNameService(ORBAccessControl.getInstance().getNameService(), path1, virtualGroupServiceRef);
+            
+        } catch (ServantNotActive ex) {
+            Logger.getLogger(VirtualGroupCore.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (WrongPolicy ex) {
+            Logger.getLogger(VirtualGroupCore.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
+    public void addMessage(Message msg) {
+        this.messages.add(msg);
+    }
+    
+    public void removeMessage(Message msg) {
+        this.messages.remove(msg);
+    }
+    
+    public void addMember(String boardname) {
+        this.members.add(new VirtualGroupMember(boardname));
+    }
 }
