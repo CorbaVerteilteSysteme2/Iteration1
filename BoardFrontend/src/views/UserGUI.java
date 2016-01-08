@@ -28,6 +28,7 @@ import org.omg.CosNaming.NamingContextExtHelper;
 import org.omg.CosNaming.NamingContextPackage.CannotProceed;
 import org.omg.CosNaming.NamingContextPackage.NotFound;
 import BoardModules.BasicServices.*;
+import java.awt.event.*;
 
 public class UserGUI extends javax.swing.JFrame {
 
@@ -214,11 +215,9 @@ public class UserGUI extends javax.swing.JFrame {
         destination = (String) destinationList.getSelectedItem();
         //if ("eigene Tafel".equals(destination))
         //    destination = "";
-        
         //Nachricht Senden
         try{
         boardServiceObj.sendMessage(user, new Message(sendMessageField.getText(), user.name, new Date().toString()), destination);
-        //message = viewServiceObj.getAllMessageByDestination("");
         } catch (DestinationUnreachable ex) {
             Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
         } catch (UnknownUser ex) {
@@ -240,6 +239,7 @@ public class UserGUI extends javax.swing.JFrame {
         
             //GUI
             this.setEnabled(true);
+            t.start();
             loginDialog.setVisible(false);
         }
     }//GEN-LAST:event_loginButtonActionPerformed
@@ -326,6 +326,25 @@ public class UserGUI extends javax.swing.JFrame {
         }
         return worked;
     }    
+ 
+    javax.swing.Timer t = new javax.swing.Timer(1000, new ActionListener() {  
+        @Override
+        public void actionPerformed(ActionEvent e) {
+              try{
+              messageCheck = viewServiceObj.getAllMessageByDestination("");
+              if (message != messageCheck){
+                message = messageCheck;  
+                readMessageField.setText("");
+                for (int i = 0; i < message.length; i++){
+                    readMessageField.append(message[i].toString());
+                    readMessageField.append("\n");
+              }
+              }
+              }catch (DestinationUnreachable ex){
+                  
+              }
+          }
+    });
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -349,5 +368,6 @@ public class UserGUI extends javax.swing.JFrame {
     private ViewService viewServiceObj = null;
     private User user = null;
     private Message[] message = null;
+    private Message[] messageCheck = null;
     //private String tableID = "";
 }
