@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.GregorianCalendar;
 /*
     @author Adrian Müller, Dennis Kupfer, Matthäus Piechowiak
@@ -16,8 +17,6 @@ public class MessageParser
     String User_ID;
     private File message_file;
     private FileWriter filewriter;
-    boolean first_message = true;
-    boolean last_message = false;
     MessageParser(){}
     MessageParser(String Group_ID,String User_ID)
     {
@@ -44,10 +43,16 @@ public class MessageParser
     }
     
     //Liest aus einer bestehenden Tafel und schreibt den String in ein Array
-    public String ReadMessageLogFromTextfile(String Group_ID)
+    public ArrayList<Message> ReadMessageLogFromTextfile(String Group_ID)
     {
+        Message single_message;
+        ArrayList<Message> the_messages = new ArrayList<>();
         String zeile;
-        String message_return="";
+        String message;
+        String user;
+        String timestamp;
+        boolean user_fertig;
+        boolean timestamp_fertig;
         try
         {
             message_file = new File(Group_ID + ".txt");
@@ -61,19 +66,38 @@ public class MessageParser
                 BufferedReader bufferedreader = new BufferedReader(filereader);
                 while((zeile=bufferedreader.readLine()) != null)
                 {
-                    message_return += zeile;
-                    if(!last_message)
+                    timestamp_fertig = false;
+                    user_fertig = false;
+                    message = "";
+                    user = "";
+                    timestamp = "";
+                    for(int i=1;i<zeile.length();i++)
                     {
-                        message_return += "\n";
+                        if(!timestamp_fertig && zeile.charAt(i)!=')')
+                        {
+                            timestamp+=zeile.charAt(i);
+                        }
+                        if(!timestamp_fertig && zeile.charAt(i)==')')
+                        {
+                            timestamp_fertig = true;
+                            i += 2;
+                        }
+                        if(timestamp_fertig && !user_fertig && zeile.charAt(i)!=':')
+                        {
+                            user += zeile.charAt(i);
+                        }
+                        if(timestamp_fertig && !user_fertig && zeile.charAt(i)==':')
+                        {
+                            user_fertig = true;
+                            i += 2;
+                        }
+                        if(user_fertig && zeile.charAt(i)!='\n')
+                        {
+                            message += zeile.charAt(i);
+                        }
                     }
-                    if((zeile=bufferedreader.readLine()) != null)
-                    {
-                        message_return += zeile;
-                    }
-                    else
-                    {
-                        last_message = true;
-                    }
+                    single_message = new Message(message,user,timestamp);
+                    the_messages.add(single_message);
                 }
                 bufferedreader.close();
             }
@@ -81,7 +105,7 @@ public class MessageParser
         catch (IOException e) {
 //            e.printStackTrace();
         }
-        return message_return;
+        return the_messages;
     }
     
     //Schreibt in eine bestehende Tafel
@@ -101,17 +125,13 @@ public class MessageParser
                 DateFormat dateformat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM);
                 return_Message = new Message(Message,User_ID,dateformat.format(now.getTime()));
                 filewriter = new FileWriter(message_file ,true);
-                if(!first_message)
-                {
-                    filewriter.write("\n");
-                }
                 filewriter.write("(");
                 filewriter.write(dateformat.format(now.getTime()));
                 filewriter.write(") ");
                 filewriter.write(User_ID);
                 filewriter.write(": ");
                 filewriter.write(Message);
-                first_message = false;
+                filewriter.write("\n");
                 filewriter.flush();
                 filewriter.close();
             }
@@ -122,21 +142,21 @@ public class MessageParser
         return return_Message;
     }
     
-//    public static void main(String[] args) {
-//    MessageParser message_instance = new MessageParser();
-//    //Gibt eine Warnung aus, da die Gruppe A noch nicht existiert
+    public static void main(String[] args) {
+    MessageParser message_instance = new MessageParser();
+    //Gibt eine Warnung aus, da die Gruppe A noch nicht existiert
 //    message_instance.WriteMessageToTextfile("A","Fritz","Hoi");
 //    message_instance.WriteMessageToTextfile("A","Max","Ho");
 //    message_instance.ReadMessageLogFromTextfile("A");
-//    
+    
+    message_instance.CreateNewBoard("A");
+    message_instance.WriteMessageToTextfile("A","Fritz","Hallo");
+    message_instance.WriteMessageToTextfile("A","Max","Hi");
+    message_instance.ReadMessageLogFromTextfile("A");
+//    Gibt eine Warnung aus, da die Gruppe A schon existiert
 //    message_instance.CreateNewBoard("A");
-//    message_instance.WriteMessageToTextfile("A","Fritz","Hallo");
-//    message_instance.WriteMessageToTextfile("A","Max","Hi");
-//    System.out.println(message_instance.ReadMessageFromTextfile("A"));
-////    Gibt eine Warnung aus, da die Gruppe A schon existiert
-//    message_instance.CreateNewBoard("A");
-//    
-//    message_instance.WriteMessageToTextfile("A","Fritz","Ciao");
-//    message_instance.WriteMessageToTextfile("A","Max","Ciao");
-//  }
+    
+    message_instance.WriteMessageToTextfile("A","Fritz","Ciao");
+    message_instance.WriteMessageToTextfile("A","Max","Ciao");
+  }
 }
