@@ -8,6 +8,8 @@ package BasicServices;
 import AdvancedServices.VirtualGroupCore;
 import BoardCore.AbstractCore;
 import BoardCore.ORBAccessControl;
+import BoardModules.AdvancedServices.VirtualGroupService;
+import BoardModules.AdvancedServices.VirtualGroupServiceHelper;
 import BoardModules.BasicServices.AdministrationServicePOA;
 import BoardModules.BasicServices.BoardService;
 import BoardModules.BasicServices.BoardServiceHelper;
@@ -56,7 +58,17 @@ public class AdministrationServiceImpl extends AdministrationServicePOA {
 
     @Override
     public void loginToVirtualGroup(String vgroupname) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            VirtualGroupService virtualGroupServiceObj = (VirtualGroupService) VirtualGroupServiceHelper.narrow(ORBAccessControl.getInstance().getNameService().resolve_str(vgroupname + "/VirtualGroupService"));
+            virtualGroupServiceObj.addMember(core.getIdentifier(), core.getAllUsers());
+            //virtualGroupServiceObj.createBackupOfVirtualGroup(users, messages);
+        } catch (NotFound ex) {
+            Logger.getLogger(AdministrationServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (CannotProceed ex) {
+            Logger.getLogger(AdministrationServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InvalidName ex) {
+            Logger.getLogger(AdministrationServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override

@@ -42,14 +42,12 @@ public abstract class AbstractCore {
     protected ViewServiceImpl _viewService;
     
     private ArrayList<Message> messages;
-    private ArrayList<User> users;
     
     private MessageParser messageParser;
     
     public AbstractCore(String identifier) throws CannotProceed, InvalidName {
         try {
             this._identifier = identifier;
-            this.users = new ArrayList<>();
             this.messageParser = new MessageParser(identifier);
             this.messages = new ArrayList<>();
             //getAllMessagesFromMessageParser();
@@ -140,16 +138,17 @@ public abstract class AbstractCore {
         return msgs;
     }
     
-    public synchronized void addUser(User user) {
-        users.add(user);
-        
-    }
+    public abstract void addUser(User user);    
     
-    public synchronized boolean checkUser(User user) {
-        return users.contains(user);
-    }
+    public abstract boolean checkUser(User user);
     
     private void getAllMessagesFromMessageParser() {
         messages = messageParser.ReadMessageLogFromTextfile(_identifier);
     }
+    
+    public String getIdentifier() {
+        return _identifier;
+    }
+
+    public abstract User[] getAllUsers();
 }
