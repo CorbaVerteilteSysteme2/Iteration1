@@ -8,7 +8,7 @@ package AdvancedServices;
 import BoardCore.AbstractCore;
 import BoardCore.ORBAccessControl;
 import BoardModules.AdvancedServices.*;
-import BoardModules.Message;
+import BoardModules.User;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -32,7 +32,7 @@ public class VirtualGroupCore extends AbstractCore {
         super(groupname);
         members = new ArrayList<>();
         try {
-            VirtualGroupServiceImpl _virtualGroupService = new VirtualGroupServiceImpl();
+            VirtualGroupServiceImpl _virtualGroupService = new VirtualGroupServiceImpl(this);
             
             org.omg.CORBA.Object virtualGroupServiceRef = ORBAccessControl.getInstance().getRootPOA().servant_to_reference(_virtualGroupService);
             
@@ -51,7 +51,41 @@ public class VirtualGroupCore extends AbstractCore {
         }
     }
     
-    public void addMember(String boardname) {
-        this.members.add(new VirtualGroupMember(boardname));
+    public void addMember(String boardname, ArrayList<User> users) {
+        this.members.add(new VirtualGroupMember(boardname, users));
+    }
+    
+    public ArrayList<User> getUsers() {
+        ArrayList<User> users = new ArrayList<>();
+        
+        for (VirtualGroupMember member : members) {
+            for (User user : member.getUsers()) {
+                users.add(user);
+            }
+        }
+        
+        return users;
+    }
+
+    @Override
+    public void addUser(User user) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean checkUser(User user) {
+        return getUsers().contains(user);
+    }
+
+    @Override
+    public User[] getAllUsers() {
+        ArrayList<User> userList = getUsers();
+        
+        User users[] = new User[userList.size()];
+        for (int i = 0; i < userList.size(); i++) {
+            users[i] = userList.get(i);
+        }
+        
+        return users;
     }
 }

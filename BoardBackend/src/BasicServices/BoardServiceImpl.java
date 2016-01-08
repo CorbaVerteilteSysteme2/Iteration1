@@ -35,6 +35,9 @@ public class BoardServiceImpl extends BoardServicePOA {
     @Override
     public void sendMessage(User user, Message message, String destination) throws DestinationUnreachable, UnknownUser {
         // Benutzer überprüfen
+        if (!core.checkUser(user)) {
+            throw new UnknownUser(user.name);
+        }
         System.out.println("Nachricht erhalten von " + message.author + ": " + message.content + ", vom " + message.timestamp);
         // Ziel unterscheiden zwischen lokale Tafel oder VirtualBoardService
         // destination == "" --> Ziel ist die lokale Tafel! 

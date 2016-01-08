@@ -9,6 +9,7 @@ import BoardModules.AdvancedServices.*;
 import BoardModules.MessageListHolder;
 import BoardModules.User;
 import BoardModules.UserListHolder;
+import java.util.ArrayList;
 
 /**
  *
@@ -16,9 +17,21 @@ import BoardModules.UserListHolder;
  */
 public class VirtualGroupServiceImpl extends VirtualGroupServicePOA {
 
+    private final VirtualGroupCore core;
+    
+    VirtualGroupServiceImpl(VirtualGroupCore core) {
+        this.core = core;
+    }
+
     @Override
     public void addMember(String boardname, User[] users) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        ArrayList<User> userList = new ArrayList<>();
+        
+        for (User user : users) {
+            user.name = boardname + "." + user.name;
+        }
+        
+        this.core.addMember(boardname, userList);
     }
 
     @Override

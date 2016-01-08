@@ -15,13 +15,14 @@ import java.util.ArrayList;
 public class VirtualGroupMember {
     
     private final String identifier;
-    private ArrayList<User> users;
+    private final ArrayList<User> users;
     
-    public VirtualGroupMember(String id) {
-        this.identifier = id;
-        
-        
+    VirtualGroupMember(String boardname, ArrayList<User> users) {
+        this.identifier = boardname;
+        this.users = users;
     }
     
-    
+    public ArrayList<User> getUsers() {
+        return this.users;
+    }
 }
