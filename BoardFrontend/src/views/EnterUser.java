@@ -7,7 +7,7 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import BasicServices.BoardServiceImpl;
+//import BasicServices.BoardServiceImpl;
 
 /**
  *
@@ -23,7 +23,7 @@ public class EnterUser
     String user = "";
     eingabeUser = Eingabe(name);
     user = eingabeUser;
-    checkUser(user);
+    //checkUser(user);
     if (user == eingabeUser)
     {
         Ausgabe(name);
