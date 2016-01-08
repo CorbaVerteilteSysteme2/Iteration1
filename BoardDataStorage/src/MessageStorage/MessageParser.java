@@ -1,3 +1,5 @@
+package MessageStorage;
+
 import BoardModules.Message;
 import java.io.BufferedReader;
 import java.io.File;
@@ -22,6 +24,10 @@ public class MessageParser
     {
         this.Board_ID = Group_ID;
         this.User_ID = User_ID;
+    }
+
+    public MessageParser(String identifier) {
+        this.Board_ID = identifier;
     }
     //Legt eine neue Tafel an
     public void CreateNewBoard(String Board_ID)
@@ -159,4 +165,9 @@ public class MessageParser
     message_instance.WriteMessageToTextfile("A","Fritz","Ciao");
     message_instance.WriteMessageToTextfile("A","Max","Ciao");
   }
+
+    public void WriteMessageToTextfile(Message msg) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }
