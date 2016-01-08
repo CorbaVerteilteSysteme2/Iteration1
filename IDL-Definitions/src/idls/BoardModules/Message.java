@@ -25,4 +25,11 @@ public final class Message implements org.omg.CORBA.portable.IDLEntity
     timestamp = _timestamp;
   } // ctor
 
+    @Override
+    public String toString() {
+        return timestamp + " " + author + ": " + content;
+    }
+  
+  
+
 } // class Message
