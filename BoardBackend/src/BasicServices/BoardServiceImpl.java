@@ -5,7 +5,7 @@
  */
 package BasicServices;
 
-import BoardCore.MessageStorage;
+import BoardCore.AbstractCore;
 import BoardCore.UserStorage;
 import BoardModules.BasicServices.BoardServicePOA;
 import BoardModules.DestinationUnreachable;
@@ -18,12 +18,18 @@ import BoardModules.User;
  * @author Tobias
  */
 public class BoardServiceImpl extends BoardServicePOA {
+
+    private final AbstractCore core;
+    
+    public BoardServiceImpl(AbstractCore core) {
+        this.core = core;
+    }
     
     /**
      * 
      * @param user
      * @param message
-     * @param destination
+     * @param destination depricated
      * @throws DestinationUnreachable
      * @throws UnknownUser 
      */
@@ -33,11 +39,12 @@ public class BoardServiceImpl extends BoardServicePOA {
         System.out.println("Nachricht erhalten von " + message.author + ": " + message.content + ", vom " + message.timestamp);
         // Ziel unterscheiden zwischen lokale Tafel oder VirtualBoardService
         // destination == "" --> Ziel ist die lokale Tafel! 
-        if (destination.equals("")) {
-            MessageStorage.getInstance().addMessage(message);
-        } else {
-            // hier wird an eine virtuelle Gruppe gesendet
-        }
+//        if (destination.equals("")) {
+//            MessageStorage.getInstance().addMessage(message);
+//        } else {
+//            // hier wird an eine virtuelle Gruppe gesendet
+//        }
+        core.addMessage(message);
     }
 
     /**
@@ -47,7 +54,7 @@ public class BoardServiceImpl extends BoardServicePOA {
      */
     @Override
     public void checkUser(User user) throws UnknownUser {
-        if (!UserStorage.getInstance().checkUser(user)) {
+        if (!core.checkUser(user)) {
             throw new UnknownUser(user.name);
         }
     }

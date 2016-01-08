@@ -27,11 +27,10 @@ import org.omg.PortableServer.POAPackage.WrongPolicy;
 public class VirtualGroupCore extends AbstractCore {
     
     private ArrayList<VirtualGroupMember> members;
-    private ArrayList<Message> messages;
     
     public VirtualGroupCore(String groupname) throws CannotProceed, InvalidName, NotFound, AlreadyBound {
         super(groupname);
-        
+        members = new ArrayList<>();
         try {
             VirtualGroupServiceImpl _virtualGroupService = new VirtualGroupServiceImpl();
             
@@ -50,14 +49,6 @@ public class VirtualGroupCore extends AbstractCore {
         } catch (WrongPolicy ex) {
             Logger.getLogger(VirtualGroupCore.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
-
-    public void addMessage(Message msg) {
-        this.messages.add(msg);
-    }
-    
-    public void removeMessage(Message msg) {
-        this.messages.remove(msg);
     }
     
     public void addMember(String boardname) {

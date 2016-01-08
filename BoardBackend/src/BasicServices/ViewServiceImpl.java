@@ -5,7 +5,7 @@
  */
 package BasicServices;
 
-import BoardCore.MessageStorage;
+import BoardCore.AbstractCore;
 import BoardModules.BasicServices.ViewServicePOA;
 import BoardModules.DestinationUnreachable;
 import BoardModules.Message;
@@ -16,24 +16,34 @@ import BoardModules.Message;
  */
 public class ViewServiceImpl extends ViewServicePOA {
 
+    private final AbstractCore core;
+    
+    public ViewServiceImpl(AbstractCore core) {
+        super();
+        
+        this.core = core;
+    }
+    
     private boolean state;
+    
+    public void setState(boolean messages_changed) {
+        this.state = messages_changed;
+    }
     
     @Override
     public Message[] getAllMessageByDestination(String destination) throws DestinationUnreachable {
-        Message[] messages = null;
-        
-        if (destination.equals("")) {
-            messages = (Message[]) MessageStorage.getInstance().getMessages().toArray();
-        } else {
-            // virtuelle Gruppe
-        }
-        
-        return messages;
+        return core.getAllMessages();
     }
 
+    /**
+     * Methode gibt zurück, ob sich die Nachrichten verändert haben:
+     * true - Nachrichten wurden verändert
+     * false - Nachrichten wurden nicht verändert
+     * @return 
+     */
     @Override
     public boolean getState() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return this.state;
     }
     
 }

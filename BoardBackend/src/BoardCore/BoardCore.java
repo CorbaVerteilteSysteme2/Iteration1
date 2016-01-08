@@ -3,22 +3,7 @@
  */
 package BoardCore;
 
-import AdvancedServices.*;
-import BasicServices.*;
-
-import BoardModules.BasicServices.*;
-import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.omg.CORBA.ORB;
-import org.omg.CORBA.ORBPackage.InvalidName;
-import org.omg.CosNaming.*;
-import org.omg.CosNaming.NamingContextPackage.AlreadyBound;
 import org.omg.CosNaming.NamingContextPackage.CannotProceed;
-import org.omg.CosNaming.NamingContextPackage.NotFound;
-import org.omg.PortableServer.POA;
-import org.omg.PortableServer.POAHelper;
-import org.omg.PortableServer.POAManagerPackage.AdapterInactive;
 
 /**
  * Der BoardCore ist das zentrale Element einer Tafel.

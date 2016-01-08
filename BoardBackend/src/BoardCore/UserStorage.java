@@ -9,7 +9,7 @@ import BoardModules.User;
 import java.util.ArrayList;
 
 /**
- *
+ * @deprecated funktionen wandern in den AbstractCore
  * @author Tobias
  */
 public class UserStorage {

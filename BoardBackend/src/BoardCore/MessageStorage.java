@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 /**
  * Diese Klasse soll dazu dienen, auf den BoardDataStorage zuzugreifen!
- * 
+ * @deprecated funktionen wandern in den AbstractCore
  * @author Tobias
  */
 public class MessageStorage {

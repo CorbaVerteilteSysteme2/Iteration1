@@ -14,6 +14,10 @@ import BoardModules.BasicServices.BoardService;
 import BoardModules.BasicServices.BoardServiceHelper;
 import BoardModules.BasicServices.ViewService;
 import BoardModules.BasicServices.ViewServiceHelper;
+import BoardModules.Message;
+import BoardModules.User;
+import MessageStorage.MessageParser;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.omg.CosNaming.NameComponent;
@@ -37,13 +41,21 @@ public abstract class AbstractCore {
     protected AdministrationServiceImpl _adminService;
     protected ViewServiceImpl _viewService;
     
+    private ArrayList<Message> messages;
+    private ArrayList<User> users;
+    
+    private MessageParser messageParser;
+    
     public AbstractCore(String identifier) throws CannotProceed, InvalidName {
         try {
             this._identifier = identifier;
+            this.users = new ArrayList<>();
+            this.messageParser = new MessageParser(identifier);
             
-            this._boardService = new BoardServiceImpl();
-            this._adminService = new AdministrationServiceImpl();
-            this._viewService = new ViewServiceImpl();
+            
+            this._boardService = new BoardServiceImpl(this);
+            this._adminService = new AdministrationServiceImpl(this);
+            this._viewService = new ViewServiceImpl(this);
             
             org.omg.CORBA.Object boardServiceRef = ORBAccessControl.getInstance().getRootPOA().servant_to_reference(_boardService);
             org.omg.CORBA.Object adminServiceRef = ORBAccessControl.getInstance().getRootPOA().servant_to_reference(_adminService);
@@ -103,5 +115,34 @@ public abstract class AbstractCore {
         }
         singleElement[0] = serviceName[serviceName.length - 1];
         currentContext.rebind(singleElement, serviceObj);
+    }
+    
+    public synchronized void addMessage(Message msg) {
+        messages.add(msg);
+        messageParser.WriteMessageToTextfile(msg);
+        _viewService.setState(true);
+        
+    }
+    
+     public synchronized void removeMessage(Message msg) {
+        this.messages.remove(msg);
+        _viewService.setState(true);
+    }
+     
+    public synchronized Message[] getAllMessages() {
+        return (Message[]) messages.toArray();
+    }
+    
+    public synchronized void addUser(User user) {
+        users.add(user);
+        
+    }
+    
+    public synchronized boolean checkUser(User user) {
+        return users.contains(user);
+    }
+    
+    private void getAllMessagesFromMessageParser() {
+        messages = messageParser.ReadMessageLogFromTextfile(_identifier);
     }
 }
