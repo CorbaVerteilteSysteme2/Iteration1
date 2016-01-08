@@ -31,7 +31,7 @@ public class BoardCore extends AbstractCore {
     public BoardCore(String boardID) throws RuntimeException, CannotProceed, org.omg.CosNaming.NamingContextPackage.InvalidName {
         super(boardID); 
         this.users = new ArrayList<>();
-            
+        this.users.add(new User("user1"));
     }
     
     @Override
