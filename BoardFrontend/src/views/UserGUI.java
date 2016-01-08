@@ -29,6 +29,7 @@ import org.omg.CosNaming.NamingContextPackage.CannotProceed;
 import org.omg.CosNaming.NamingContextPackage.NotFound;
 import BoardModules.BasicServices.*;
 import java.awt.event.*;
+import java.util.Arrays;
 
 public class UserGUI extends javax.swing.JFrame {
 
@@ -331,14 +332,22 @@ public class UserGUI extends javax.swing.JFrame {
         @Override
         public void actionPerformed(ActionEvent e) {
               try{
-              messageCheck = viewServiceObj.getAllMessageByDestination("");
-              if (message != messageCheck){
-                message = messageCheck;  
-                readMessageField.setText("");
-                for (int i = 0; i < message.length; i++){
-                    readMessageField.append(message[i].toString());
-                    readMessageField.append("\n");
-              }
+              if (message != null){
+                messageCheck = viewServiceObj.getAllMessageByDestination("");
+                if (message.length != messageCheck.length){
+                    message = messageCheck;  
+                    readMessageField.setText("");
+                    for (Message message1 : message) {
+                        readMessageField.append(message1.toString());
+                        readMessageField.append("\n");
+                    }
+                }
+              }else{
+                  message = viewServiceObj.getAllMessageByDestination("");
+                  for (Message message1 : message) {
+                      readMessageField.append(message1.toString());
+                      readMessageField.append("\n");
+                  }
               }
               }catch (DestinationUnreachable ex){
                   
@@ -346,7 +355,7 @@ public class UserGUI extends javax.swing.JFrame {
           }
     }
     );
-    
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField IPInput;
@@ -370,5 +379,6 @@ public class UserGUI extends javax.swing.JFrame {
     private User user = null;
     private Message[] message = null;
     private Message[] messageCheck = null;
+    //private boolean firstRun = true;
     //private String tableID = "";
 }
