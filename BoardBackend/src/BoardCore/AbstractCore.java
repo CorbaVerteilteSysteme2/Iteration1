@@ -51,7 +51,8 @@ public abstract class AbstractCore {
             this._identifier = identifier;
             this.users = new ArrayList<>();
             this.messageParser = new MessageParser(identifier);
-            
+            this.messages = new ArrayList<>();
+            //getAllMessagesFromMessageParser();
             
             this._boardService = new BoardServiceImpl(this);
             this._adminService = new AdministrationServiceImpl(this);
@@ -119,7 +120,7 @@ public abstract class AbstractCore {
     
     public synchronized void addMessage(Message msg) {
         messages.add(msg);
-        messageParser.WriteMessageToTextfile(msg);
+        //messageParser.WriteMessageToTextfile(msg);
         _viewService.setState(true);
         
     }
@@ -130,7 +131,13 @@ public abstract class AbstractCore {
     }
      
     public synchronized Message[] getAllMessages() {
-        return (Message[]) messages.toArray();
+        Message msgs[] = new Message[messages.size()];
+        
+        for (int i = 0; i < messages.size(); i++) {
+            msgs[i] = messages.get(i);
+        }
+        
+        return msgs;
     }
     
     public synchronized void addUser(User user) {

@@ -6,7 +6,6 @@
 package BasicServices;
 
 import BoardCore.AbstractCore;
-import BoardCore.UserStorage;
 import BoardModules.BasicServices.BoardServicePOA;
 import BoardModules.DestinationUnreachable;
 import BoardModules.Message;
