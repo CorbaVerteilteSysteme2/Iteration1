@@ -8,6 +8,8 @@ package views;
 /**
  *
  * @author Mike
+ * @version 0.1
+ * @date 08.01.2016
  */
 import BoardModules.BasicServices.BoardService;
 import BoardModules.BasicServices.BoardServiceHelper;
@@ -201,12 +203,17 @@ public class UserGUI extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    
+    /**
+     * @throws DestinationUnreachable
+     * @throws UnknownUser 
+     */
     private void sendMessageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendMessageActionPerformed
         String destination;
         destination = (String) destinationList.getSelectedItem();
         //if ("eigene Tafel".equals(destination))
         //    destination = "";
+        
         //Nachricht Senden
         try{
         boardServiceObj.sendMessage(user, new Message(sendMessageField.getText(), user.name, new Date().toString()), destination);
@@ -215,6 +222,9 @@ public class UserGUI extends javax.swing.JFrame {
         } catch (UnknownUser ex) {
             Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        //TODO Eingehende Nachrichten Anzeige
+        //Verruebergehende Ausgabe
         readMessageField.append(sendMessageField.getText());
         readMessageField.append("\n");
         sendMessageField.setText("");
@@ -233,10 +243,12 @@ public class UserGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_loginButtonActionPerformed
 
     private void loginDialogWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_loginDialogWindowOpened
+        //GUI
         this.setEnabled(false);
     }//GEN-LAST:event_loginDialogWindowOpened
 
     private void loginDialogWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_loginDialogWindowClosed
+        //GUI
         this.dispose();
     }//GEN-LAST:event_loginDialogWindowClosed
 
@@ -275,14 +287,14 @@ public class UserGUI extends javax.swing.JFrame {
         });
     }
     
-/**
- * Dies ist nur eine Testbench, jedoch kann daraus die benötigten
- * Funktionen des BoardFronted gezogen werden!
- * 
- * @author Tobias Müller
- */
-//public class UserBoardService{
-    public boolean startUserBoardService(String username, String tableID, String ipAddress) {
+    /**
+    * @param username Benutzername zum einloggen.
+    * @param tableID Name der Tafel auf die eingeloggt werden soll.
+    * @param ipAddress IP-Adresse des Nameservers.
+    * @author Tobias Müller, Mike Hoffmann
+    * @return Status Login Erfolgreich/Fail
+    */
+    public boolean startUserBoardService(String username, String tableID, String ipAddress){
         boolean worked = false;
         try {
             ORB _orb;
@@ -298,8 +310,6 @@ public class UserGUI extends javax.swing.JFrame {
         
             this.boardServiceObj = (BoardService) BoardServiceHelper.narrow(ncRef.resolve_str(tableID + "/BoardService"));
             this.user = new User(username);
-            //this.tableID = tableID;
-            //boardServiceObj.sendMessage(_user1, new Message("Hallo Test-Tafel no. 1", _user1.name, new Date().toString()), tableID);
             worked = true;
         } catch (InvalidName ex) {
             Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
@@ -309,14 +319,9 @@ public class UserGUI extends javax.swing.JFrame {
             Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
         } catch (org.omg.CosNaming.NamingContextPackage.InvalidName ex) {
             Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
-        //} catch (DestinationUnreachable ex) {
-        //    Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
-        //} catch (UnknownUser ex) {
-        //    Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
         }
         return worked;
-    }
-//}    
+    }    
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
