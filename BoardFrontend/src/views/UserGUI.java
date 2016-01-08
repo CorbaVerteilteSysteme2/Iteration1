@@ -27,6 +27,7 @@ import org.omg.CosNaming.NamingContextExt;
 import org.omg.CosNaming.NamingContextExtHelper;
 import org.omg.CosNaming.NamingContextPackage.CannotProceed;
 import org.omg.CosNaming.NamingContextPackage.NotFound;
+import BoardModules.BasicServices.*;
 
 public class UserGUI extends javax.swing.JFrame {
 
@@ -217,6 +218,7 @@ public class UserGUI extends javax.swing.JFrame {
         //Nachricht Senden
         try{
         boardServiceObj.sendMessage(user, new Message(sendMessageField.getText(), user.name, new Date().toString()), destination);
+        //message = viewServiceObj.getAllMessageByDestination("");
         } catch (DestinationUnreachable ex) {
             Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
         } catch (UnknownUser ex) {
@@ -309,6 +311,8 @@ public class UserGUI extends javax.swing.JFrame {
             NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
         
             this.boardServiceObj = (BoardService) BoardServiceHelper.narrow(ncRef.resolve_str(tableID + "/BoardService"));
+            this.viewServiceObj = (ViewService) ViewServiceHelper.narrow(ncRef.resolve_str(tableID + "/ViewService"));
+            
             this.user = new User(username);
             worked = true;
         } catch (InvalidName ex) {
@@ -342,6 +346,8 @@ public class UserGUI extends javax.swing.JFrame {
     private javax.swing.JTextField userNameInput;
     // End of variables declaration//GEN-END:variables
     private BoardService boardServiceObj = null;
+    private ViewService viewServiceObj = null;
     private User user = null;
+    private Message[] message = null;
     //private String tableID = "";
 }
