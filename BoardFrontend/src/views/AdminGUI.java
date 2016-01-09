@@ -13,9 +13,11 @@ import BoardModules.BasicServices.ViewService;
 import BoardModules.BasicServices.ViewServiceHelper;
 import BoardModules.DestinationUnreachable;
 import BoardModules.Message;
+import BoardModules.UnknownUser;
 import BoardModules.User;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Date;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -61,20 +63,27 @@ public class AdminGUI extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         ownBoardLabel = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        boardListOutput = new javax.swing.JTextArea();
         jScrollPane2 = new javax.swing.JScrollPane();
         readMessageField = new javax.swing.JTextArea();
         dropdownOnlineBoards = new javax.swing.JComboBox<>();
         transfereMessage = new javax.swing.JButton();
-        transfereMessageNumber = new javax.swing.JTextField();
+        transfereMsgNumberInput = new javax.swing.JTextField();
         createUserButton = new javax.swing.JButton();
         createVGButton = new javax.swing.JButton();
-        newVGName = new javax.swing.JTextField();
+        newVGNameInput = new javax.swing.JTextField();
         loginVGButton = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         refreshButton = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        sendMessageField = new javax.swing.JTextArea();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        newUserNameInput = new javax.swing.JTextField();
+        jLabel10 = new javax.swing.JLabel();
 
         loginDialog.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         loginDialog.setAlwaysOnTop(true);
@@ -177,30 +186,68 @@ public class AdminGUI extends javax.swing.JFrame {
         ownBoardLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         ownBoardLabel.setText("eigene Tafel");
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jTextArea1.setMaximumSize(new java.awt.Dimension(164, 94));
-        jTextArea1.setMinimumSize(new java.awt.Dimension(164, 94));
-        jScrollPane1.setViewportView(jTextArea1);
+        boardListOutput.setEditable(false);
+        boardListOutput.setColumns(20);
+        boardListOutput.setRows(5);
+        boardListOutput.setMaximumSize(new java.awt.Dimension(164, 94));
+        boardListOutput.setMinimumSize(new java.awt.Dimension(164, 94));
+        jScrollPane1.setViewportView(boardListOutput);
 
+        readMessageField.setEditable(false);
         readMessageField.setColumns(20);
         readMessageField.setRows(5);
         jScrollPane2.setViewportView(readMessageField);
 
-        dropdownOnlineBoards.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Aktive Tafel waehlen" }));
+        dropdownOnlineBoards.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Bitte Tafel aktuallisieren" }));
 
         transfereMessage.setText("Msg Nr -> Tafel");
+        transfereMessage.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                transfereMessageActionPerformed(evt);
+            }
+        });
 
-        transfereMessageNumber.setText("Msg Nummer angeben");
+        transfereMsgNumberInput.setText("Msg Nummer angeben");
+        transfereMsgNumberInput.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                transfereMsgNumberInputFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                transfereMsgNumberInputFocusLost(evt);
+            }
+        });
 
         createUserButton.setText("neuen Benutzer anlegen");
+        createUserButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                createUserButtonActionPerformed(evt);
+            }
+        });
 
         createVGButton.setText("erstelle VG");
+        createVGButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                createVGButtonActionPerformed(evt);
+            }
+        });
 
-        newVGName.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        newVGName.setText("VG Namen eingeben");
+        newVGNameInput.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        newVGNameInput.setText("VG-Namen eingeben");
+        newVGNameInput.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                newVGNameInputFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                newVGNameInputFocusLost(evt);
+            }
+        });
 
         loginVGButton.setText("login ausgewaehlte VG");
+        loginVGButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                loginVGButtonActionPerformed(evt);
+            }
+        });
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -215,10 +262,44 @@ public class AdminGUI extends javax.swing.JFrame {
         });
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2.setText("Virtuelle Gruppe");
 
-        jLabel7.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel7.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel7.setText("<---");
+
+        jButton1.setText("an eigene Tafel senden");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        sendMessageField.setColumns(20);
+        sendMessageField.setRows(5);
+        jScrollPane3.setViewportView(sendMessageField);
+
+        jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel8.setText("Msg Nr:");
+
+        jLabel9.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel9.setText("Verwaltung");
+
+        newUserNameInput.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        newUserNameInput.setText("Name des neuen Benutzers");
+        newUserNameInput.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                newUserNameInputFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                newUserNameInputFocusLost(evt);
+            }
+        });
+
+        jLabel10.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel10.setText("Name des neuen Nutzers:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -227,33 +308,41 @@ public class AdminGUI extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(ownBoardLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(transfereMessageNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(26, 26, 26)
-                                .addComponent(transfereMessage, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jScrollPane2)
-                            .addComponent(ownBoardLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(refreshButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(dropdownOnlineBoards, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE))
-                        .addGap(8, 8, 8)
-                        .addComponent(jLabel7)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(newVGName, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(createVGButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(loginVGButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(20, 20, 20))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(createUserButton, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                                .addGap(0, 192, Short.MAX_VALUE)
+                                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(transfereMsgNumberInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane3))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(transfereMessage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(refreshButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)
+                    .addComponent(dropdownOnlineBoards, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel7)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(loginVGButton, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(createUserButton)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(newUserNameInput, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(newVGNameInput, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(createVGButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addGap(42, 42, 42))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -262,33 +351,45 @@ public class AdminGUI extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ownBoardLabel)
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2))
+                    .addComponent(jLabel9))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(refreshButton, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(jLabel10)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(newUserNameInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(createUserButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jLabel3)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(newVGName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(newVGNameInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(createVGButton)))
+                                .addComponent(createVGButton)
+                                .addGap(27, 27, 27)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(transfereMsgNumberInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(dropdownOnlineBoards, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(transfereMessage, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(loginVGButton)
+                            .addComponent(jLabel7)
+                            .addComponent(jLabel8))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(refreshButton, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(10, 10, 10))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(dropdownOnlineBoards, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(transfereMessage, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(transfereMessageNumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(loginVGButton)
-                    .addComponent(jLabel7))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(createUserButton)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap())
         );
 
@@ -296,7 +397,22 @@ public class AdminGUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshButtonActionPerformed
-        // TODO add your handling code here:
+        //TODO Kommentar entfernen und tests entfernen wenn implementiert
+        
+        //virtualGrpList = adminServiceObj.getAllVirtualGroups();
+  
+        //TESTEINGABEN
+        String[] testVGs = {"VG", "VGtest"};
+        virtualGrpList = testVGs;
+        //TESTEINGABEN ENDE
+        
+        boardListOutput.setText("");
+        for (String virtualGrpList1 : virtualGrpList) {
+            boardListOutput.append(virtualGrpList1);
+            boardListOutput.append("\n");
+        }
+        
+        dropdownOnlineBoards.setModel(new javax.swing.DefaultComboBoxModel<>(virtualGrpList));   
     }//GEN-LAST:event_refreshButtonActionPerformed
 
     private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
@@ -316,6 +432,86 @@ public class AdminGUI extends javax.swing.JFrame {
         //GUI
         this.setEnabled(false);
     }//GEN-LAST:event_loginDialogWindowOpened
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+
+        //Nachricht Senden
+        try{
+        boardServiceObj.sendMessage(admin, new Message(sendMessageField.getText(), admin.name, new Date().toString()), "");
+        } catch (DestinationUnreachable ex) {
+            Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (UnknownUser ex) {
+            Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        //TODO Eingehende Nachrichten Anzeige
+        //Verruebergehende Ausgabe
+        readMessageField.append(sendMessageField.getText());
+        readMessageField.append("\n");
+        sendMessageField.setText("");
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void transfereMsgNumberInputFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_transfereMsgNumberInputFocusGained
+        transfereMsgNumberInput.setText("");
+    }//GEN-LAST:event_transfereMsgNumberInputFocusGained
+
+    private void transfereMsgNumberInputFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_transfereMsgNumberInputFocusLost
+        if ("".equals(transfereMsgNumberInput.getText())){
+            transfereMsgNumberInput.setText("Msg Nummer angeben");
+        }
+    }//GEN-LAST:event_transfereMsgNumberInputFocusLost
+
+    private void newVGNameInputFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_newVGNameInputFocusGained
+        newVGNameInput.setText("");
+    }//GEN-LAST:event_newVGNameInputFocusGained
+
+    private void newVGNameInputFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_newVGNameInputFocusLost
+        if ("".equals(newVGNameInput.getText())){
+            newVGNameInput.setText("VG-Namen eingeben");
+        }
+    }//GEN-LAST:event_newVGNameInputFocusLost
+              
+    private void createVGButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createVGButtonActionPerformed
+        adminServiceObj.createVirtualGroup(newVGNameInput.getText());
+    }//GEN-LAST:event_createVGButtonActionPerformed
+
+    private void createUserButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createUserButtonActionPerformed
+        //TODO Namesliste oder throw benötigt?
+        User newUser = new User(newUserNameInput.getText());
+        try{
+        adminServiceObj.createUser(newUser);
+        newUserNameInput.setText("Nutzer erfolgreich erstellt");
+        }catch (Exception e){
+            newUserNameInput.setText("Fehlgeschlagen");
+        }
+        
+    }//GEN-LAST:event_createUserButtonActionPerformed
+
+    private void newUserNameInputFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_newUserNameInputFocusGained
+        newUserNameInput.setText("");
+    }//GEN-LAST:event_newUserNameInputFocusGained
+
+    private void newUserNameInputFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_newUserNameInputFocusLost
+        if ("".equals(newUserNameInput.getText())){
+            newUserNameInput.setText("Name des neuen Benutzers");
+        }
+    }//GEN-LAST:event_newUserNameInputFocusLost
+
+    private void loginVGButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginVGButtonActionPerformed
+        String virtualGrpName = (String) dropdownOnlineBoards.getSelectedItem();
+        adminServiceObj.loginToVirtualGroup(virtualGrpName);
+    }//GEN-LAST:event_loginVGButtonActionPerformed
+
+    private void transfereMessageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_transfereMessageActionPerformed
+        String[] boardName = {dropdownOnlineBoards.getSelectedItem().toString()};
+        int msgNr = Integer.parseInt(transfereMsgNumberInput.getText());
+        try{
+        adminServiceObj.forwardMessageToBoards(boardName,message[msgNr]);
+        transfereMsgNumberInput.setText("Erfolgreich");
+        }catch (DestinationUnreachable ex){
+            transfereMsgNumberInput.setText("Fehlgeschlagen");
+        }
+    }//GEN-LAST:event_transfereMessageActionPerformed
 
     /**
      * @param args the command line arguments
@@ -367,7 +563,7 @@ public class AdminGUI extends javax.swing.JFrame {
             NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
         
             this.adminServiceObj = (AdministrationService) AdministrationServiceHelper.narrow(ncRef.resolve_str(tableID + "/AdminService"));
-
+            this.boardServiceObj = (BoardService) BoardServiceHelper.narrow(ncRef.resolve_str(tableID + "/BoardService"));
             this.viewServiceObj = (ViewService) ViewServiceHelper.narrow(ncRef.resolve_str(tableID + "/ViewService"));
             
             this.admin = new User(adminname);
@@ -384,18 +580,31 @@ public class AdminGUI extends javax.swing.JFrame {
         return worked;
     }
     
-        javax.swing.Timer t = new javax.swing.Timer(1000, new ActionListener() {  
+    javax.swing.Timer t = new javax.swing.Timer(1000, new ActionListener() {  
         @Override
         public void actionPerformed(ActionEvent e) {
+              int counter = 0;
               try{
-              messageCheck = viewServiceObj.getAllMessageByDestination("");
-              if (message != messageCheck){
-                message = messageCheck;  
-                readMessageField.setText("");
-                for (int i = 0; i < message.length; i++){
-                    readMessageField.append(message[i].toString());
-                    readMessageField.append("\n");
-              }
+              if (message != null){
+                messageCheck = viewServiceObj.getAllMessageByDestination("");
+                if (message.length != messageCheck.length){
+                    message = messageCheck;  
+                    readMessageField.setText("");
+                    for (Message message1 : message) {
+                        readMessageField.append(Integer.toString(counter)+": ");
+                        readMessageField.append(message1.toString());
+                        readMessageField.append("\n");
+                        counter++;
+                    }
+                }
+              }else{
+                  message = viewServiceObj.getAllMessageByDestination("");
+                  for (Message message1 : message) {
+                      readMessageField.append(Integer.toString(counter)+": ");
+                      readMessageField.append(message1.toString());
+                      readMessageField.append("\n");
+                      counter++;
+                  }
               }
               }catch (DestinationUnreachable ex){
                   
@@ -407,29 +616,36 @@ public class AdminGUI extends javax.swing.JFrame {
     private javax.swing.JTextField IPInput;
     private javax.swing.JTextField adminBoardInput;
     private javax.swing.JTextField adminNameInput;
+    private javax.swing.JTextArea boardListOutput;
     private javax.swing.JButton createUserButton;
     private javax.swing.JButton createVGButton;
     private javax.swing.JComboBox<String> dropdownOnlineBoards;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JButton loginButton;
     private javax.swing.JDialog loginDialog;
     private javax.swing.JPanel loginPanel;
     private javax.swing.JButton loginVGButton;
-    private javax.swing.JTextField newVGName;
+    private javax.swing.JTextField newUserNameInput;
+    private javax.swing.JTextField newVGNameInput;
     private javax.swing.JLabel ownBoardLabel;
     private javax.swing.JTextArea readMessageField;
     private javax.swing.JButton refreshButton;
+    private javax.swing.JTextArea sendMessageField;
     private javax.swing.JButton transfereMessage;
-    private javax.swing.JTextField transfereMessageNumber;
+    private javax.swing.JTextField transfereMsgNumberInput;
     // End of variables declaration//GEN-END:variables
     private AdministrationService adminServiceObj = null;
     private BoardService boardServiceObj = null;
@@ -437,4 +653,6 @@ public class AdminGUI extends javax.swing.JFrame {
     private User admin = null;
     private Message[] message = null;
     private Message[] messageCheck = null;
+    private String[] virtualGrpList = {"Bitte Tafeln aktuallisieren"};
+    
 }
