@@ -59,6 +59,7 @@ public class AdministrationServiceImpl extends AdministrationServicePOA {
     @Override
     public void loginToVirtualGroup(String vgroupname) {
         try {
+            System.out.println("Logge in eine Virtuelle Gruppe ein");
             VirtualGroupService virtualGroupServiceObj = (VirtualGroupService) VirtualGroupServiceHelper.narrow(ORBAccessControl.getInstance().getNameService().resolve_str(vgroupname + "/VirtualGroupService"));
             virtualGroupServiceObj.addMember(core.getIdentifier(), core.getAllUsers());
             //virtualGroupServiceObj.createBackupOfVirtualGroup(users, messages);
