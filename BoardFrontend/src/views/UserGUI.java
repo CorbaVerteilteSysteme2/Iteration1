@@ -30,6 +30,7 @@ import org.omg.CosNaming.NamingContextPackage.NotFound;
 import BoardModules.BasicServices.*;
 import java.awt.event.*;
 import java.util.Arrays;
+import javax.swing.JOptionPane;
 
 public class UserGUI extends javax.swing.JFrame {
 
@@ -208,21 +209,23 @@ public class UserGUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
     
     /**
+     * Änderung: Destination ist nun die Quelle einer Nachricht
      * @throws DestinationUnreachable
      * @throws UnknownUser 
      */
     private void sendMessageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendMessageActionPerformed
-        String destination;
-        destination = (String) destinationList.getSelectedItem();
+//        String destination;
+//        destination = (String) destinationList.getSelectedItem();
         //if ("eigene Tafel".equals(destination))
         //    destination = "";
         //Nachricht Senden
         try{
-        boardServiceObj.sendMessage(user, new Message(sendMessageField.getText(), user.name, new Date().toString()), destination);
+            boardServiceObj.sendMessage(user, new Message(sendMessageField.getText(), user.name, new Date().toString()), tableID);
         } catch (DestinationUnreachable ex) {
             Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
         } catch (UnknownUser ex) {
-            Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
+            // Fehlerausgabe!
+            JOptionPane.showMessageDialog(null, "Unbekannter Nutzer: " + ex.username);
         }
         
         //TODO Eingehende Nachrichten Anzeige
@@ -299,6 +302,7 @@ public class UserGUI extends javax.swing.JFrame {
     */
     public boolean startUserBoardService(String username, String tableID, String ipAddress){
         boolean worked = false;
+        this.tableID = tableID;
         try {
             ORB _orb;
             Properties props = new Properties();
@@ -380,5 +384,5 @@ public class UserGUI extends javax.swing.JFrame {
     private Message[] message = null;
     private Message[] messageCheck = null;
     //private boolean firstRun = true;
-    //private String tableID = "";
+    private String tableID = "";
 }

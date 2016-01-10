@@ -441,7 +441,7 @@ public class AdminGUI extends javax.swing.JFrame {
 
         //Nachricht Senden
         try{
-        boardServiceObj.sendMessage(admin, new Message(sendMessageField.getText(), admin.name, new Date().toString()), "");
+            boardServiceObj.sendMessage(admin, new Message(sendMessageField.getText(), admin.name, new Date().toString()), tableID);
         } catch (DestinationUnreachable ex) {
             Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
         } catch (UnknownUser ex) {
@@ -554,6 +554,7 @@ public class AdminGUI extends javax.swing.JFrame {
 
     public boolean startAdminBoardService(String adminname, String tableID, String ipAddress){
         boolean worked = false;
+        this.tableID = tableID;
         try {
             ORB _orb;
             Properties props = new Properties();
@@ -659,6 +660,7 @@ public class AdminGUI extends javax.swing.JFrame {
     private Message[] message = null;
     private Message[] messageCheck = null;
     private String[] virtualGrpList = {"Bitte Tafeln aktuallisieren"};
+    private String tableID = "";
 
     /**
      * Diese Methode erstellt eine Liste von allen Boards und VGroups.
