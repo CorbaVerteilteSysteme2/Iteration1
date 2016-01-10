@@ -28,7 +28,7 @@ public class BoardCoreApplication {
                 // Testausführung!
                 System.out.println("Test-Ausführung!");
                 ORBAccessControl.getInstance().setORB("1050", "localhost");
-                core = new BoardCore("Test-Tafel");
+                core = new BoardCore("Test-Tafel2");
             }
             ORBAccessControl.getInstance().run();
             //core.run();

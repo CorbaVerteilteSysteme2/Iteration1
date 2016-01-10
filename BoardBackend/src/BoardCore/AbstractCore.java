@@ -18,6 +18,7 @@ import BoardModules.Message;
 import BoardModules.User;
 import MessageStorage.MessageParser;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.omg.CosNaming.NameComponent;
@@ -41,7 +42,8 @@ public abstract class AbstractCore {
     protected AdministrationServiceImpl _adminService;
     protected ViewServiceImpl _viewService;
     
-    private ArrayList<Message> messages;
+    private ArrayList<Message> localMessages;
+    //private HashMap<String, ArrayList<Message>> receivedForwardedMessages;
     
     private MessageParser messageParser;
     
@@ -49,7 +51,8 @@ public abstract class AbstractCore {
         try {
             this._identifier = identifier;
             this.messageParser = new MessageParser(identifier);
-            this.messages = new ArrayList<>();
+            this.localMessages = new ArrayList<>();
+            //this.receivedForwardedMessages = new HashMap<String, ArrayList<Message>>();
             //getAllMessagesFromMessageParser();
             
             this._boardService = new BoardServiceImpl(this);
@@ -117,22 +120,22 @@ public abstract class AbstractCore {
     }
     
     public synchronized void addMessage(Message msg) {
-        messages.add(msg);
+        localMessages.add(msg);
         //messageParser.WriteMessageToTextfile(msg);
         _viewService.setState(true);
         
     }
     
      public synchronized void removeMessage(Message msg) {
-        this.messages.remove(msg);
+        this.localMessages.remove(msg);
         _viewService.setState(true);
     }
      
     public synchronized Message[] getAllMessages() {
-        Message msgs[] = new Message[messages.size()];
+        Message msgs[] = new Message[localMessages.size()];
         
-        for (int i = 0; i < messages.size(); i++) {
-            msgs[i] = messages.get(i);
+        for (int i = 0; i < localMessages.size(); i++) {
+            msgs[i] = localMessages.get(i);
         }
         
         return msgs;
@@ -143,7 +146,7 @@ public abstract class AbstractCore {
     public abstract boolean checkUser(User user);
     
     private void getAllMessagesFromMessageParser() {
-        messages = messageParser.ReadMessageLogFromTextfile(_identifier);
+        localMessages = messageParser.ReadMessageLogFromTextfile(_identifier);
     }
     
     public String getIdentifier() {
@@ -151,4 +154,10 @@ public abstract class AbstractCore {
     }
 
     public abstract User[] getAllUsers();
+    
+    /* nur als Idee (TM) - lokale Nachrichten und Nachrichten von anderen Tafeln trennen
+    public void addForwardedMessage(String boardname, Message message) {
+        
+    }
+    */
 }

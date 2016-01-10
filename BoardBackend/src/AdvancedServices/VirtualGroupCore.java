@@ -74,7 +74,18 @@ public class VirtualGroupCore extends AbstractCore {
 
     @Override
     public boolean checkUser(User user) {
-        return getUsers().contains(user);
+        // scheint nicht zu funktionieren
+        System.out.println("checkUser");
+        for (VirtualGroupMember member : members) {
+            for (User u : member.getUsers()) {
+                System.out.println(user.name);
+                if (user.name.equals(u.name)) {
+                    
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     @Override

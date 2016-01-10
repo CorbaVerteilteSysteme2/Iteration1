@@ -28,25 +28,28 @@ public class BoardServiceImpl extends BoardServicePOA {
      * 
      * @param user
      * @param message
-     * @param destination depricated
+     * @param source (ehemals destination) gibt die Quelle der nachricht an
      * @throws DestinationUnreachable
      * @throws UnknownUser 
      */
     @Override
-    public void sendMessage(User user, Message message, String destination) throws DestinationUnreachable, UnknownUser {
-        // Benutzer überprüfen
-        if (!core.checkUser(user)) {
-            throw new UnknownUser(user.name);
+    public void sendMessage(User user, Message message, String source) throws DestinationUnreachable, UnknownUser {
+        System.out.println("Einkommende Nachricht...");
+        if (source.equals(core.getIdentifier())) {
+            // in diesem Fall überträgt ein Benutzer der lokalen Tafel eine Nachricht 
+
+            // Benutzer überprüfen
+            if (!core.checkUser(user)) {
+                throw new UnknownUser(user.name);
+            }
+            System.out.println("Nachricht erhalten von " + message.author + ": " + message.content + ", vom " + message.timestamp);
+            core.addMessage(message);
+        } else {
+            // hier handelt es sich bei der Nachricht um eine weitergeleitete Nachricht
+            System.out.println("Nachricht erhalten von " + source + "-" + message.author + ": " + message.content + ", vom " + message.timestamp);
+            message.author = source + message.author;
+            core.addMessage(message);
         }
-        System.out.println("Nachricht erhalten von " + message.author + ": " + message.content + ", vom " + message.timestamp);
-        // Ziel unterscheiden zwischen lokale Tafel oder VirtualBoardService
-        // destination == "" --> Ziel ist die lokale Tafel! 
-//        if (destination.equals("")) {
-//            MessageStorage.getInstance().addMessage(message);
-//        } else {
-//            // hier wird an eine virtuelle Gruppe gesendet
-//        }
-        core.addMessage(message);
     }
 
     /**

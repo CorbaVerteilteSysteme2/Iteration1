@@ -25,4 +25,8 @@ public class VirtualGroupMember {
     public ArrayList<User> getUsers() {
         return this.users;
     }
+    
+    public String getIdentifier() {
+        return this.identifier;
+    }
 }

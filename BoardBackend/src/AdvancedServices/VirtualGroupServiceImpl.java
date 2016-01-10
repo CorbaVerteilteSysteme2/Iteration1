@@ -29,6 +29,8 @@ public class VirtualGroupServiceImpl extends VirtualGroupServicePOA {
         
         for (User user : users) {
             user.name = boardname + "." + user.name;
+            System.out.println(user.name);
+            userList.add(user);
         }
         
         this.core.addMember(boardname, userList);
