@@ -5,6 +5,8 @@
  */
 package views;
 
+import BoardModules.AdvancedServices.VirtualGroupService;
+import BoardModules.AdvancedServices.VirtualGroupServiceHelper;
 import BoardModules.BasicServices.AdministrationService;
 import BoardModules.BasicServices.AdministrationServiceHelper;
 import BoardModules.BasicServices.BoardService;
@@ -17,12 +19,16 @@ import BoardModules.UnknownUser;
 import BoardModules.User;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.omg.CORBA.ORB;
 import org.omg.CORBA.ORBPackage.InvalidName;
+import org.omg.CosNaming.Binding;
+import org.omg.CosNaming.BindingIteratorHolder;
+import org.omg.CosNaming.BindingListHolder;
 import org.omg.CosNaming.NamingContextExt;
 import org.omg.CosNaming.NamingContextExtHelper;
 import org.omg.CosNaming.NamingContextPackage.CannotProceed;
@@ -87,7 +93,6 @@ public class AdminGUI extends javax.swing.JFrame {
 
         loginDialog.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         loginDialog.setAlwaysOnTop(true);
-        loginDialog.setMaximumSize(new java.awt.Dimension(400, 300));
         loginDialog.setMinimumSize(new java.awt.Dimension(400, 300));
         loginDialog.addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowOpened(java.awt.event.WindowEvent evt) {
@@ -379,13 +384,14 @@ public class AdminGUI extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(createVGButton)
                                 .addGap(27, 27, 27)))
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(transfereMsgNumberInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(dropdownOnlineBoards, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(transfereMessage, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(loginVGButton)
-                            .addComponent(jLabel7)
-                            .addComponent(jLabel8))
+                            .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(transfereMsgNumberInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(dropdownOnlineBoards, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(loginVGButton)
+                                .addComponent(jLabel7)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
@@ -397,18 +403,16 @@ public class AdminGUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshButtonActionPerformed
-        //TODO Kommentar entfernen und tests entfernen wenn implementiert
-        
-        //virtualGrpList = adminServiceObj.getAllVirtualGroups();
+        /*
+        hier müssen noch die besprochenen Anpassungen gemacht werden (2 Comboboxen)
+        */
+        virtualGrpList = adminServiceObj.getAllVirtualGroups();
   
-        //TESTEINGABEN
-        String[] testVGs = {"VG", "VGtest"};
-        virtualGrpList = testVGs;
-        //TESTEINGABEN ENDE
+        ArrayList<String> boardList = getAllBoardsAndVirtualGroups();
         
         boardListOutput.setText("");
-        for (String virtualGrpList1 : virtualGrpList) {
-            boardListOutput.append(virtualGrpList1);
+        for (String boardname : boardList) {
+            boardListOutput.append(boardname);
             boardListOutput.append("\n");
         }
         
@@ -560,11 +564,11 @@ public class AdminGUI extends javax.swing.JFrame {
             _orb = ORB.init(new String[0], props);
             
             org.omg.CORBA.Object objRef = _orb.resolve_initial_references("NameService");
-            NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
+            nameService = NamingContextExtHelper.narrow(objRef);
         
-            this.adminServiceObj = (AdministrationService) AdministrationServiceHelper.narrow(ncRef.resolve_str(tableID + "/AdminService"));
-            this.boardServiceObj = (BoardService) BoardServiceHelper.narrow(ncRef.resolve_str(tableID + "/BoardService"));
-            this.viewServiceObj = (ViewService) ViewServiceHelper.narrow(ncRef.resolve_str(tableID + "/ViewService"));
+            this.adminServiceObj = (AdministrationService) AdministrationServiceHelper.narrow(nameService.resolve_str(tableID + "/AdminService"));
+            this.boardServiceObj = (BoardService) BoardServiceHelper.narrow(nameService.resolve_str(tableID + "/BoardService"));
+            this.viewServiceObj = (ViewService) ViewServiceHelper.narrow(nameService.resolve_str(tableID + "/ViewService"));
             
             this.admin = new User(adminname);
             worked = true;
@@ -647,6 +651,7 @@ public class AdminGUI extends javax.swing.JFrame {
     private javax.swing.JButton transfereMessage;
     private javax.swing.JTextField transfereMsgNumberInput;
     // End of variables declaration//GEN-END:variables
+    private NamingContextExt nameService = null; // Referenz auf den NameService
     private AdministrationService adminServiceObj = null;
     private BoardService boardServiceObj = null;
     private ViewService viewServiceObj = null;
@@ -654,5 +659,38 @@ public class AdminGUI extends javax.swing.JFrame {
     private Message[] message = null;
     private Message[] messageCheck = null;
     private String[] virtualGrpList = {"Bitte Tafeln aktuallisieren"};
+
+    /**
+     * Diese Methode erstellt eine Liste von allen Boards und VGroups.
+     * Zu erkennen sind diese am BoardService.
+     * @return 
+     */
+    private ArrayList<String> getAllBoardsAndVirtualGroups() {
+        int batchSize = 100;
+        ArrayList<String> boardList = new ArrayList<>();
+        BindingListHolder bList = new BindingListHolder();
+        BindingIteratorHolder bIterator = new BindingIteratorHolder();
+
+        nameService.list(batchSize, bList, bIterator);
+        
+        for (Binding value : bList.value) {
+            String boardname = value.binding_name[0].id;
+            //System.err.println(boardname);
+            try {
+                BoardService boardService = (BoardService) BoardServiceHelper.narrow(nameService.resolve_str(boardname + "/BoardService"));
+                
+                //VirtualGroupService virtualGroupServiceObj = (VirtualGroupService) VirtualGroupServiceHelper.narrow(nameService.resolve_str(boardname + "/VirtualGroupService"));
+                boardList.add(boardname);
+            } catch (NotFound ex) {
+                
+                
+            } catch (CannotProceed ex) {
+                
+            } catch (org.omg.CosNaming.NamingContextPackage.InvalidName ex) {
+                
+            }
+        }
+        return boardList;
+    }
     
 }
