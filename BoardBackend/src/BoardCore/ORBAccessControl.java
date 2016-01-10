@@ -65,5 +65,9 @@ public class ORBAccessControl {
             _orb.run();
         }
     }
+    
+    public void shutdown() {
+        this._orb.shutdown(false);
+    }
 }
  

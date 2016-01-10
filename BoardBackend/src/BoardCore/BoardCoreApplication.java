@@ -5,10 +5,6 @@
  */
 package BoardCore;
 
-import org.omg.CosNaming.NamingContextPackage.CannotProceed;
-import org.omg.CosNaming.NamingContextPackage.InvalidName;
-import org.omg.PortableServer.POAManagerPackage.AdapterInactive;
-
 /**
  * 
  * 
@@ -16,18 +12,32 @@ import org.omg.PortableServer.POAManagerPackage.AdapterInactive;
  */
 public class BoardCoreApplication {
     
-    public static void main(String[] args) throws RuntimeException, CannotProceed, InvalidName, org.omg.CORBA.ORBPackage.InvalidName, AdapterInactive {
-        BoardCore core = null;
-        
-        if (args.length == 2) {
-            ORBAccessControl.getInstance().setORB("1050", args[0]);
-            core = new BoardCore(args[1]);
-        } else {
-            // Testausführung!
-            ORBAccessControl.getInstance().setORB("1050", "localhost");
-            core = new BoardCore("Test-Tafel");
+    public static void main(String[] args) {
+        try {
+            System.out.println("BoardCore wird gestartet...");
+            BoardCore core = null;
+
+            int port = 1050;
+            
+            if (args.length == 2) {
+                System.out.println("Port: " + port + "; Host: " + args[0]);
+                System.out.println("Tafel-Identifier: " + args[1]);
+                ORBAccessControl.getInstance().setORB(Integer.toString(port), args[0]);
+                core = new BoardCore(args[1]);
+            } else {
+                // Testausführung!
+                System.out.println("Test-Ausführung!");
+                ORBAccessControl.getInstance().setORB("1050", "localhost");
+                core = new BoardCore("Test-Tafel");
+            }
+            ORBAccessControl.getInstance().run();
+            //core.run();
+        } catch (Exception ex) {
+            System.err.println("Fehler: " + ex.getMessage());
+        } finally {
+//            System.out.println("BoardCore wird heruntergefahren...");
+//            ORBAccessControl.getInstance().shutdown();
+//            System.out.println("Board wurde beendet.");
         }
-        ORBAccessControl.getInstance().run();
-        //core.run();
     }
 }

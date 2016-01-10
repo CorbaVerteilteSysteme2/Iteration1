@@ -74,7 +74,37 @@ public class AdministrationServiceImpl extends AdministrationServicePOA {
 
     @Override
     public String[] getAllVirtualGroups() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        int batchSize = 100;
+        ArrayList<String> vgroupList = new ArrayList<>();
+        
+        BindingListHolder bList = new BindingListHolder();
+        BindingIteratorHolder bIterator = new BindingIteratorHolder();
+
+        ORBAccessControl.getInstance().getNameService().list(batchSize, bList, bIterator);
+        
+        for (Binding value : bList.value) {
+            String boardname = value.binding_name[0].id;
+            
+            try {
+                VirtualGroupService virtualGroupServiceObj = (VirtualGroupService) VirtualGroupServiceHelper.narrow(ORBAccessControl.getInstance().getNameService().resolve_str(boardname + "/VirtualGroupService"));
+                vgroupList.add(boardname);
+            } catch (NotFound ex) {
+                
+                
+            } catch (CannotProceed ex) {
+                Logger.getLogger(AdministrationServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (InvalidName ex) {
+                Logger.getLogger(AdministrationServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            
+        }
+        
+        String result[] = new String[vgroupList.size()];
+        
+        vgroupList.toArray(result);
+            
+        return result;
     }
 
     @Override
@@ -97,7 +127,7 @@ public class AdministrationServiceImpl extends AdministrationServicePOA {
                 if (strListBoards.contains(boardname)) {
                     System.out.println(value.binding_name[0].id);
                     BoardService boardServiceObj = (BoardService) BoardServiceHelper.narrow(ORBAccessControl.getInstance().getNameService().resolve_str(boardname + "/BoardService"));
-                    boardServiceObj.sendMessage(new User("."), message, "");
+                    boardServiceObj.sendMessage(new User("."), message, ""); //TODO
                 } else {
                     System.err.println("Tafel existiert nicht: " + boardname + "!");
                 }
