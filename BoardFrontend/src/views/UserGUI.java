@@ -95,7 +95,7 @@ public class UserGUI extends javax.swing.JFrame {
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel3.setText("Benutzername:");
 
-        userBoardInput.setText("Test-Tafel");
+        userBoardInput.setText("Test-Tafel2");
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -215,22 +215,20 @@ public class UserGUI extends javax.swing.JFrame {
      * @throws UnknownUser 
      */
     private void sendMessageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendMessageActionPerformed
-//        String destination;
-//        destination = (String) destinationList.getSelectedItem();
-        //if ("eigene Tafel".equals(destination))
-        //    destination = "";
-        //Nachricht Senden
-        try{
-            boardServiceObj.sendMessage(user, new Message(sendMessageField.getText(), user.name, new Date().toString()), tableID);
-        } catch (DestinationUnreachable ex) {
-            Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (UnknownUser ex) {
-            // Fehlerausgabe!
-            JOptionPane.showMessageDialog(null, "Unbekannter Nutzer: " + ex.username);
-        }
+        if ("".equals(sendMessageField.getText())){
+            JOptionPane.showMessageDialog(null,"Nachrichten müssen einen Inhalt haben!","Warnung",JOptionPane.WARNING_MESSAGE);           
+        }else{
+            try{
         
-        //TODO Eingehende Nachrichten Anzeige
-        //Verruebergehende Ausgabe
+                boardServiceObj.sendMessage(user, new Message(sendMessageField.getText(), user.name, new Date().toString()), tableID);
+            } catch (DestinationUnreachable ex) {
+                Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (UnknownUser ex) {
+                Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(null,"Unbekannter Nutzer!","Warnung",JOptionPane.WARNING_MESSAGE);           
+
+            }
+        }
         readMessageField.append(sendMessageField.getText());
         readMessageField.append("\n");
         sendMessageField.setText("");
@@ -320,16 +318,23 @@ public class UserGUI extends javax.swing.JFrame {
             this.viewServiceObj = (ViewService) ViewServiceHelper.narrow(ncRef.resolve_str(tableID + "/" + BoardConfiguration.VIEW_SERVICE_NAME));
             
             this.user = new User(username);
+            this.boardServiceObj.checkUser(user);
             worked = true;
+        } catch (UnknownUser ex){
+            JOptionPane.showMessageDialog(null,"Benutzer wurde nicht gefunden!","Warnung",JOptionPane.WARNING_MESSAGE);     
         } catch (InvalidName ex) {
             Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
         } catch (NotFound ex) {
             Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null,"Tafel wurde nicht gefunden!","Warnung",JOptionPane.WARNING_MESSAGE);
         } catch (CannotProceed ex) {
             Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
+
         } catch (org.omg.CosNaming.NamingContextPackage.InvalidName ex) {
             Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
+
         }
+
         return worked;
     }    
  
