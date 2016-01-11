@@ -11,6 +11,7 @@ package views;
  * @version 0.1
  * @date 08.01.2016
  */
+import BoardConfiguration.BoardConfiguration;
 import BoardModules.BasicServices.BoardService;
 import BoardModules.BasicServices.BoardServiceHelper;
 import BoardModules.DestinationUnreachable;
@@ -307,16 +308,16 @@ public class UserGUI extends javax.swing.JFrame {
             ORB _orb;
             Properties props = new Properties();
             
-            props.put("org.omg.CORBA.ORBInitialPort", "1050");
+            props.put("org.omg.CORBA.ORBInitialPort", BoardConfiguration.ORB_PORT);
             props.put("org.omg.CORBA.ORBInitialHost", ipAddress);
             
             _orb = ORB.init(new String[0], props);
             
-            org.omg.CORBA.Object objRef = _orb.resolve_initial_references("NameService");
+            org.omg.CORBA.Object objRef = _orb.resolve_initial_references(BoardConfiguration.NAMESERVICE);
             NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
         
-            this.boardServiceObj = (BoardService) BoardServiceHelper.narrow(ncRef.resolve_str(tableID + "/BoardService"));
-            this.viewServiceObj = (ViewService) ViewServiceHelper.narrow(ncRef.resolve_str(tableID + "/ViewService"));
+            this.boardServiceObj = (BoardService) BoardServiceHelper.narrow(ncRef.resolve_str(tableID + "/" + BoardConfiguration.BOARD_SERVICE_NAME));
+            this.viewServiceObj = (ViewService) ViewServiceHelper.narrow(ncRef.resolve_str(tableID + "/" + BoardConfiguration.VIEW_SERVICE_NAME));
             
             this.user = new User(username);
             worked = true;

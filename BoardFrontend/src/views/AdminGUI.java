@@ -5,6 +5,7 @@
  */
 package views;
 
+import BoardConfiguration.BoardConfiguration;
 import BoardModules.AdvancedServices.VirtualGroupService;
 import BoardModules.AdvancedServices.VirtualGroupServiceHelper;
 import BoardModules.BasicServices.AdministrationService;
@@ -599,17 +600,17 @@ public class AdminGUI extends javax.swing.JFrame {
             ORB _orb;
             Properties props = new Properties();
             
-            props.put("org.omg.CORBA.ORBInitialPort", "1050");
+            props.put("org.omg.CORBA.ORBInitialPort", BoardConfiguration.ORB_PORT);
             props.put("org.omg.CORBA.ORBInitialHost", ipAddress);
             
             _orb = ORB.init(new String[0], props);
             
-            org.omg.CORBA.Object objRef = _orb.resolve_initial_references("NameService");
+            org.omg.CORBA.Object objRef = _orb.resolve_initial_references(BoardConfiguration.NAMESERVICE);
             nameService = NamingContextExtHelper.narrow(objRef);
         
-            this.adminServiceObj = (AdministrationService) AdministrationServiceHelper.narrow(nameService.resolve_str(tableID + "/AdminService"));
-            this.boardServiceObj = (BoardService) BoardServiceHelper.narrow(nameService.resolve_str(tableID + "/BoardService"));
-            this.viewServiceObj = (ViewService) ViewServiceHelper.narrow(nameService.resolve_str(tableID + "/ViewService"));
+            this.adminServiceObj = (AdministrationService) AdministrationServiceHelper.narrow(nameService.resolve_str(tableID + "/" + BoardConfiguration.ADMIN_SERVICE_NAME));
+            this.boardServiceObj = (BoardService) BoardServiceHelper.narrow(nameService.resolve_str(tableID + "/" + BoardConfiguration.BOARD_SERVICE_NAME));
+            this.viewServiceObj = (ViewService) ViewServiceHelper.narrow(nameService.resolve_str(tableID + "/" + BoardConfiguration.VIEW_SERVICE_NAME));
             
             this.admin = new User(adminname);
             worked = true;
@@ -646,7 +647,7 @@ public class AdminGUI extends javax.swing.JFrame {
             String boardname = value.binding_name[0].id;
             //System.err.println(boardname);
             try {
-                BoardService boardService = (BoardService) BoardServiceHelper.narrow(nameService.resolve_str(boardname + "/BoardService"));
+                BoardService boardService = (BoardService) BoardServiceHelper.narrow(nameService.resolve_str(boardname + "/" + BoardConfiguration.BOARD_SERVICE_NAME));
                 
                 //VirtualGroupService virtualGroupServiceObj = (VirtualGroupService) VirtualGroupServiceHelper.narrow(nameService.resolve_str(boardname + "/VirtualGroupService"));
                 boardList.add(boardname);
