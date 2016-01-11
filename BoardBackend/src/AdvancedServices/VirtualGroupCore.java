@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.omg.CosNaming.NameComponent;
+import org.omg.CosNaming.NamingContextExt;
 import org.omg.CosNaming.NamingContextPackage.AlreadyBound;
 import org.omg.CosNaming.NamingContextPackage.CannotProceed;
 import org.omg.CosNaming.NamingContextPackage.InvalidName;
@@ -27,12 +28,13 @@ import org.omg.PortableServer.POAPackage.WrongPolicy;
 public class VirtualGroupCore extends AbstractCore {
     
     private ArrayList<VirtualGroupMember> members;
-    
+    private VirtualGroupServiceImpl _virtualGroupService;
+      
     public VirtualGroupCore(String groupname) throws CannotProceed, InvalidName, NotFound, AlreadyBound {
         super(groupname);
         members = new ArrayList<>();
         try {
-            VirtualGroupServiceImpl _virtualGroupService = new VirtualGroupServiceImpl(this);
+            _virtualGroupService = new VirtualGroupServiceImpl(this);
             
             org.omg.CORBA.Object virtualGroupServiceRef = ORBAccessControl.getInstance().getRootPOA().servant_to_reference(_virtualGroupService);
             
@@ -50,6 +52,15 @@ public class VirtualGroupCore extends AbstractCore {
             Logger.getLogger(VirtualGroupCore.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+    /*
+    @Override
+    protected void finalize() throws Throwable {
+        super.finalize(); //To change body of generated methods, choose Tools | Templates.
+        this.closeCore();
+    }
+*/
+    
     
     public void addMember(String boardname, ArrayList<User> users) {
         this.members.add(new VirtualGroupMember(boardname, users));
@@ -98,5 +109,27 @@ public class VirtualGroupCore extends AbstractCore {
         }
         
         return users;
+    }
+    
+    @Override 
+    public void closeCore() {
+        super.closeCore();
+        
+        NamingContextExt nameService = ORBAccessControl.getInstance().getNameService();
+        
+        NameComponent boardNC = new NameComponent(_identifier, "");
+
+        if (_virtualGroupService != null) {
+            try {
+                nameService.unbind(new NameComponent[] { boardNC, new NameComponent("VirtualGroupService", "")});
+            } catch (NotFound ex) {
+                Logger.getLogger(VirtualGroupCore.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (CannotProceed ex) {
+                Logger.getLogger(VirtualGroupCore.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (InvalidName ex) {
+                Logger.getLogger(VirtualGroupCore.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        }
     }
 }

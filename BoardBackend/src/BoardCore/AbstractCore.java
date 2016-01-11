@@ -23,6 +23,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.omg.CosNaming.NameComponent;
 import org.omg.CosNaming.NamingContext;
+import org.omg.CosNaming.NamingContextExt;
 import org.omg.CosNaming.NamingContextHelper;
 import org.omg.CosNaming.NamingContextPackage.AlreadyBound;
 import org.omg.CosNaming.NamingContextPackage.CannotProceed;
@@ -80,6 +81,14 @@ public abstract class AbstractCore {
             registerObjWithNameService(ORBAccessControl.getInstance().getNameService(), path1, boardServiceRef);
             registerObjWithNameService(ORBAccessControl.getInstance().getNameService(), path2, adminServiceRef);
             registerObjWithNameService(ORBAccessControl.getInstance().getNameService(), path3, viewServiceRef);
+       
+            /*
+            ORBAccessControl.getInstance().getNameService().unbind(path1);
+            ORBAccessControl.getInstance().getNameService().unbind(path2);
+            ORBAccessControl.getInstance().getNameService().unbind(path3);
+            ORBAccessControl.getInstance().getNameService().unbind(new NameComponent[]{ boardNC });
+            */
+            
             
         } catch (ServantNotActive ex) {
             Logger.getLogger(AbstractCore.class.getName()).log(Level.SEVERE, null, ex);
@@ -124,6 +133,46 @@ public abstract class AbstractCore {
         //messageParser.WriteMessageToTextfile(msg);
         _viewService.setState(true);
         
+    }
+    
+    protected void closeCore() {
+        NamingContextExt nameService = ORBAccessControl.getInstance().getNameService();
+        
+        NameComponent boardNC = new NameComponent(_identifier, "");
+        
+        if (_viewService != null) {
+            try {
+                nameService.unbind(new NameComponent[] { boardNC, new NameComponent("ViewService", "")});
+            } catch (NotFound ex) {
+                Logger.getLogger(AbstractCore.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (CannotProceed ex) {
+                Logger.getLogger(AbstractCore.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (InvalidName ex) {
+                Logger.getLogger(AbstractCore.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        if (_boardService != null) {
+            try {
+                nameService.unbind(new NameComponent[] { boardNC, new NameComponent("BoardService", "")});
+            } catch (NotFound ex) {
+                Logger.getLogger(AbstractCore.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (CannotProceed ex) {
+                Logger.getLogger(AbstractCore.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (InvalidName ex) {
+                Logger.getLogger(AbstractCore.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        if (_adminService != null) {
+            try {
+                nameService.unbind(new NameComponent[] { boardNC, new NameComponent("AdminService", "")});
+            } catch (NotFound ex) {
+                Logger.getLogger(AbstractCore.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (CannotProceed ex) {
+                Logger.getLogger(AbstractCore.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (InvalidName ex) {
+                Logger.getLogger(AbstractCore.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
     
      public synchronized void removeMessage(Message msg) {

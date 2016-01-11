@@ -5,7 +5,13 @@ package BoardCore;
 
 import BoardModules.User;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.omg.CosNaming.NameComponent;
+import org.omg.CosNaming.NamingContextExt;
 import org.omg.CosNaming.NamingContextPackage.CannotProceed;
+import org.omg.CosNaming.NamingContextPackage.InvalidName;
+import org.omg.CosNaming.NamingContextPackage.NotFound;
 
 /**
  * Der BoardCore ist das zentrale Element einer Tafel.
@@ -53,5 +59,21 @@ public class BoardCore extends AbstractCore {
         }
         
         return userList;
+    }
+    
+    @Override
+    public void closeCore() {
+        super.closeCore();
+
+        NameComponent boardNC = new NameComponent(_identifier, "");
+        try {
+            ORBAccessControl.getInstance().getNameService().unbind(new NameComponent[] { boardNC });
+        } catch (NotFound ex) {
+            Logger.getLogger(BoardCore.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (CannotProceed ex) {
+            Logger.getLogger(BoardCore.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InvalidName ex) {
+            Logger.getLogger(BoardCore.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

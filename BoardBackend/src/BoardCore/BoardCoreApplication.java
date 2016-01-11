@@ -13,9 +13,11 @@ package BoardCore;
 public class BoardCoreApplication {
     
     public static void main(String[] args) {
-        try {
-            System.out.println("BoardCore wird gestartet...");
+        
+        try {          
             BoardCore core = null;
+            System.out.println("BoardCore wird gestartet...");
+            
 
             int port = 1050;
             
@@ -30,14 +32,30 @@ public class BoardCoreApplication {
                 ORBAccessControl.getInstance().setORB("1050", "localhost");
                 core = new BoardCore("Test-Tafel2");
             }
+            
+            Runtime.getRuntime().addShutdownHook(new ThreadImpl(core));
+        
             ORBAccessControl.getInstance().run();
             //core.run();
         } catch (Exception ex) {
             System.err.println("Fehler: " + ex.getMessage());
-        } finally {
-//            System.out.println("BoardCore wird heruntergefahren...");
-//            ORBAccessControl.getInstance().shutdown();
-//            System.out.println("Board wurde beendet.");
+        } 
+    }
+
+    private static class ThreadImpl extends Thread {
+
+        BoardCore core;
+        private ThreadImpl(BoardCore core) {
+            this.core = core;
+        }
+
+        @Override
+        public void run() {
+            if (core != null) {
+                System.out.println("BoardCore wurde beendet!");
+                core.closeCore();
+            }
+            ORBAccessControl.getInstance().shutdown();
         }
     }
 }

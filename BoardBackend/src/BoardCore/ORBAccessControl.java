@@ -61,9 +61,7 @@ public class ORBAccessControl {
     }
     
     public void run() {
-        while (true) {
-            _orb.run();
-        }
+        _orb.run();
     }
     
     public void shutdown() {
