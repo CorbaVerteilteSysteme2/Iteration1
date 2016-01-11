@@ -8,6 +8,7 @@ package BoardCore;
 import BasicServices.AdministrationServiceImpl;
 import BasicServices.BoardServiceImpl;
 import BasicServices.ViewServiceImpl;
+import BoardConfiguration.BoardConfiguration;
 import BoardModules.BasicServices.AdministrationService;
 import BoardModules.BasicServices.AdministrationServiceHelper;
 import BoardModules.BasicServices.BoardService;
@@ -70,9 +71,9 @@ public abstract class AbstractCore {
 
             NameComponent boardNC = new NameComponent(_identifier, "");
 
-            NameComponent boardServiceNC = new NameComponent("BoardService", "");
-            NameComponent adminServiceNC = new NameComponent("AdminService", "");
-            NameComponent viewServiceNC = new NameComponent("ViewService", "");
+            NameComponent boardServiceNC = new NameComponent(BoardConfiguration.BOARD_SERVICE_NAME, "");
+            NameComponent adminServiceNC = new NameComponent(BoardConfiguration.ADMIN_SERVICE_NAME, "");
+            NameComponent viewServiceNC = new NameComponent(BoardConfiguration.VIEW_SERVICE_NAME, "");
 
             NameComponent path1[] = { boardNC, boardServiceNC };
             NameComponent path2[] = { boardNC, adminServiceNC };
@@ -81,14 +82,6 @@ public abstract class AbstractCore {
             registerObjWithNameService(ORBAccessControl.getInstance().getNameService(), path1, boardServiceRef);
             registerObjWithNameService(ORBAccessControl.getInstance().getNameService(), path2, adminServiceRef);
             registerObjWithNameService(ORBAccessControl.getInstance().getNameService(), path3, viewServiceRef);
-       
-            /*
-            ORBAccessControl.getInstance().getNameService().unbind(path1);
-            ORBAccessControl.getInstance().getNameService().unbind(path2);
-            ORBAccessControl.getInstance().getNameService().unbind(path3);
-            ORBAccessControl.getInstance().getNameService().unbind(new NameComponent[]{ boardNC });
-            */
-            
             
         } catch (ServantNotActive ex) {
             Logger.getLogger(AbstractCore.class.getName()).log(Level.SEVERE, null, ex);
@@ -142,7 +135,7 @@ public abstract class AbstractCore {
         
         if (_viewService != null) {
             try {
-                nameService.unbind(new NameComponent[] { boardNC, new NameComponent("ViewService", "")});
+                nameService.unbind(new NameComponent[] { boardNC, new NameComponent(BoardConfiguration.VIEW_SERVICE_NAME, "")});
             } catch (NotFound ex) {
                 Logger.getLogger(AbstractCore.class.getName()).log(Level.SEVERE, null, ex);
             } catch (CannotProceed ex) {
@@ -153,7 +146,7 @@ public abstract class AbstractCore {
         }
         if (_boardService != null) {
             try {
-                nameService.unbind(new NameComponent[] { boardNC, new NameComponent("BoardService", "")});
+                nameService.unbind(new NameComponent[] { boardNC, new NameComponent(BoardConfiguration.BOARD_SERVICE_NAME, "")});
             } catch (NotFound ex) {
                 Logger.getLogger(AbstractCore.class.getName()).log(Level.SEVERE, null, ex);
             } catch (CannotProceed ex) {
@@ -164,7 +157,7 @@ public abstract class AbstractCore {
         }
         if (_adminService != null) {
             try {
-                nameService.unbind(new NameComponent[] { boardNC, new NameComponent("AdminService", "")});
+                nameService.unbind(new NameComponent[] { boardNC, new NameComponent(BoardConfiguration.ADMIN_SERVICE_NAME, "")});
             } catch (NotFound ex) {
                 Logger.getLogger(AbstractCore.class.getName()).log(Level.SEVERE, null, ex);
             } catch (CannotProceed ex) {

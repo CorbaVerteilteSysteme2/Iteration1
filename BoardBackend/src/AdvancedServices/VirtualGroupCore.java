@@ -5,6 +5,7 @@
  */
 package AdvancedServices;
 
+import BoardConfiguration.BoardConfiguration;
 import BoardCore.AbstractCore;
 import BoardCore.ORBAccessControl;
 import BoardModules.AdvancedServices.*;
@@ -41,7 +42,7 @@ public class VirtualGroupCore extends AbstractCore {
             VirtualGroupService virtualGroupService = VirtualGroupServiceHelper.narrow(virtualGroupServiceRef);
             
             NameComponent boardNC = new NameComponent(_identifier, "");
-            NameComponent virtualGroupServiceNC = new NameComponent("VirtualGroupService", "");
+            NameComponent virtualGroupServiceNC = new NameComponent(BoardConfiguration.VGROUP_SERVICE_NAME, "");
             NameComponent path1[] = { boardNC, virtualGroupServiceNC };
             
             registerObjWithNameService(ORBAccessControl.getInstance().getNameService(), path1, virtualGroupServiceRef);
@@ -121,7 +122,7 @@ public class VirtualGroupCore extends AbstractCore {
 
         if (_virtualGroupService != null) {
             try {
-                nameService.unbind(new NameComponent[] { boardNC, new NameComponent("VirtualGroupService", "")});
+                nameService.unbind(new NameComponent[] { boardNC, new NameComponent(BoardConfiguration.VGROUP_SERVICE_NAME, "")});
             } catch (NotFound ex) {
                 Logger.getLogger(VirtualGroupCore.class.getName()).log(Level.SEVERE, null, ex);
             } catch (CannotProceed ex) {
