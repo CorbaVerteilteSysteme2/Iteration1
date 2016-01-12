@@ -25,6 +25,8 @@ import java.util.Date;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DefaultListModel;
+import javax.swing.JList;
 import org.omg.CORBA.ORB;
 import org.omg.CORBA.ORBPackage.InvalidName;
 import org.omg.CosNaming.Binding;
@@ -36,6 +38,7 @@ import org.omg.CosNaming.NamingContextPackage.AlreadyBound;
 import org.omg.CosNaming.NamingContextPackage.CannotProceed;
 import org.omg.CosNaming.NamingContextPackage.NotFound;
 import javax.swing.JOptionPane;
+import javax.swing.ListSelectionModel;
 
 /**
  *
@@ -75,17 +78,16 @@ public class AdminGUI extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         readMessageField = new javax.swing.JTextArea();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        boardListOutput = new javax.swing.JTextArea();
         refreshButton = new javax.swing.JButton();
         jLabel8 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
         transfereMsgNumberInput = new javax.swing.JTextField();
-        dropdownOnlineBoards = new javax.swing.JComboBox<>();
         transfereMessage = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
         sendMessageField = new javax.swing.JTextArea();
+        jScrollPane6 = new javax.swing.JScrollPane();
+        boardListOutput = new javax.swing.JList<>();
         jPanel2 = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
@@ -110,6 +112,9 @@ public class AdminGUI extends javax.swing.JFrame {
         loginDialog.setAlwaysOnTop(true);
         loginDialog.setMinimumSize(new java.awt.Dimension(400, 300));
         loginDialog.addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                loginDialogWindowClosed(evt);
+            }
             public void windowOpened(java.awt.event.WindowEvent evt) {
                 loginDialogWindowOpened(evt);
             }
@@ -211,13 +216,6 @@ public class AdminGUI extends javax.swing.JFrame {
         readMessageField.setRows(5);
         jScrollPane2.setViewportView(readMessageField);
 
-        boardListOutput.setEditable(false);
-        boardListOutput.setColumns(20);
-        boardListOutput.setRows(5);
-        boardListOutput.setMaximumSize(new java.awt.Dimension(164, 94));
-        boardListOutput.setMinimumSize(new java.awt.Dimension(164, 94));
-        jScrollPane1.setViewportView(boardListOutput);
-
         refreshButton.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         refreshButton.setText("Aktuallisieren");
         refreshButton.addActionListener(new java.awt.event.ActionListener() {
@@ -242,13 +240,6 @@ public class AdminGUI extends javax.swing.JFrame {
             }
         });
 
-        dropdownOnlineBoards.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Bitte Tafel aktuallisieren" }));
-        dropdownOnlineBoards.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                dropdownOnlineBoardsFocusGained(evt);
-            }
-        });
-
         transfereMessage.setText("Nachricht an Tafel weiterleiten");
         transfereMessage.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -267,14 +258,26 @@ public class AdminGUI extends javax.swing.JFrame {
         sendMessageField.setRows(5);
         jScrollPane3.setViewportView(sendMessageField);
 
+        boardListOutput.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item1", "Item2" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane6.setViewportView(boardListOutput);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap(351, Short.MAX_VALUE)
                 .addComponent(jButton1)
                 .addGap(296, 296, 296))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(transfereMessage, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)))
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel1Layout.createSequentialGroup()
                     .addGap(2, 2, 2)
@@ -286,11 +289,8 @@ public class AdminGUI extends javax.swing.JFrame {
                             .addGap(0, 92, Short.MAX_VALUE)))
                     .addGap(18, 18, 18)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(transfereMessage, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(dropdownOnlineBoards, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(refreshButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jScrollPane1)
                         .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createSequentialGroup()
                             .addComponent(jLabel11)
@@ -301,9 +301,13 @@ public class AdminGUI extends javax.swing.JFrame {
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(316, Short.MAX_VALUE)
+                .addGap(45, 45, 45)
+                .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 57, Short.MAX_VALUE)
                 .addComponent(jButton1)
-                .addGap(74, 74, 74))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(transfereMessage, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(45, 45, 45))
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel1Layout.createSequentialGroup()
                     .addContainerGap()
@@ -313,8 +317,7 @@ public class AdminGUI extends javax.swing.JFrame {
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 213, Short.MAX_VALUE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addGap(0, 0, Short.MAX_VALUE)
                             .addComponent(refreshButton, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -325,10 +328,6 @@ public class AdminGUI extends javax.swing.JFrame {
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addComponent(transfereMsgNumberInput)
                                 .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(dropdownOnlineBoards, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(transfereMessage, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addContainerGap())
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
         );
@@ -438,11 +437,6 @@ public class AdminGUI extends javax.swing.JFrame {
         jLabel7.setText("In virtuelle Gruppe einloggen:");
 
         dropdownVirtualBoards.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Bitte Tafel aktuallisieren" }));
-        dropdownVirtualBoards.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                dropdownVirtualBoardsFocusGained(evt);
-            }
-        });
 
         loginVGButton.setText("einloggen in Virtuelle Gruppe");
         loginVGButton.addActionListener(new java.awt.event.ActionListener() {
@@ -542,7 +536,6 @@ public class AdminGUI extends javax.swing.JFrame {
     private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
 
         if (startAdminBoardService(adminNameInput.getText(),adminBoardInput.getText(), IPInput.getText())){
-            //TODO Anpassen wenn mehrere Tafeln auswaehlbar werden
             ownBoardLabel.setText(adminBoardInput.getText());
 
             //GUI
@@ -576,7 +569,6 @@ public class AdminGUI extends javax.swing.JFrame {
             }
         }
         
-        //TODO Eingehende Nachrichten Anzeige
         //Verruebergehende Ausgabe
         readMessageField.append(sendMessageField.getText());
         readMessageField.append("\n");
@@ -656,7 +648,8 @@ public class AdminGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_loginVGButtonActionPerformed
 
     private void transfereMessageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_transfereMessageActionPerformed
-        String[] boardName = {dropdownOnlineBoards.getSelectedItem().toString()};
+
+        String[] boardName = boardListOutput.getSelectedValuesList().toArray(new String[boardListOutput.getSelectedValuesList().size()]);
         try{
             int msgNr = Integer.parseInt(transfereMsgNumberInput.getText());
             if ((msgNr < message.length) && (msgNr >= 0) && (message != null)){
@@ -674,17 +667,13 @@ public class AdminGUI extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_transfereMessageActionPerformed
 
-    private void dropdownOnlineBoardsFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_dropdownOnlineBoardsFocusGained
-        //refreshBoardLists();
-    }//GEN-LAST:event_dropdownOnlineBoardsFocusGained
-
-    private void dropdownVirtualBoardsFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_dropdownVirtualBoardsFocusGained
-        //refreshBoardLists();
-    }//GEN-LAST:event_dropdownVirtualBoardsFocusGained
-
     private void refreshButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshButton1ActionPerformed
-        // TODO add your handling code here:
+        refreshBoardLists();
     }//GEN-LAST:event_refreshButton1ActionPerformed
+
+    private void loginDialogWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_loginDialogWindowClosed
+       this.dispose();
+    }//GEN-LAST:event_loginDialogWindowClosed
 
     /**
      * @param args the command line arguments
@@ -716,7 +705,7 @@ public class AdminGUI extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new AdminGUI().setVisible(true);
+                new AdminGUI().setVisible(true);               
             }
         });
     }
@@ -808,20 +797,21 @@ public class AdminGUI extends javax.swing.JFrame {
         String[] allBoardList;
         virtualGrpList = adminServiceObj.getAllVirtualGroups();
         
-        ArrayList<String> boardList = getAllBoardsAndVirtualGroups();
-        
-        boardListOutput.setText("");
+        ArrayList<String> boardList = getAllBoardsAndVirtualGroups();       
+        String[] boardListArrayObject = boardList.toArray(new String[boardList.size()]);
+
+        listModel = new DefaultListModel();
         for (String boardname : boardList) {
-            boardListOutput.append(boardname);
-            boardListOutput.append("\n");
+            listModel.addElement(boardname);
         }
+        boardListOutput.setListData(boardListArrayObject);       
+        
         virtualBoardListOutput.setText("");
         for (String boardname : virtualGrpList) {
             virtualBoardListOutput.append(boardname);
             virtualBoardListOutput.append("\n");
         }
         allBoardList = boardList.toArray(new String[boardList.size()]);
-        dropdownOnlineBoards.setModel(new javax.swing.DefaultComboBoxModel<>(allBoardList));
         dropdownVirtualBoards.setModel(new javax.swing.DefaultComboBoxModel<>(virtualGrpList));
     }
     
@@ -864,10 +854,9 @@ public class AdminGUI extends javax.swing.JFrame {
     private javax.swing.JTextField IPInput;
     private javax.swing.JTextField adminBoardInput;
     private javax.swing.JTextField adminNameInput;
-    private javax.swing.JTextArea boardListOutput;
+    private javax.swing.JList<String> boardListOutput;
     private javax.swing.JButton createUserButton;
     private javax.swing.JButton createVGButton;
-    private javax.swing.JComboBox<String> dropdownOnlineBoards;
     private javax.swing.JComboBox<String> dropdownVirtualBoards;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
@@ -885,11 +874,11 @@ public class AdminGUI extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JTabbedPane jTabbedPane2;
     private javax.swing.JButton loginButton;
     private javax.swing.JDialog loginDialog;
@@ -916,6 +905,9 @@ public class AdminGUI extends javax.swing.JFrame {
     private Message[] messageCheck = null;
     private String[] virtualGrpList = {"Bitte Tafeln aktuallisieren"};
     private String tableID = "";
+    
+    private JList list;
+    private DefaultListModel listModel;
 
     
     
