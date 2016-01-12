@@ -7,7 +7,8 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-//import BasicServices.BoardServiceImpl;
+import BoardModules.BasicServices.BoardService;
+import BoardModules.BasicServices.BoardServiceHelper;
 
 /**
  *
@@ -21,6 +22,8 @@ public class EnterUser
     String eingabeUser = "";
     String name = "";
     String user = "";
+    
+    this.boardServiceObj = (BoardService) BoardServiceHelper.narrow(ncRef.resolve_str(tableID + "/BoardService"));
     eingabeUser = Eingabe(name);
     user = eingabeUser;
     //checkUser(user);
@@ -64,4 +67,7 @@ private String Eingabe(String name)
     {        
         System.out.println("Der Benutzer" +name+ " ist noch nicht angemeldet");   
     }
+
+    //Deklaration
+    private BoardService boardServiceObj = null;
 }
