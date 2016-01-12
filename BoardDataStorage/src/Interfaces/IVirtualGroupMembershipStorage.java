@@ -22,4 +22,9 @@ public interface IVirtualGroupMembershipStorage {
         Diese Methode soll aus einer Datei die virtuellen Gruppen auslesen. 
     */
     ArrayList<String> loadMembership();
+    
+    /*
+        Entfernt eine Mitgliedschaft
+    */
+    void removeMembership(String vgroupname);
 }

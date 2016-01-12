@@ -22,4 +22,9 @@ public interface IUserStorage {
         Lade alle Benutzer, abhängig vom Identifier (Name der Virtuellen Gruppe oder Tafel)
     */
     ArrayList<User> loadAllUsers(String identifier);
+    
+    /*
+        Entfernt einen Benutzer
+    */
+    void removeUser(String identifier, User user);
 }

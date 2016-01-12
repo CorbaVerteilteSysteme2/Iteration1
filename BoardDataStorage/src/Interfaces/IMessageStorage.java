@@ -22,4 +22,9 @@ public interface IMessageStorage {
         Läd alle Nachrichten, abhängig vom Identifier (Name der Virtuellen Gruppe oder Tafel)
     */
     ArrayList<Message> loadAllMessages(String identifier);
+    
+    /*
+        Entfernt eine Nachricht
+    */
+    void removeMessage(String identifier, Message message);
 }
