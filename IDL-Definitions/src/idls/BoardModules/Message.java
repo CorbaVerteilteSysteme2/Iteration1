@@ -1,5 +1,7 @@
 package BoardModules;
 
+import java.util.Objects;
+
 
 /**
 * BoardModules/Message.java .
@@ -29,7 +31,39 @@ public final class Message implements org.omg.CORBA.portable.IDLEntity
     public String toString() {
         return timestamp + " " + author + ": " + content;
     }
-  
-  
 
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 37 * hash + Objects.hashCode(this.content);
+        hash = 37 * hash + Objects.hashCode(this.author);
+        hash = 37 * hash + Objects.hashCode(this.timestamp);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Message other = (Message) obj;
+        if (!Objects.equals(this.content, other.content)) {
+            return false;
+        }
+        if (!Objects.equals(this.author, other.author)) {
+            return false;
+        }
+        if (!Objects.equals(this.timestamp, other.timestamp)) {
+            return false;
+        }
+        return true;
+    }
+    
+    
 } // class Message
