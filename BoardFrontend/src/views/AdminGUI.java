@@ -22,6 +22,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -656,8 +657,16 @@ public class AdminGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_loginVGButtonActionPerformed
 
     private void transfereMessageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_transfereMessageActionPerformed
-
-        String[] boardName = boardListOutput.getSelectedValuesList().toArray(new String[boardListOutput.getSelectedValuesList().size()]);
+        List<String> checkID = boardListOutput.getSelectedValuesList();
+        checkID.remove(tableID);
+        String[] boardName = checkID.toArray(new String[checkID.size()]);
+        /* Auskommentiren zum testen des boardNameStrings
+        for (String boardNameCheck : boardName){
+            if (boardNameCheck.equals(this.tableID)){
+                System.out.println("BOEEEESE!");
+            }
+        }
+        */
         try{
             int msgNr = Integer.parseInt(transfereMsgNumberInput.getText());
             if ((msgNr < message.length) && (msgNr >= 0) && (message != null)){
@@ -929,8 +938,6 @@ public class AdminGUI extends javax.swing.JFrame {
     private Message[] messageCheck = null;
     private String[] virtualGrpList = {"Bitte Tafeln aktuallisieren"};
     private String tableID = "";
-    
-    private JList list;
     private DefaultListModel listModel;
 
     
