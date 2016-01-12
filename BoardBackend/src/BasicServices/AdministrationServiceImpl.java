@@ -62,12 +62,12 @@ public class AdministrationServiceImpl extends AdministrationServicePOA {
     @Override
     public void loginToVirtualGroup(String vgroupname) {
         try {
-            System.out.println("Logge in eine Virtuelle Gruppe ein");
+            System.out.println("Logge in eine Virtuelle Gruppe ein: " + vgroupname);
             VirtualGroupService virtualGroupServiceObj = (VirtualGroupService) VirtualGroupServiceHelper.narrow(ORBAccessControl.getInstance().getNameService().resolve_str(vgroupname + "/" + BoardConfiguration.VGROUP_SERVICE_NAME));
             
             virtualGroupServiceObj.addMember(core.getIdentifier(), core.getAllUsers());
             virtualGroupRefs.add(virtualGroupServiceObj);
-            //virtualGroupServiceObj.createBackupOfVirtualGroup(users, messages);
+            
         } catch (NotFound ex) {
             Logger.getLogger(AdministrationServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         } catch (CannotProceed ex) {
@@ -101,8 +101,6 @@ public class AdministrationServiceImpl extends AdministrationServicePOA {
             } catch (InvalidName ex) {
                 Logger.getLogger(AdministrationServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
-            
         }
         
         String result[] = new String[vgroupList.size()];
@@ -148,5 +146,9 @@ public class AdministrationServiceImpl extends AdministrationServicePOA {
             core.addUser(newuser);
         }
     }
-    
+
+    @Override
+    public String[] getAllUsers() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }
