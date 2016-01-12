@@ -9,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import BoardModules.BasicServices.BoardService;
+import BoardModules.BasicServices.BoardServiceHelper;
 
 /**
  *
@@ -23,7 +24,7 @@ public class EnterUser
     String name = "";
     String user = "";
     
-    //this.boardServiceObj = (BoardService) BoardServiceHelper.narrow(ncRef.resolve_str(tableID + "/BoardService"));
+    this.boardServiceObj = (BoardService) BoardServiceHelper.narrow(ncRef.resolve_str(tableID + "/BoardService"));
     eingabeUser = Eingabe(name);
     user = eingabeUser;
     //checkUser(user);
