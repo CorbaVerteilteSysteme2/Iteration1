@@ -651,7 +651,7 @@ public class AdminGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_newUserNameInputFocusLost
 
     private void loginVGButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginVGButtonActionPerformed
-        String virtualGrpName = (String) dropdownOnlineBoards.getSelectedItem();
+        String virtualGrpName = (String) dropdownVirtualBoards.getSelectedItem();
         adminServiceObj.loginToVirtualGroup(virtualGrpName);
     }//GEN-LAST:event_loginVGButtonActionPerformed
 
