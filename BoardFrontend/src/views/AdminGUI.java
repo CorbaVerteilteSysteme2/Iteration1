@@ -6,8 +6,6 @@
 package views;
 
 import BoardConfiguration.BoardConfiguration;
-import BoardModules.AdvancedServices.VirtualGroupService;
-import BoardModules.AdvancedServices.VirtualGroupServiceHelper;
 import BoardModules.BasicServices.AdministrationService;
 import BoardModules.BasicServices.AdministrationServiceHelper;
 import BoardModules.BasicServices.BoardService;
@@ -27,7 +25,6 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
-import javax.swing.JList;
 import org.omg.CORBA.ORB;
 import org.omg.CORBA.ORBPackage.InvalidName;
 import org.omg.CosNaming.Binding;
@@ -35,11 +32,9 @@ import org.omg.CosNaming.BindingIteratorHolder;
 import org.omg.CosNaming.BindingListHolder;
 import org.omg.CosNaming.NamingContextExt;
 import org.omg.CosNaming.NamingContextExtHelper;
-import org.omg.CosNaming.NamingContextPackage.AlreadyBound;
 import org.omg.CosNaming.NamingContextPackage.CannotProceed;
 import org.omg.CosNaming.NamingContextPackage.NotFound;
 import javax.swing.JOptionPane;
-import javax.swing.ListSelectionModel;
 
 /**
  *
@@ -628,7 +623,6 @@ public class AdminGUI extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null,"Benutzer bereits vorhanden!","Warnung",JOptionPane.WARNING_MESSAGE);
             userAlreadyExist = true;
         }catch (UnknownUser e){
-            //evtl doch boolean Rueckgabe....
         }
         if (!userAlreadyExist){
             try{
