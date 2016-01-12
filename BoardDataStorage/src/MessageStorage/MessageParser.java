@@ -148,7 +148,9 @@ public class MessageParser
         return return_Message;
     }
     
+	
     public static void main(String[] args) {
+/*		
     MessageParser message_instance = new MessageParser();
     //Gibt eine Warnung aus, da die Gruppe A noch nicht existiert
 //    message_instance.WriteMessageToTextfile("A","Fritz","Hoi");
@@ -164,7 +166,24 @@ public class MessageParser
     
     message_instance.WriteMessageToTextfile("A","Fritz","Ciao");
     message_instance.WriteMessageToTextfile("A","Max","Ciao");
-  }
+*/ 
+	ArrayList<Message> testlist = new ArrayList<>();
+
+	SaveMessage sm = new SaveMessage();
+	Message nachricht = new Message("Hallo", "Test", "12.01.2016");
+	Message nachricht2 = new Message("Hallo Nachricht2", "Test", "12.01.2016");
+	String tafelID = "Tafel";
+	sm.storeMessage(tafelID, nachricht);
+	sm.storeMessage(tafelID, nachricht2);
+	System.out.println("Schreiben Fertig\n");
+	
+	testlist = sm.loadAllMessages(tafelID);
+	for(Message m: testlist){
+		System.out.println(m.content);
+	}
+
+	
+}
 
     public void WriteMessageToTextfile(Message msg) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
