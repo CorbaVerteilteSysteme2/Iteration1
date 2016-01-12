@@ -5,10 +5,6 @@
  */
 package BoardCore;
 
-import org.omg.CosNaming.NamingContextPackage.CannotProceed;
-import org.omg.CosNaming.NamingContextPackage.InvalidName;
-import org.omg.PortableServer.POAManagerPackage.AdapterInactive;
-
 /**
  * 
  * 
@@ -16,18 +12,50 @@ import org.omg.PortableServer.POAManagerPackage.AdapterInactive;
  */
 public class BoardCoreApplication {
     
-    public static void main(String[] args) throws RuntimeException, CannotProceed, InvalidName, org.omg.CORBA.ORBPackage.InvalidName, AdapterInactive {
-        BoardCore core = null;
+    public static void main(String[] args) {
         
-        if (args.length == 2) {
-            ORBAccessControl.getInstance().setORB("1050", args[0]);
-            core = new BoardCore(args[1]);
-        } else {
-            // Testausführung!
-            ORBAccessControl.getInstance().setORB("1050", "localhost");
-            core = new BoardCore("Test-Tafel");
+        try {          
+            BoardCore core = null;
+            System.out.println("BoardCore wird gestartet...");
+            
+
+            int port = 1050;
+            
+            if (args.length == 2) {
+                System.out.println("Port: " + port + "; Host: " + args[0]);
+                System.out.println("Tafel-Identifier: " + args[1]);
+                ORBAccessControl.getInstance().setORB(Integer.toString(port), args[0]);
+                core = new BoardCore(args[1]);
+            } else {
+                // Testausführung!
+                System.out.println("Test-Ausführung!");
+                ORBAccessControl.getInstance().setORB("1050", "localhost");
+                core = new BoardCore("Test-Tafel2");
+            }
+            
+            Runtime.getRuntime().addShutdownHook(new ThreadImpl(core));
+        
+            ORBAccessControl.getInstance().run();
+            //core.run();
+        } catch (Exception ex) {
+            System.err.println("Fehler: " + ex.getMessage());
+        } 
+    }
+
+    private static class ThreadImpl extends Thread {
+
+        BoardCore core;
+        private ThreadImpl(BoardCore core) {
+            this.core = core;
         }
-        ORBAccessControl.getInstance().run();
-        //core.run();
+
+        @Override
+        public void run() {
+            if (core != null) {
+                System.out.println("BoardCore wurde beendet!");
+                core.closeCore();
+            }
+            ORBAccessControl.getInstance().shutdown();
+        }
     }
 }

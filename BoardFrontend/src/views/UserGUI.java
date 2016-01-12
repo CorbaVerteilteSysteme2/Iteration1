@@ -11,6 +11,7 @@ package views;
  * @version 0.1
  * @date 08.01.2016
  */
+import BoardConfiguration.BoardConfiguration;
 import BoardModules.BasicServices.BoardService;
 import BoardModules.BasicServices.BoardServiceHelper;
 import BoardModules.DestinationUnreachable;
@@ -28,6 +29,9 @@ import org.omg.CosNaming.NamingContextExtHelper;
 import org.omg.CosNaming.NamingContextPackage.CannotProceed;
 import org.omg.CosNaming.NamingContextPackage.NotFound;
 import BoardModules.BasicServices.*;
+import java.awt.event.*;
+import java.util.Arrays;
+import javax.swing.JOptionPane;
 
 public class UserGUI extends javax.swing.JFrame {
 
@@ -91,7 +95,7 @@ public class UserGUI extends javax.swing.JFrame {
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel3.setText("Benutzername:");
 
-        userBoardInput.setText("Test-Tafel");
+        userBoardInput.setText("Test-Tafel2");
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -206,27 +210,25 @@ public class UserGUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
     
     /**
+     * Änderung: Destination ist nun die Quelle einer Nachricht
      * @throws DestinationUnreachable
      * @throws UnknownUser 
      */
     private void sendMessageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendMessageActionPerformed
-        String destination;
-        destination = (String) destinationList.getSelectedItem();
-        //if ("eigene Tafel".equals(destination))
-        //    destination = "";
+        if ("".equals(sendMessageField.getText())){
+            JOptionPane.showMessageDialog(null,"Nachrichten müssen einen Inhalt haben!","Warnung",JOptionPane.WARNING_MESSAGE);           
+        }else{
+            try{
         
-        //Nachricht Senden
-        try{
-        boardServiceObj.sendMessage(user, new Message(sendMessageField.getText(), user.name, new Date().toString()), destination);
-        //message = viewServiceObj.getAllMessageByDestination("");
-        } catch (DestinationUnreachable ex) {
-            Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (UnknownUser ex) {
-            Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
+                boardServiceObj.sendMessage(user, new Message(sendMessageField.getText(), user.name, new Date().toString()), tableID);
+            } catch (DestinationUnreachable ex) {
+                Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (UnknownUser ex) {
+                Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(null,"Unbekannter Nutzer!","Warnung",JOptionPane.WARNING_MESSAGE);           
+
+            }
         }
-        
-        //TODO Eingehende Nachrichten Anzeige
-        //Verruebergehende Ausgabe
         readMessageField.append(sendMessageField.getText());
         readMessageField.append("\n");
         sendMessageField.setText("");
@@ -240,6 +242,7 @@ public class UserGUI extends javax.swing.JFrame {
         
             //GUI
             this.setEnabled(true);
+            t.start();
             loginDialog.setVisible(false);
         }
     }//GEN-LAST:event_loginButtonActionPerformed
@@ -298,35 +301,71 @@ public class UserGUI extends javax.swing.JFrame {
     */
     public boolean startUserBoardService(String username, String tableID, String ipAddress){
         boolean worked = false;
+        this.tableID = tableID;
         try {
             ORB _orb;
             Properties props = new Properties();
             
-            props.put("org.omg.CORBA.ORBInitialPort", "1050");
+            props.put("org.omg.CORBA.ORBInitialPort", BoardConfiguration.ORB_PORT);
             props.put("org.omg.CORBA.ORBInitialHost", ipAddress);
             
             _orb = ORB.init(new String[0], props);
             
-            org.omg.CORBA.Object objRef = _orb.resolve_initial_references("NameService");
+            org.omg.CORBA.Object objRef = _orb.resolve_initial_references(BoardConfiguration.NAMESERVICE);
             NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
         
-            this.boardServiceObj = (BoardService) BoardServiceHelper.narrow(ncRef.resolve_str(tableID + "/BoardService"));
-            this.viewServiceObj = (ViewService) ViewServiceHelper.narrow(ncRef.resolve_str(tableID + "/ViewService"));
+            this.boardServiceObj = (BoardService) BoardServiceHelper.narrow(ncRef.resolve_str(tableID + "/" + BoardConfiguration.BOARD_SERVICE_NAME));
+            this.viewServiceObj = (ViewService) ViewServiceHelper.narrow(ncRef.resolve_str(tableID + "/" + BoardConfiguration.VIEW_SERVICE_NAME));
             
             this.user = new User(username);
+            this.boardServiceObj.checkUser(user);
             worked = true;
+        } catch (UnknownUser ex){
+            JOptionPane.showMessageDialog(null,"Benutzer wurde nicht gefunden!","Warnung",JOptionPane.WARNING_MESSAGE);     
         } catch (InvalidName ex) {
             Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
         } catch (NotFound ex) {
             Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null,"Tafel wurde nicht gefunden!","Warnung",JOptionPane.WARNING_MESSAGE);
         } catch (CannotProceed ex) {
             Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
+
         } catch (org.omg.CosNaming.NamingContextPackage.InvalidName ex) {
             Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
+
         }
+
         return worked;
     }    
-    
+ 
+    javax.swing.Timer t = new javax.swing.Timer(1000, new ActionListener() {  
+        @Override
+        public void actionPerformed(ActionEvent e) {
+              try{
+              if (message != null){
+                messageCheck = viewServiceObj.getAllMessageByDestination("");
+                if (message.length != messageCheck.length){
+                    message = messageCheck;  
+                    readMessageField.setText("");
+                    for (Message message1 : message) {
+                        readMessageField.append(message1.toString());
+                        readMessageField.append("\n");
+                    }
+                }
+              }else{
+                  message = viewServiceObj.getAllMessageByDestination("");
+                  for (Message message1 : message) {
+                      readMessageField.append(message1.toString());
+                      readMessageField.append("\n");
+                  }
+              }
+              }catch (DestinationUnreachable ex){
+                  
+              }
+          }
+    }
+    );
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField IPInput;
@@ -349,5 +388,7 @@ public class UserGUI extends javax.swing.JFrame {
     private ViewService viewServiceObj = null;
     private User user = null;
     private Message[] message = null;
-    //private String tableID = "";
+    private Message[] messageCheck = null;
+    //private boolean firstRun = true;
+    private String tableID = "";
 }

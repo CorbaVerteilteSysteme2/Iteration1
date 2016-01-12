@@ -6,8 +6,11 @@
 package BasicServices;
 
 import AdvancedServices.VirtualGroupCore;
+import BoardConfiguration.BoardConfiguration;
 import BoardCore.AbstractCore;
 import BoardCore.ORBAccessControl;
+import BoardModules.AdvancedServices.VirtualGroupService;
+import BoardModules.AdvancedServices.VirtualGroupServiceHelper;
 import BoardModules.BasicServices.AdministrationServicePOA;
 import BoardModules.BasicServices.BoardService;
 import BoardModules.BasicServices.BoardServiceHelper;
@@ -30,12 +33,14 @@ import org.omg.CosNaming.NamingContextPackage.*;
 public class AdministrationServiceImpl extends AdministrationServicePOA {
 
     private final ArrayList<VirtualGroupCore> virtualGroups;
-
+    private final ArrayList<VirtualGroupService> virtualGroupRefs;
+    
     private final AbstractCore core;
     
     public AdministrationServiceImpl(AbstractCore core) {
         this.core = core;
-        virtualGroups = new ArrayList<>();
+        this.virtualGroups = new ArrayList<>();
+        this.virtualGroupRefs = new ArrayList<>();
     }
     
     @Override
@@ -56,12 +61,55 @@ public class AdministrationServiceImpl extends AdministrationServicePOA {
 
     @Override
     public void loginToVirtualGroup(String vgroupname) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            System.out.println("Logge in eine Virtuelle Gruppe ein");
+            VirtualGroupService virtualGroupServiceObj = (VirtualGroupService) VirtualGroupServiceHelper.narrow(ORBAccessControl.getInstance().getNameService().resolve_str(vgroupname + "/" + BoardConfiguration.VGROUP_SERVICE_NAME));
+            
+            virtualGroupServiceObj.addMember(core.getIdentifier(), core.getAllUsers());
+            virtualGroupRefs.add(virtualGroupServiceObj);
+            //virtualGroupServiceObj.createBackupOfVirtualGroup(users, messages);
+        } catch (NotFound ex) {
+            Logger.getLogger(AdministrationServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (CannotProceed ex) {
+            Logger.getLogger(AdministrationServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InvalidName ex) {
+            Logger.getLogger(AdministrationServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override
     public String[] getAllVirtualGroups() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        int batchSize = 100;
+        ArrayList<String> vgroupList = new ArrayList<>();
+        
+        BindingListHolder bList = new BindingListHolder();
+        BindingIteratorHolder bIterator = new BindingIteratorHolder();
+
+        ORBAccessControl.getInstance().getNameService().list(batchSize, bList, bIterator);
+        
+        for (Binding value : bList.value) {
+            String boardname = value.binding_name[0].id;
+            
+            try {
+                VirtualGroupService virtualGroupServiceObj = (VirtualGroupService) VirtualGroupServiceHelper.narrow(ORBAccessControl.getInstance().getNameService().resolve_str(boardname + "/" + BoardConfiguration.VGROUP_SERVICE_NAME));
+                vgroupList.add(boardname);
+            } catch (NotFound ex) {
+                
+                
+            } catch (CannotProceed ex) {
+                Logger.getLogger(AdministrationServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (InvalidName ex) {
+                Logger.getLogger(AdministrationServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            
+        }
+        
+        String result[] = new String[vgroupList.size()];
+        
+        vgroupList.toArray(result);
+            
+        return result;
     }
 
     @Override
@@ -83,8 +131,8 @@ public class AdministrationServiceImpl extends AdministrationServicePOA {
                 String boardname = value.binding_name[0].id;
                 if (strListBoards.contains(boardname)) {
                     System.out.println(value.binding_name[0].id);
-                    BoardService boardServiceObj = (BoardService) BoardServiceHelper.narrow(ORBAccessControl.getInstance().getNameService().resolve_str(boardname + "/BoardService"));
-                    boardServiceObj.sendMessage(new User("."), message, "");
+                    BoardService boardServiceObj = (BoardService) BoardServiceHelper.narrow(ORBAccessControl.getInstance().getNameService().resolve_str(boardname + "/" + BoardConfiguration.BOARD_SERVICE_NAME));
+                    boardServiceObj.sendMessage(new User("."), message, ""); //TODO
                 } else {
                     System.err.println("Tafel existiert nicht: " + boardname + "!");
                 }

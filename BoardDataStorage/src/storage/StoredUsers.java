@@ -1,5 +1,6 @@
 package storage;
 
+import BoardModules.Message;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -7,7 +8,9 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -135,6 +138,32 @@ public void stripDuplicatesFromFile() throws FileNotFoundException, IOException
         }
 }
 
+/**
+ * Methode liest die einzelnen User aus der .txt Datei in ein Array.
+ * 
+ * @throws FileNotFoundException
+ * @throws IOException 
+ */
+    public void readUsersFromTxt() throws FileNotFoundException, IOException
+    {
+        BufferedReader in = new BufferedReader(new FileReader("users.txt"));
+        String user;
+        
+        List<String> list = new ArrayList<>();
+        while((user = in.readLine()) != null)
+        {
+            list.add(user);
+        }
+        
+        String[] userNameArray = list.toArray(new String[0]);
+        
+        /*
+        Notiz: Zurzeit ist die erste Zeile nur ein newline
+        Deshalb fängt das Array hier bei 1 an.
+        */
+        System.out.println(userNameArray[1]);
+        
+    }
     /**
      * Main Methode, zum reinen Testzweck dieser Klasse
      * @param args
@@ -145,11 +174,10 @@ public void stripDuplicatesFromFile() throws FileNotFoundException, IOException
     {
         StoredUsers test = new StoredUsers();
         test.createUsers();
-        test.pushUsers("Max"); 
-        test.pushUsers("Maxi");  
-        test.pushUsers("Mexiko");
+        test.pushUsers("MAX");
         //test.checkIfUserExists("Max");
         test.stripDuplicatesFromFile();
+        test.readUsersFromTxt();
     }
 }
 

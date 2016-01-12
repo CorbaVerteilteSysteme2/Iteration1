@@ -111,7 +111,7 @@
             </Component>
             <Component class="javax.swing.JTextField" name="userBoardInput">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Test-Tafel"/>
+                <Property name="text" type="java.lang.String" value="Test-Tafel2"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="userNameInput">
