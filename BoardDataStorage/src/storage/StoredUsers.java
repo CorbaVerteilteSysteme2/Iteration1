@@ -1,6 +1,5 @@
 package storage;
 
-import BoardModules.Message;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -18,6 +17,12 @@ import java.util.Set;
  * @author Matthäus Piechowiak
  * @version 1.0
  * Klasse zum speichern der Usernamen in einer .txt Datei
+ * createUsers() - Erstellt die users.txt Datei
+ * pushUsers() - speichert die Usernamen in der .txt Datei
+ * checkIfUserExists() - Überprüfung ob User schon in .txt steht
+ * stripDuplicatesFromFile() - Löscht doppelte namen au der .txt Datei
+ * readUsersFromTxt() - Speichert die User in ein Array
+ * 
  * 
  * Der Speicherort muss letztendlich noch in jeder Methode geändert werden
  * Die Variable "user_id" u.U. ebenso.
@@ -61,22 +66,11 @@ public class StoredUsers {
     public String pushUsers(String user_id)
     {   
         try
-        {
-            user_file = new File("users.txt");
-            /*
-            if(!user_file.exists())
-            {
-                System.out.println("Test, existiert nicht");
-            }
-            
-            else
-            {
-            */
+        {       
                 filewriter = new FileWriter(user_file ,true);
                 filewriter.write("\n" + user_id);
                 filewriter.flush();
                 filewriter.close();
-            //}
         }
         catch (IOException e) {
 //            e.printStackTrace();
@@ -98,13 +92,15 @@ public class StoredUsers {
         String line;
         while ((line = br.readLine()) != null) 
         {
-        if (line.contains(user_id))
+        if (!line.contains(user_id))
             {
                 System.out.println("Username existiert schon!");
+                break;
             }
         else
             {
                 System.out.println("User wurde gespeichert!");
+                break;
             }
         }
     }
@@ -140,6 +136,7 @@ public void stripDuplicatesFromFile() throws FileNotFoundException, IOException
 
 /**
  * Methode liest die einzelnen User aus der .txt Datei in ein Array.
+ * Die erste Zeile ist ein newline, Array-Index fängt also bei 1 an.
  * 
  * @throws FileNotFoundException
  * @throws IOException 
@@ -157,27 +154,6 @@ public void stripDuplicatesFromFile() throws FileNotFoundException, IOException
         
         String[] userNameArray = list.toArray(new String[0]);
         
-        /*
-        Notiz: Zurzeit ist die erste Zeile nur ein newline
-        Deshalb fängt das Array hier bei 1 an.
-        */
-        System.out.println(userNameArray[1]);
-        
-    }
-    /**
-     * Main Methode, zum reinen Testzweck dieser Klasse
-     * @param args
-     * @throws FileNotFoundException
-     * @throws IOException 
-     */
-    public static void main(String[] args) throws FileNotFoundException, IOException
-    {
-        StoredUsers test = new StoredUsers();
-        test.createUsers();
-        test.pushUsers("MAX");
-        //test.checkIfUserExists("Max");
-        test.stripDuplicatesFromFile();
-        test.readUsersFromTxt();
     }
 }
 
