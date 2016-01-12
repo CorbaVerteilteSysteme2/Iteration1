@@ -632,6 +632,7 @@ public class AdminGUI extends javax.swing.JFrame {
                 newUserNameInput.setText("Fehlgeschlagen");
             }
         }
+        refreshAllLists();
         
     }//GEN-LAST:event_createUserButtonActionPerformed
 
