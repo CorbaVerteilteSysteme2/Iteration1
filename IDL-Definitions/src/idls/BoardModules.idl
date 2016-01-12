@@ -44,6 +44,7 @@ module BoardModules {
 
             void forwardMessageToBoards(in StringList boards, in Message message) raises (DestinationUnreachable);
             void createUser(in User newuser);
+            StringList getAllUsers();
         };
 
         interface BoardService {
@@ -61,7 +62,7 @@ module BoardModules {
         interface VirtualGroupService {
             void addMember(in string boardname, in UserList users);
             void removeMember(in string boardname);
-            void createBackupOfVirtualGroup(out UserList users, out MessageList messages);
+            void createBackupOfVirtualGroup(out StringList membernames, out UserList users, out MessageList messages);
         };
     };
 };

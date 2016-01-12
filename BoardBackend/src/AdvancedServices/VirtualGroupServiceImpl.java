@@ -7,6 +7,7 @@ package AdvancedServices;
 
 import BoardModules.AdvancedServices.*;
 import BoardModules.MessageListHolder;
+import BoardModules.StringListHolder;
 import BoardModules.User;
 import BoardModules.UserListHolder;
 import java.util.ArrayList;
@@ -42,8 +43,7 @@ public class VirtualGroupServiceImpl extends VirtualGroupServicePOA {
     }
 
     @Override
-    public void createBackupOfVirtualGroup(UserListHolder users, MessageListHolder messages) {
+    public void createBackupOfVirtualGroup(StringListHolder membernames, UserListHolder users, MessageListHolder messages) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
 }
