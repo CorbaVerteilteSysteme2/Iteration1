@@ -149,6 +149,13 @@ public class AdministrationServiceImpl extends AdministrationServicePOA {
 
     @Override
     public String[] getAllUsers() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        User users[] = this.core.getAllUsers();
+        String usernames[] = new String[users.length];
+        
+        for (int i = 0; i < usernames.length; i++) {
+            usernames[i] = users[i].name;
+        }
+        
+        return usernames;
     }
 }
