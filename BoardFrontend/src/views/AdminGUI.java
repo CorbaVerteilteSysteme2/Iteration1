@@ -96,6 +96,7 @@ public class AdminGUI extends javax.swing.JFrame {
         jScrollPane5 = new javax.swing.JScrollPane();
         userNamesOutput = new javax.swing.JTextArea();
         jLabel12 = new javax.swing.JLabel();
+        refreshButton2 = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -258,11 +259,6 @@ public class AdminGUI extends javax.swing.JFrame {
         sendMessageField.setRows(5);
         jScrollPane3.setViewportView(sendMessageField);
 
-        boardListOutput.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item1", "Item2" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
         jScrollPane6.setViewportView(boardListOutput);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -369,6 +365,14 @@ public class AdminGUI extends javax.swing.JFrame {
         jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel12.setText("Benutzerliste:");
 
+        refreshButton2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        refreshButton2.setText("Aktuallisieren");
+        refreshButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                refreshButton2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -377,7 +381,8 @@ public class AdminGUI extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane5)
                     .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(refreshButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -401,7 +406,9 @@ public class AdminGUI extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(createUserButton))
                     .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(186, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(refreshButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(161, Short.MAX_VALUE))
         );
 
         jTabbedPane2.addTab("Nutzerverwaltung", jPanel2);
@@ -529,7 +536,7 @@ public class AdminGUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshButtonActionPerformed
-        refreshBoardLists();
+        refreshAllLists();
   
     }//GEN-LAST:event_refreshButtonActionPerformed
 
@@ -541,7 +548,7 @@ public class AdminGUI extends javax.swing.JFrame {
             //GUI
             this.setEnabled(true);
             t.start();
-            refreshBoardLists();
+            refreshAllLists();
             loginDialog.setVisible(false);
         }
     }//GEN-LAST:event_loginButtonActionPerformed
@@ -608,12 +615,13 @@ public class AdminGUI extends javax.swing.JFrame {
         }else{
             JOptionPane.showMessageDialog(null,"Virtuelle Gruppe bereits vorhanden!","Warnung",JOptionPane.WARNING_MESSAGE);           
         }
-        refreshBoardLists();
+        refreshAllLists();
     }//GEN-LAST:event_createVGButtonActionPerformed
 
     private void createUserButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createUserButtonActionPerformed
         boolean userAlreadyExist = false;
         User newUser = new User(newUserNameInput.getText());
+        refreshAllLists();
         try{
             boardServiceObj.checkUser(newUser);
             JOptionPane.showMessageDialog(null,"Benutzer bereits vorhanden!","Warnung",JOptionPane.WARNING_MESSAGE);
@@ -664,16 +672,21 @@ public class AdminGUI extends javax.swing.JFrame {
             transfereMsgNumberInput.setText("Fehlgeschlagen");
         }catch (NumberFormatException e) {
             transfereMsgNumberInput.setText("Ungültige Eingabe!");
+            JOptionPane.showMessageDialog(null,"Fehlerhafte Eingabe Nachrichten-Nr!","Warnung",JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_transfereMessageActionPerformed
 
     private void refreshButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshButton1ActionPerformed
-        refreshBoardLists();
+        refreshAllLists();
     }//GEN-LAST:event_refreshButton1ActionPerformed
 
     private void loginDialogWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_loginDialogWindowClosed
        this.dispose();
     }//GEN-LAST:event_loginDialogWindowClosed
+
+    private void refreshButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshButton2ActionPerformed
+        refreshAllLists();
+    }//GEN-LAST:event_refreshButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -793,8 +806,9 @@ public class AdminGUI extends javax.swing.JFrame {
      /**
      * Aktuallisieren der Tafelliste und beider Comboboxen
      */
-    private void refreshBoardLists(){
+    private void refreshAllLists(){
         String[] allBoardList;
+        String[] allUsers;
         virtualGrpList = adminServiceObj.getAllVirtualGroups();
         
         ArrayList<String> boardList = getAllBoardsAndVirtualGroups();       
@@ -811,6 +825,15 @@ public class AdminGUI extends javax.swing.JFrame {
             virtualBoardListOutput.append(boardname);
             virtualBoardListOutput.append("\n");
         }
+        
+        //Userausgabe
+        allUsers = adminServiceObj.getAllUsers();
+        userNamesOutput.setText("");
+        for(String userName : allUsers){
+            userNamesOutput.append(userName);
+            userNamesOutput.append("\n");
+        }
+        
         allBoardList = boardList.toArray(new String[boardList.size()]);
         dropdownVirtualBoards.setModel(new javax.swing.DefaultComboBoxModel<>(virtualGrpList));
     }
@@ -890,6 +913,7 @@ public class AdminGUI extends javax.swing.JFrame {
     private javax.swing.JTextArea readMessageField;
     private javax.swing.JButton refreshButton;
     private javax.swing.JButton refreshButton1;
+    private javax.swing.JButton refreshButton2;
     private javax.swing.JTextArea sendMessageField;
     private javax.swing.JButton transfereMessage;
     private javax.swing.JTextField transfereMsgNumberInput;

@@ -387,10 +387,7 @@
                 <Component class="javax.swing.JList" name="boardListOutput">
                   <Properties>
                     <Property name="model" type="javax.swing.ListModel" editor="org.netbeans.modules.form.editors2.ListModelEditor">
-                      <StringArray count="2">
-                        <StringItem index="0" value="Item1"/>
-                        <StringItem index="1" value="Item2"/>
-                      </StringArray>
+                      <StringArray count="0"/>
                     </Property>
                   </Properties>
                   <AuxValues>
@@ -418,6 +415,7 @@
                           <Component id="jScrollPane5" max="32767" attributes="0"/>
                           <Component id="jLabel9" max="32767" attributes="0"/>
                           <Component id="jLabel12" max="32767" attributes="0"/>
+                          <Component id="refreshButton2" alignment="0" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
@@ -447,7 +445,9 @@
                           </Group>
                           <Component id="jScrollPane5" min="-2" pref="168" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="186" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="refreshButton2" min="-2" pref="19" max="-2" attributes="0"/>
+                      <EmptySpace pref="161" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -513,6 +513,17 @@
                 <Property name="horizontalAlignment" type="int" value="0"/>
                 <Property name="text" type="java.lang.String" value="Benutzerliste:"/>
               </Properties>
+            </Component>
+            <Component class="javax.swing.JButton" name="refreshButton2">
+              <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Tahoma" size="14" style="0"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Aktuallisieren"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="refreshButton2ActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>
