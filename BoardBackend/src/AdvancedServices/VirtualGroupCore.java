@@ -53,15 +53,6 @@ public class VirtualGroupCore extends AbstractCore {
             Logger.getLogger(VirtualGroupCore.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
-    /*
-    @Override
-    protected void finalize() throws Throwable {
-        super.finalize(); //To change body of generated methods, choose Tools | Templates.
-        this.closeCore();
-    }
-*/
-    
     
     public void addMember(String boardname, ArrayList<User> users) {
         this.members.add(new VirtualGroupMember(boardname, users));

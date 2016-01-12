@@ -6,6 +6,7 @@
 package BasicServices;
 
 import AdvancedServices.VirtualGroupCore;
+import BoardConfiguration.BoardConfiguration;
 import BoardCore.AbstractCore;
 import BoardCore.ORBAccessControl;
 import BoardModules.AdvancedServices.VirtualGroupService;
@@ -32,12 +33,14 @@ import org.omg.CosNaming.NamingContextPackage.*;
 public class AdministrationServiceImpl extends AdministrationServicePOA {
 
     private final ArrayList<VirtualGroupCore> virtualGroups;
-
+    private final ArrayList<VirtualGroupService> virtualGroupRefs;
+    
     private final AbstractCore core;
     
     public AdministrationServiceImpl(AbstractCore core) {
         this.core = core;
-        virtualGroups = new ArrayList<>();
+        this.virtualGroups = new ArrayList<>();
+        this.virtualGroupRefs = new ArrayList<>();
     }
     
     @Override
@@ -60,8 +63,10 @@ public class AdministrationServiceImpl extends AdministrationServicePOA {
     public void loginToVirtualGroup(String vgroupname) {
         try {
             System.out.println("Logge in eine Virtuelle Gruppe ein");
-            VirtualGroupService virtualGroupServiceObj = (VirtualGroupService) VirtualGroupServiceHelper.narrow(ORBAccessControl.getInstance().getNameService().resolve_str(vgroupname + "/VirtualGroupService"));
+            VirtualGroupService virtualGroupServiceObj = (VirtualGroupService) VirtualGroupServiceHelper.narrow(ORBAccessControl.getInstance().getNameService().resolve_str(vgroupname + "/" + BoardConfiguration.VGROUP_SERVICE_NAME));
+            
             virtualGroupServiceObj.addMember(core.getIdentifier(), core.getAllUsers());
+            virtualGroupRefs.add(virtualGroupServiceObj);
             //virtualGroupServiceObj.createBackupOfVirtualGroup(users, messages);
         } catch (NotFound ex) {
             Logger.getLogger(AdministrationServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -86,7 +91,7 @@ public class AdministrationServiceImpl extends AdministrationServicePOA {
             String boardname = value.binding_name[0].id;
             
             try {
-                VirtualGroupService virtualGroupServiceObj = (VirtualGroupService) VirtualGroupServiceHelper.narrow(ORBAccessControl.getInstance().getNameService().resolve_str(boardname + "/VirtualGroupService"));
+                VirtualGroupService virtualGroupServiceObj = (VirtualGroupService) VirtualGroupServiceHelper.narrow(ORBAccessControl.getInstance().getNameService().resolve_str(boardname + "/" + BoardConfiguration.VGROUP_SERVICE_NAME));
                 vgroupList.add(boardname);
             } catch (NotFound ex) {
                 
@@ -126,7 +131,7 @@ public class AdministrationServiceImpl extends AdministrationServicePOA {
                 String boardname = value.binding_name[0].id;
                 if (strListBoards.contains(boardname)) {
                     System.out.println(value.binding_name[0].id);
-                    BoardService boardServiceObj = (BoardService) BoardServiceHelper.narrow(ORBAccessControl.getInstance().getNameService().resolve_str(boardname + "/BoardService"));
+                    BoardService boardServiceObj = (BoardService) BoardServiceHelper.narrow(ORBAccessControl.getInstance().getNameService().resolve_str(boardname + "/" + BoardConfiguration.BOARD_SERVICE_NAME));
                     boardServiceObj.sendMessage(new User("."), message, ""); //TODO
                 } else {
                     System.err.println("Tafel existiert nicht: " + boardname + "!");

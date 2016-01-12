@@ -2,3 +2,9 @@
 /BoardDataStorage/nbproject/private/
 /BoardFrontend/nbproject/private/
 /IDL-Definitions/nbproject/private/
+/nbproject/private/
+/BoardDataStorage/build/
+/BoardDataStorage/dist/
+/BoardBackend/build/
+/IDL-Definitions/build/
+/IDL-Definitions/dist/

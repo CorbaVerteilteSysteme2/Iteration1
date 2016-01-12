@@ -102,6 +102,7 @@ public abstract class AbstractCore {
      * @param serviceName Name des Dienstes
      * @param serviceObj Objekt des Dienstes
      * @throws NotFound
+     * @throws org.omg.CosNaming.NamingContextPackage.AlreadyBound
      * @throws CannotProceed
      * @throws InvalidName 
      */
