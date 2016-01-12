@@ -15,42 +15,45 @@ public class SaveMessage implements IMessageStorage {
 	
 	@Override
 	public void storeMessage(String identifier, Message message) {
-		String datname = "C:\\Users\\Patrick\\Desktop\\"+identifier+"Messages.xml";
-		XMLEncoder enc = null;
-		
-		try {
-			enc = new XMLEncoder(new FileOutputStream(datname));
-			enc.writeObject(message);
-		} catch (IOException e) {
-			System.out.println("Fehler: Konnte nicht gespeichert werden!");
-			e.printStackTrace();
-		} finally {
-			if(enc != null){
-				enc.close();
-			}
-		}
+            
+            // mit relativer Pfad
+            String datname = "..\\" + identifier + "_Messages.xml";
+            XMLEncoder enc = null;
+
+            try {
+                enc = new XMLEncoder(new FileOutputStream(datname));
+                enc.writeObject(message);
+            } catch (IOException e) {
+                System.out.println("Fehler: Konnte nicht gespeichert werden!");
+                e.printStackTrace();
+            } finally {
+                if(enc != null){
+                    enc.close();
+                }
+            }
 	}
 	
 	@Override
 	public ArrayList<Message> loadAllMessages(String Identifier) {
-		String datname = "C:\\Users\\Patrick\\Desktop\\"+Identifier+"Messages.xml";
-		XMLDecoder dec = null;
-		ArrayList<Message> msglist = new ArrayList<>();
-		Message nachricht = new Message();
-		
-		try {
-			dec = new XMLDecoder(new FileInputStream(datname));
-			nachricht = (Message)dec.readObject();
-			} catch (IOException e) {
-				System.out.println("Fehler: Konnte nicht laden!");
-				e.printStackTrace();
-			} finally {
-			if(dec != null) {
-				dec.close();
-			}
-		}
-		msglist.add(nachricht);
-		return msglist;
+            // mit relativer Pfad
+            String datname = "..\\"+Identifier+"Messages.xml";
+            XMLDecoder dec = null;
+            ArrayList<Message> msglist = new ArrayList<>();
+            Message nachricht = null;   // Die Nachricht muss nicht vordeklariert werden
+            
+            try {
+                dec = new XMLDecoder(new FileInputStream(datname));
+                nachricht = (Message)dec.readObject();
+                } catch (IOException e) {
+                        System.out.println("Fehler: Konnte nicht laden!");
+                        e.printStackTrace();
+                } finally {
+                    if(dec != null) {
+                        dec.close();
+                }
+            }
+            msglist.add(nachricht);
+            return msglist;
 	}
 	
 //	ArrayList<Message>msglist = null;
@@ -120,5 +123,10 @@ public class SaveMessage implements IMessageStorage {
 //	
 //	return msglist;
 //	}
+
+    @Override
+    public void removeMessage(String identifier, Message message) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }
 
