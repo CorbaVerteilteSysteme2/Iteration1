@@ -17,6 +17,7 @@ import BoardModules.BasicServices.ViewService;
 import BoardModules.BasicServices.ViewServiceHelper;
 import BoardModules.Message;
 import BoardModules.User;
+import Interfaces.*;
 import MessageStorage.MessageParser;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,15 +46,21 @@ public abstract class AbstractCore {
     protected ViewServiceImpl _viewService;
     
     private ArrayList<Message> localMessages;
-    //private HashMap<String, ArrayList<Message>> receivedForwardedMessages;
     
     private MessageParser messageParser;
+    
+    private IMessageStorage _messageStorage;
     
     public AbstractCore(String identifier) throws CannotProceed, InvalidName {
         try {
             this._identifier = identifier;
             this.messageParser = new MessageParser(identifier);
-            this.localMessages = new ArrayList<>();
+            
+            if (_messageStorage == null) {
+                this.localMessages = new ArrayList<>();
+            } else {
+                this.localMessages = _messageStorage.loadAllMessages(_identifier);
+            }
             //this.receivedForwardedMessages = new HashMap<String, ArrayList<Message>>();
             //getAllMessagesFromMessageParser();
             
@@ -127,6 +134,8 @@ public abstract class AbstractCore {
         //messageParser.WriteMessageToTextfile(msg);
         _viewService.setState(true);
         
+        if (this._messageStorage != null)
+            this._messageStorage.storeMessage(_identifier, msg);
     }
     
     protected void closeCore() {

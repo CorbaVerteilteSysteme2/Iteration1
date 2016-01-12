@@ -44,6 +44,8 @@ public class VirtualGroupServiceImpl extends VirtualGroupServicePOA {
 
     @Override
     public void createBackupOfVirtualGroup(StringListHolder membernames, UserListHolder users, MessageListHolder messages) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        core.getMembernames().toArray(membernames.value);
+        users.value = core.getAllUsers();
+        messages.value = core.getAllMessages();
     }
 }

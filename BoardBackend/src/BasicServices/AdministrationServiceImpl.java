@@ -16,7 +16,10 @@ import BoardModules.BasicServices.BoardService;
 import BoardModules.BasicServices.BoardServiceHelper;
 import BoardModules.DestinationUnreachable;
 import BoardModules.Message;
+import BoardModules.MessageListHolder;
+import BoardModules.StringListHolder;
 import BoardModules.User;
+import BoardModules.UserListHolder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.logging.Level;
@@ -67,6 +70,24 @@ public class AdministrationServiceImpl extends AdministrationServicePOA {
             
             virtualGroupServiceObj.addMember(core.getIdentifier(), core.getAllUsers());
             virtualGroupRefs.add(virtualGroupServiceObj);
+            
+            /*
+            boolean containVGroupCore = false;
+            
+            for (VirtualGroupCore vgroupcore : virtualGroups) {
+                if (vgroupcore.getIdentifier().equals(vgroupname)) {
+                    containVGroupCore = true;
+                }
+            }
+
+            if (!containVGroupCore) {
+                 StringListHolder membernames = new StringListHolder();
+                UserListHolder users = new UserListHolder();
+                MessageListHolder messages = new MessageListHolder();
+                virtualGroupServiceObj.createBackupOfVirtualGroup(membernames, users, messages);
+                this.virtualGroups.add(new VirtualGroupCore(vgroupname, membernames.value, users.value, messages.value));
+            }
+            */
             
         } catch (NotFound ex) {
             Logger.getLogger(AdministrationServiceImpl.class.getName()).log(Level.SEVERE, null, ex);

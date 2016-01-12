@@ -9,6 +9,7 @@ import BoardConfiguration.BoardConfiguration;
 import BoardCore.AbstractCore;
 import BoardCore.ORBAccessControl;
 import BoardModules.AdvancedServices.*;
+import BoardModules.Message;
 import BoardModules.User;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -37,7 +38,36 @@ public class VirtualGroupCore extends AbstractCore {
         try {
             _virtualGroupService = new VirtualGroupServiceImpl(this);
             
-            org.omg.CORBA.Object virtualGroupServiceRef = ORBAccessControl.getInstance().getRootPOA().servant_to_reference(_virtualGroupService);
+            buildVirtualGroupService();
+            
+        } catch (ServantNotActive ex) {
+            Logger.getLogger(VirtualGroupCore.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (WrongPolicy ex) {
+            Logger.getLogger(VirtualGroupCore.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public VirtualGroupCore(String vgroupname, String[] membernames, User[] users, Message[] messages) throws CannotProceed, InvalidName {
+        super(vgroupname);
+        _virtualGroupService = new VirtualGroupServiceImpl(this);
+        
+        for (Message msg : messages) {
+            this.addMessage(msg);
+        }
+        
+        for (String membername : membernames) {
+            ArrayList<User> memberUsers = new ArrayList<>();
+            for (User user : users) {
+                if (user.name.startsWith(vgroupname)) {
+                    memberUsers.add(user);
+                }
+            }
+            this.members.add(new VirtualGroupMember(membername, memberUsers));
+        }
+    }
+    
+    private void buildVirtualGroupService() throws ServantNotActive, WrongPolicy, NotFound, AlreadyBound, CannotProceed, InvalidName {
+        org.omg.CORBA.Object virtualGroupServiceRef = ORBAccessControl.getInstance().getRootPOA().servant_to_reference(_virtualGroupService);
             
             VirtualGroupService virtualGroupService = VirtualGroupServiceHelper.narrow(virtualGroupServiceRef);
             
@@ -46,12 +76,6 @@ public class VirtualGroupCore extends AbstractCore {
             NameComponent path1[] = { boardNC, virtualGroupServiceNC };
             
             registerObjWithNameService(ORBAccessControl.getInstance().getNameService(), path1, virtualGroupServiceRef);
-            
-        } catch (ServantNotActive ex) {
-            Logger.getLogger(VirtualGroupCore.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (WrongPolicy ex) {
-            Logger.getLogger(VirtualGroupCore.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
     
     public void addMember(String boardname, ArrayList<User> users) {
@@ -123,5 +147,15 @@ public class VirtualGroupCore extends AbstractCore {
             }
 
         }
+    }
+    
+    public ArrayList<String> getMembernames() {
+        ArrayList<String> membernames = new ArrayList<>();
+        
+        for (VirtualGroupMember m : members) {
+            membernames.add(m.getIdentifier());
+        }
+        
+        return membernames;
     }
 }

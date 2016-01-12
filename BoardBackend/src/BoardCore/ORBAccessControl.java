@@ -47,7 +47,7 @@ public class ORBAccessControl {
             rootPOA = POAHelper.narrow(_orb.resolve_initial_references("RootPOA"));
             rootPOA.the_POAManager().activate();
 
-            org.omg.CORBA.Object objRef = _orb.resolve_initial_references("NameService");
+            org.omg.CORBA.Object objRef = _orb.resolve_initial_references(BoardConfiguration.BoardConfiguration.NAMESERVICE);
             nameService = NamingContextExtHelper.narrow(objRef);
         }
     }
