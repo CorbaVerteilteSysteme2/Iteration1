@@ -85,6 +85,7 @@ public class AdminGUI extends javax.swing.JFrame {
         sendMessageField = new javax.swing.JTextArea();
         jScrollPane6 = new javax.swing.JScrollPane();
         boardListOutput = new javax.swing.JList<>();
+        jButton2 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
@@ -238,6 +239,11 @@ public class AdminGUI extends javax.swing.JFrame {
                 transfereMsgNumberInputFocusLost(evt);
             }
         });
+        transfereMsgNumberInput.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                transfereMsgNumberInputActionPerformed(evt);
+            }
+        });
 
         transfereMessage.setText("Nachricht an Tafel weiterleiten");
         transfereMessage.addActionListener(new java.awt.event.ActionListener() {
@@ -259,16 +265,26 @@ public class AdminGUI extends javax.swing.JFrame {
 
         jScrollPane6.setViewportView(boardListOutput);
 
+        jButton2.setText("löschen");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeMessageActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap(351, Short.MAX_VALUE)
-                .addComponent(jButton1)
-                .addGap(296, 296, 296))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jButton2))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap(351, Short.MAX_VALUE)
+                        .addComponent(jButton1)))
+                .addGap(46, 46, 46)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(transfereMessage, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -300,7 +316,9 @@ public class AdminGUI extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 57, Short.MAX_VALUE)
                 .addComponent(jButton1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(transfereMessage, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(transfereMessage, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton2))
                 .addGap(45, 45, 45))
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel1Layout.createSequentialGroup()
@@ -713,7 +731,7 @@ public class AdminGUI extends javax.swing.JFrame {
         }
         catch (UnknownUser e)
         {
-            JOptionPane.showMessageDialog(null,"Benutzer existiert nicht","Warnung",JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null,"Benutzer existiert nicht!","Warnung",JOptionPane.WARNING_MESSAGE);
         }
         catch (COMM_FAILURE ex)
         {
@@ -734,6 +752,14 @@ public class AdminGUI extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_deleteUserButtonActionPerformed
+
+    private void transfereMsgNumberInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_transfereMsgNumberInputActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_transfereMsgNumberInputActionPerformed
+
+    private void removeMessageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeMessageActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_removeMessageActionPerformed
 
     /**
      * @param args the command line arguments
@@ -905,6 +931,38 @@ public class AdminGUI extends javax.swing.JFrame {
         
 
     }
+    
+        private void removeMessage(String message) 
+        {
+        if ("".equals(message))
+        {
+            JOptionPane.showMessageDialog(null,"Nachrichten müssen einen Inhalt haben!","Warnung",JOptionPane.WARNING_MESSAGE);           
+        }
+        else
+        {
+            try
+            {
+                boardServiceObj.removeMessage(admin, new Message(message, admin.name, new Date().toString()), tableID);
+            }
+            catch (UnknownUser ex) 
+            {
+                Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(null,"Unbekannter Nutzer!","Warnung",JOptionPane.WARNING_MESSAGE);           
+
+            }
+            catch (COMM_FAILURE ex)
+            {
+                JOptionPane.showMessageDialog(null,"Server wurde nicht gefunden! Nachrichten werden zur nächsten Gelegenheit gesendet!","Warnung",JOptionPane.WARNING_MESSAGE);
+                //Verruebergehende Ausgabe
+                readMessageField.append("\n");
+                sendMessageField.setText("");
+                startMessagePuffer(message);
+            }
+        }
+        
+
+    }
+        
     /**
      * Puffer für Messages wenn Server nicht verfügbar ist
      * @param message String der Nachricht
@@ -983,6 +1041,7 @@ public class AdminGUI extends javax.swing.JFrame {
     private javax.swing.JButton createVGButton;
     private javax.swing.JComboBox<String> dropdownVirtualBoards;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
