@@ -556,26 +556,8 @@ public class AdminGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_loginDialogWindowOpened
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-
         //Nachricht Senden
-        if ("".equals(sendMessageField.getText())){
-            JOptionPane.showMessageDialog(null,"Nachrichten müssen einen Inhalt haben!","Warnung",JOptionPane.WARNING_MESSAGE);           
-        }else{
-            try{
-        
-                boardServiceObj.sendMessage(admin, new Message(sendMessageField.getText(), admin.name, new Date().toString()), tableID);
-            } catch (DestinationUnreachable ex) {
-                Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (UnknownUser ex) {
-                Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
-                JOptionPane.showMessageDialog(null,"Unbekannter Nutzer!","Warnung",JOptionPane.WARNING_MESSAGE);           
-
-            }
-        }
-        
-        //Verruebergehende Ausgabe
-        readMessageField.append(sendMessageField.getText());
-        readMessageField.append("\n");
+        sendMessage(sendMessageField.getText());
         sendMessageField.setText("");
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -738,6 +720,7 @@ public class AdminGUI extends javax.swing.JFrame {
     public boolean startAdminBoardService(String adminname, String tableID, String ipAddress){
         boolean worked = false;
         this.tableID = tableID;
+        this.loginIP = ipAddress;
         try {
             ORB _orb;
             Properties props = new Properties();
@@ -792,13 +775,8 @@ public class AdminGUI extends javax.swing.JFrame {
                 
                 //VirtualGroupService virtualGroupServiceObj = (VirtualGroupService) VirtualGroupServiceHelper.narrow(nameService.resolve_str(boardname + "/VirtualGroupService"));
                 boardList.add(boardname);
-            } catch (NotFound ex) {
-                
-                
-            } catch (CannotProceed ex) {
-                
-            } catch (org.omg.CosNaming.NamingContextPackage.InvalidName ex) {
-                
+            } catch (NotFound | CannotProceed | org.omg.CosNaming.NamingContextPackage.InvalidName ex) {
+                      
             }
         }
         return boardList;
@@ -808,7 +786,7 @@ public class AdminGUI extends javax.swing.JFrame {
      * Aktuallisieren der Tafelliste und beider Comboboxen
      */
     private void refreshAllLists(){
-        String[] allBoardList;
+        //String[] allBoardList;
         String[] allUsers;
         virtualGrpList = adminServiceObj.getAllVirtualGroups();
         
@@ -835,10 +813,52 @@ public class AdminGUI extends javax.swing.JFrame {
             userNamesOutput.append("\n");
         }
         
-        allBoardList = boardList.toArray(new String[boardList.size()]);
+        //allBoardList = boardList.toArray(new String[boardList.size()]);
         dropdownVirtualBoards.setModel(new javax.swing.DefaultComboBoxModel<>(virtualGrpList));
     }
+
+
+    private void sendMessage(String message) {
+        if ("".equals(message)){
+            JOptionPane.showMessageDialog(null,"Nachrichten müssen einen Inhalt haben!","Warnung",JOptionPane.WARNING_MESSAGE);           
+        }else{
+            try{
+        
+                boardServiceObj.sendMessage(admin, new Message(message, admin.name, new Date().toString()), tableID);
+            } catch (DestinationUnreachable ex) {
+                Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (UnknownUser ex) {
+                Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(null,"Unbekannter Nutzer!","Warnung",JOptionPane.WARNING_MESSAGE);           
+
+            } catch (COMM_FAILURE ex){
+                JOptionPane.showMessageDialog(null,"Server wurde nicht gefunden! Nachrichten werden zur nächsten Gelegenheit gesendet!","Warnung",JOptionPane.WARNING_MESSAGE);
+                //Verruebergehende Ausgabe
+                readMessageField.append(sendMessageField.getText());
+                readMessageField.append("\n");
+                sendMessageField.setText("");
+                startMessagePuffer(message);
+            }
+        }
+        
+
+    }
+    /**
+     * Puffer für Messages wenn Server nicht verfügbar ist
+     * @param message String der Nachricht
+     */   
+    private void startMessagePuffer(String backupMessage) {
+        messagePuffer.add(backupMessage);
+    }
     
+    private void sendPuffer() {
+        if ((!messagePuffer.isEmpty()) || (messagePuffer != null)) {
+            for (String msgPuffer : messagePuffer){
+                sendMessage(msgPuffer);
+            }
+            messagePuffer.clear();
+        }
+    }  
      /**
      * Timer zum regelmäßigen Aktuallisieren der eigenen Tafelanzeige
      */
@@ -846,6 +866,8 @@ public class AdminGUI extends javax.swing.JFrame {
         @Override
         public void actionPerformed(ActionEvent e) {
               int counter = 0;
+              System.out.println("check");
+              
               try{             
               if (message != null){
                 messageCheck = viewServiceObj.getAllMessageByDestination("");
@@ -868,8 +890,23 @@ public class AdminGUI extends javax.swing.JFrame {
                       counter++;
                   }
               }
+              
+              sendPuffer();
+              t.setDelay(1000);
               }catch (DestinationUnreachable ex){
                   
+              } catch (COMM_FAILURE ex){
+                  try {
+                    t.setDelay(10000);
+                    adminServiceObj = (AdministrationService) AdministrationServiceHelper.narrow(nameService.resolve_str(tableID + "/" + BoardConfiguration.ADMIN_SERVICE_NAME));
+                    boardServiceObj = (BoardService) BoardServiceHelper.narrow(nameService.resolve_str(tableID + "/" + BoardConfiguration.BOARD_SERVICE_NAME));
+                    viewServiceObj = (ViewService) ViewServiceHelper.narrow(nameService.resolve_str(tableID + "/" + BoardConfiguration.VIEW_SERVICE_NAME));
+                    
+                    //sendPuffer();
+                  } catch (NotFound | CannotProceed | org.omg.CosNaming.NamingContextPackage.InvalidName | COMM_FAILURE ex1) {
+                      //Logger.getLogger(AdminGUI.class.getName()).log(Level.SEVERE, null, ex1);
+                  }
+               
               }
           }
     }
@@ -929,8 +966,13 @@ public class AdminGUI extends javax.swing.JFrame {
     private Message[] message = null;
     private Message[] messageCheck = null;
     private String[] virtualGrpList = {"Bitte Tafeln aktuallisieren"};
-    private String tableID = "";
+    private String tableID = null;
+    private String loginIP = null;
     private DefaultListModel listModel;
+    
+    private ArrayList<String> messagePuffer = new ArrayList<>();
+
+
 
     
     
