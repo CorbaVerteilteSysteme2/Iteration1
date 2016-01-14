@@ -229,8 +229,6 @@ public class UserGUI extends javax.swing.JFrame {
             try{
         
                 boardServiceObj.sendMessage(user, new Message(message, user.name, new Date().toString()), tableID);
-            } catch (DestinationUnreachable ex) {
-                Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
             } catch (UnknownUser ex) {
                 Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
                 JOptionPane.showMessageDialog(null,"Unbekannter Nutzer!","Warnung",JOptionPane.WARNING_MESSAGE);           
