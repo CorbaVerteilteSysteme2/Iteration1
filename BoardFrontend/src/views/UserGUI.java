@@ -30,6 +30,7 @@ import org.omg.CosNaming.NamingContextPackage.CannotProceed;
 import org.omg.CosNaming.NamingContextPackage.NotFound;
 import BoardModules.BasicServices.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import javax.swing.JOptionPane;
 import org.omg.CORBA.COMM_FAILURE;
@@ -217,23 +218,32 @@ public class UserGUI extends javax.swing.JFrame {
      * @throws UnknownUser 
      */
     private void sendMessageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendMessageActionPerformed
-        if ("".equals(sendMessageField.getText())){
+        sendMessage(sendMessageField.getText());
+    }
+
+
+    private void sendMessage(String message) {
+        if ("".equals(message)){
             JOptionPane.showMessageDialog(null,"Nachrichten müssen einen Inhalt haben!","Warnung",JOptionPane.WARNING_MESSAGE);           
         }else{
             try{
         
-                boardServiceObj.sendMessage(user, new Message(sendMessageField.getText(), user.name, new Date().toString()), tableID);
+                boardServiceObj.sendMessage(user, new Message(message, user.name, new Date().toString()), tableID);
             } catch (DestinationUnreachable ex) {
                 Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
             } catch (UnknownUser ex) {
                 Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
                 JOptionPane.showMessageDialog(null,"Unbekannter Nutzer!","Warnung",JOptionPane.WARNING_MESSAGE);           
 
+            } catch (COMM_FAILURE ex){
+                JOptionPane.showMessageDialog(null,"Server wurde nicht gefunden! Nachrichten werden zur nächsten Gelegenheit gesendet!","Warnung",JOptionPane.WARNING_MESSAGE);
+                //Verruebergehende Ausgabe
+                readMessageField.append(sendMessageField.getText());
+                readMessageField.append("\n");
+                sendMessageField.setText("");
+                startMessagePuffer(message);
             }
-        }
-        readMessageField.append(sendMessageField.getText());
-        readMessageField.append("\n");
-        sendMessageField.setText("");
+        }        
     }//GEN-LAST:event_sendMessageActionPerformed
 
     private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
@@ -314,11 +324,11 @@ public class UserGUI extends javax.swing.JFrame {
             _orb = ORB.init(new String[0], props);
             
             org.omg.CORBA.Object objRef = _orb.resolve_initial_references(BoardConfiguration.NAMESERVICE);
-            NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
+            nameService = NamingContextExtHelper.narrow(objRef);
         
-            this.boardServiceObj = (BoardService) BoardServiceHelper.narrow(ncRef.resolve_str(tableID + "/" + BoardConfiguration.BOARD_SERVICE_NAME));
-            this.viewServiceObj = (ViewService) ViewServiceHelper.narrow(ncRef.resolve_str(tableID + "/" + BoardConfiguration.VIEW_SERVICE_NAME));
-            
+            this.boardServiceObj = (BoardService) BoardServiceHelper.narrow(nameService.resolve_str(tableID + "/" + BoardConfiguration.BOARD_SERVICE_NAME));
+            this.viewServiceObj = (ViewService) ViewServiceHelper.narrow(nameService.resolve_str(tableID + "/" + BoardConfiguration.VIEW_SERVICE_NAME));
+  
             this.user = new User(username);
             this.boardServiceObj.checkUser(user);
             worked = true;
@@ -335,6 +345,25 @@ public class UserGUI extends javax.swing.JFrame {
 
         return worked;
     }    
+    /**
+     * Puffer für Messages wenn Server nicht verfügbar ist
+     * @param message String der Nachricht
+     */   
+    private void startMessagePuffer(String backupMessage) {
+        messagePuffer.add(backupMessage);
+    }
+
+     /**
+     * sendPuffer sendet Messages wenn Server wieder verfügbar ist
+     */ 
+    private void sendPuffer() {
+        if ((!messagePuffer.isEmpty()) || (messagePuffer != null)) {
+            for (String msgPuffer : messagePuffer){
+                sendMessage(msgPuffer);
+            }
+            messagePuffer.clear();
+        }
+    }  
  
     javax.swing.Timer t = new javax.swing.Timer(1000, new ActionListener() {  
         @Override
@@ -357,8 +386,21 @@ public class UserGUI extends javax.swing.JFrame {
                       readMessageField.append("\n");
                   }
               }
+              
+              sendPuffer();
+              t.setDelay(1000);
               }catch (DestinationUnreachable ex){
                   
+              } catch (COMM_FAILURE ex){
+                    t.setDelay(10000);
+                    try {
+                        boardServiceObj = (BoardService) BoardServiceHelper.narrow(nameService.resolve_str(tableID + "/" + BoardConfiguration.BOARD_SERVICE_NAME));
+                        viewServiceObj = (ViewService) ViewServiceHelper.narrow(nameService.resolve_str(tableID + "/" + BoardConfiguration.VIEW_SERVICE_NAME));
+
+                  } catch (NotFound | CannotProceed | org.omg.CosNaming.NamingContextPackage.InvalidName ex1) {
+                      //Logger.getLogger(UserGUI.class.getName()).log(Level.SEVERE, null, ex1);
+                  }
+               
               }
           }
     }
@@ -382,6 +424,7 @@ public class UserGUI extends javax.swing.JFrame {
     private javax.swing.JTextField userBoardInput;
     private javax.swing.JTextField userNameInput;
     // End of variables declaration//GEN-END:variables
+    private NamingContextExt nameService = null; // Referenz auf den NameService
     private BoardService boardServiceObj = null;
     private ViewService viewServiceObj = null;
     private User user = null;
@@ -389,4 +432,6 @@ public class UserGUI extends javax.swing.JFrame {
     private Message[] messageCheck = null;
     //private boolean firstRun = true;
     private String tableID = "";
+    private ArrayList<String> messagePuffer = new ArrayList<>();
+    
 }
