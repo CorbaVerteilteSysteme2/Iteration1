@@ -43,16 +43,15 @@ public class SaveMessage implements IMessageStorage {
 		
 		try {
 			dec = new XMLDecoder(new FileInputStream(datname));
+                        msglist = (ArrayList<Message>) dec.readObject();		//Datei auslesen und in ArrayList speichern
 		} catch (FileNotFoundException ex) {
-			Logger.getLogger(SaveMessage.class.getName()).log(Level.SEVERE, null, ex);
+                    //Wenn Datei leer oder nicht existiert --> Leere ArrayList zurückgeben
+			msglist = new ArrayList<>();
 		}
-		msglist = (ArrayList<Message>) dec.readObject();		//Datei auslesen und in ArrayList speichern
-		if (msglist == null) {		//Wenn Datei leer --> Leere ArrayList zurückgeben
-			return new ArrayList<Message>();
-		} else {
+
 		return msglist;
 		}
-	}
+	
 	
     @Override
     public void removeMessage(String identifier, Message message) {
