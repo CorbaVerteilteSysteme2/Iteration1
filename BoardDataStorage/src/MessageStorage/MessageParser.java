@@ -173,8 +173,9 @@ public class MessageParser
 	Message nachricht = new Message("Hallo", "Test", "12.01.2016");
 	Message nachricht2 = new Message("Hallo Nachricht2", "Test", "12.01.2016");
 	String tafelID = "Tafel";
-	sm.storeMessage(tafelID, nachricht);
-	sm.storeMessage(tafelID, nachricht2);
+	testlist.add(nachricht);
+	testlist.add(nachricht2);
+	sm.storeMessageList(tafelID, testlist);
 	System.out.println("Schreiben Fertig\n");
 	
 	testlist = sm.loadAllMessages(tafelID);
