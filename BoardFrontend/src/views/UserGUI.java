@@ -32,6 +32,8 @@ import BoardModules.BasicServices.*;
 import java.awt.event.*;
 import java.util.Arrays;
 import javax.swing.JOptionPane;
+import org.omg.CORBA.COMM_FAILURE;
+import org.omg.PortableServer.POAManagerPackage.AdapterInactive;
 
 public class UserGUI extends javax.swing.JFrame {
 
@@ -322,17 +324,13 @@ public class UserGUI extends javax.swing.JFrame {
             worked = true;
         } catch (UnknownUser ex){
             JOptionPane.showMessageDialog(null,"Benutzer wurde nicht gefunden!","Warnung",JOptionPane.WARNING_MESSAGE);     
-        } catch (InvalidName ex) {
+        } catch (InvalidName | CannotProceed | org.omg.CosNaming.NamingContextPackage.InvalidName ex) {
             Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
+        }catch (COMM_FAILURE ex){
+            JOptionPane.showMessageDialog(null,"Server wurde nicht gefunden!","Warnung",JOptionPane.WARNING_MESSAGE);
         } catch (NotFound ex) {
             Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(null,"Tafel wurde nicht gefunden!","Warnung",JOptionPane.WARNING_MESSAGE);
-        } catch (CannotProceed ex) {
-            Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
-
-        } catch (org.omg.CosNaming.NamingContextPackage.InvalidName ex) {
-            Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
-
         }
 
         return worked;
