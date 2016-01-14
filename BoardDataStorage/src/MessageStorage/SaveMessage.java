@@ -18,46 +18,54 @@ public class SaveMessage implements IMessageStorage {
 	@Override
 	public void storeMessage(String identifier, Message message) {
         // mit relativer Pfad
-        String datname = BoardConfiguration.COMMON_STORAGE_PATH + identifier + BoardConfiguration.MESSAGE_STORAGE_PATH;
-        XMLEncoder enc = null;
+            String datname = BoardConfiguration.COMMON_STORAGE_PATH + identifier + BoardConfiguration.MESSAGE_STORAGE_PATH;
+            XMLEncoder enc = null;
 
-		try {
-            enc = new XMLEncoder(new FileOutputStream(datname));
-            enc.writeObject(message);
-        } catch (IOException e) {
-            System.out.println("Fehler: Konnte nicht gespeichert werden!");
-            e.printStackTrace();
-        } finally {
-            if(enc != null){
-                enc.close();
+            try {
+                enc = new XMLEncoder(new FileOutputStream(datname));
+                ArrayList<Message> msgs = this.loadAllMessages(identifier);
+                msgs.add(message);
+                enc.writeObject(msgs);
+            } catch (IOException e) {
+                    System.out.println("Fehler: Konnte nicht gespeichert werden!");
+                    e.printStackTrace();
+            } finally {
+                if(enc != null){
+                    enc.close();
+                }
             }
-        }
 	}
 	
 	@Override
 	public ArrayList<Message> loadAllMessages(String Identifier) {
-        // mit relativer Pfad
-        String datname = BoardConfiguration.COMMON_STORAGE_PATH + Identifier + BoardConfiguration.MESSAGE_STORAGE_PATH;
-        XMLDecoder dec = null;
-        ArrayList<Message> msglist = new ArrayList<>();
-        Message nachricht = null;   // Die Nachricht muss nicht vordeklariert werden
-			
-		try {
-			dec = new XMLDecoder(new FileInputStream(datname));
-			} catch (FileNotFoundException ex) {
-				Logger.getLogger(SaveMessage.class.getName()).log(Level.SEVERE, null, ex);
-			}
-			for(int i = 0; i < anzObj; i++) {
-				try {
-					nachricht = (Message) dec.readObject();
-                } finally {
-                    if(dec != null) {
-                        dec.close();
-					}
-				}
-				msglist.add(nachricht);
-			}
-		anzObj = 0;
+            // mit relativer Pfad
+            String datname = BoardConfiguration.COMMON_STORAGE_PATH + Identifier + BoardConfiguration.MESSAGE_STORAGE_PATH;
+            XMLDecoder dec = null;
+            ArrayList<Message> msglist = null;
+            try {
+                //		try {
+//			dec = new XMLDecoder(new FileInputStream(datname));
+//			} catch (FileNotFoundException ex) {
+//				Logger.getLogger(SaveMessage.class.getName()).log(Level.SEVERE, null, ex);
+//			}
+//			for(int i = 0; i < anzObj; i++) {
+//				try {
+//					nachricht = (Message) dec.readObject();
+//                } finally {
+//                    if(dec != null) {
+//                        dec.close();
+//					}
+//				}
+//				msglist.add(nachricht);
+//			}
+//		anzObj = 0;
+
+                dec = new XMLDecoder(new FileInputStream(datname));
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(SaveMessage.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            msglist = (ArrayList<Message>) dec.readObject();
+
         return msglist;
 	}
 	
@@ -74,10 +82,11 @@ public class SaveMessage implements IMessageStorage {
 
 		try {
             enc = new XMLEncoder(new FileOutputStream(datname));
-			for(Message msg : messages) {
-				enc.writeObject(msg);
-				anzObj++;
-			}
+//			for(Message msg : messages) {
+//				enc.writeObject(msg);
+//				anzObj++;
+//			}
+enc.writeObject(messages);
         } catch (IOException e) {
             System.out.println("Fehler: Konnte nicht gespeichert werden!");
             e.printStackTrace();

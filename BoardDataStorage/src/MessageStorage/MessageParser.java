@@ -177,7 +177,7 @@ public class MessageParser
 	testlist.add(nachricht2);
 	sm.storeMessageList(tafelID, testlist);
 	System.out.println("Schreiben Fertig\n");
-	
+//	
 	testlist = sm.loadAllMessages(tafelID);
 	for(Message m: testlist){
 		System.out.println(m.content);
