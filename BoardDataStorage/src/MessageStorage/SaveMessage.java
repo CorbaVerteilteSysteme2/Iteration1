@@ -1,5 +1,6 @@
 package MessageStorage;
 
+import BoardConfiguration.BoardConfiguration;
 import BoardModules.Message;
 import Interfaces.IMessageStorage;
 import java.beans.XMLDecoder;
@@ -17,7 +18,7 @@ public class SaveMessage implements IMessageStorage {
 	public void storeMessage(String identifier, Message message) {
             
             // mit relativer Pfad
-            String datname = "..\\" + identifier + "_Messages.xml";
+            String datname = BoardConfiguration.COMMON_STORAGE_PATH + identifier + BoardConfiguration.MESSAGE_STORAGE_PATH;
             XMLEncoder enc = null;
 
             try {
@@ -36,7 +37,7 @@ public class SaveMessage implements IMessageStorage {
 	@Override
 	public ArrayList<Message> loadAllMessages(String Identifier) {
             // mit relativer Pfad
-            String datname = "..\\"+Identifier+"_Messages.xml";
+            String datname = BoardConfiguration.COMMON_STORAGE_PATH + Identifier + BoardConfiguration.MESSAGE_STORAGE_PATH;
             XMLDecoder dec = null;
             ArrayList<Message> msglist = new ArrayList<>();
             Message nachricht = null;   // Die Nachricht muss nicht vordeklariert werden
