@@ -47,7 +47,7 @@ public class BoardServiceImpl extends BoardServicePOA {
         } else {
             // hier handelt es sich bei der Nachricht um eine weitergeleitete Nachricht
             System.out.println("Nachricht erhalten von " + source + "-" + message.author + ": " + message.content + ", vom " + message.timestamp);
-            message.author = source + message.author;
+            message.author = message.author + "(" + source + ")";
             core.addMessage(message);
         }
     }

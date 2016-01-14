@@ -16,13 +16,11 @@ import BoardModules.BasicServices.BoardService;
 import BoardModules.BasicServices.BoardServiceHelper;
 import BoardModules.DestinationUnreachable;
 import BoardModules.Message;
-import BoardModules.MessageListHolder;
-import BoardModules.StringListHolder;
 import BoardModules.User;
-import BoardModules.UserListHolder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map.Entry;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
@@ -48,7 +46,7 @@ public class AdministrationServiceImpl extends AdministrationServicePOA {
         this.virtualGroups = new ArrayList<>();
         this.virtualGroupRefs = new HashMap<>();
         
-        // aktiviere Heartbeat zur virtuellen Gruppe
+        // aktiviere Heartbeat zur virtuellen Gruppe (TODO: funktioniert noch nicht)
         Timer t = new Timer();
         t.schedule(new TimerTask() {
             @Override
@@ -57,12 +55,12 @@ public class AdministrationServiceImpl extends AdministrationServicePOA {
                 for (int i = 0; i < virtualGroupRefs.size(); i++) {
                     
                 }
-                /*
-                for (VirtualGroupService vgroupService : virtualGroupRefs) {
-                    vgroupService.heartbeat();
-                    System.out.println("Heartbeat  " + vgroupService);
+                
+                for (Entry<String, VirtualGroupService> vgroup : virtualGroupRefs.entrySet()) {
+                    vgroup.getValue().heartbeat();
+                    System.out.println(vgroup.getKey());
                 }
-                */
+                
             }
         }, 10000);
     }
@@ -172,7 +170,7 @@ public class AdministrationServiceImpl extends AdministrationServicePOA {
                 if (strListBoards.contains(boardname)) {
                     System.out.println(value.binding_name[0].id);
                     BoardService boardServiceObj = (BoardService) BoardServiceHelper.narrow(ORBAccessControl.getInstance().getNameService().resolve_str(boardname + "/" + BoardConfiguration.BOARD_SERVICE_NAME));
-                    boardServiceObj.sendMessage(new User("."), message, ""); //TODO
+                    boardServiceObj.sendMessage(new User("."), message, core.getIdentifier()); 
                 } else {
                     System.err.println("Tafel existiert nicht: " + boardname + "!");
                 }
