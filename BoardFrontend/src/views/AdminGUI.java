@@ -584,38 +584,47 @@ public class AdminGUI extends javax.swing.JFrame {
     private void createVGButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createVGButtonActionPerformed
         String newVGName = newVGNameInput.getText();
         boolean VGNameExist = false;
-        for (String boardname : virtualGrpList) {
-            if ((newVGName.equals(boardname)) || (newVGName.equals("VG-Namen eingeben")) || (newVGName.equals("")))
-                VGNameExist = true;
+        try{
+            for (String boardname : virtualGrpList) {
+                if ((newVGName.equals(boardname)) || (newVGName.equals("VG-Namen eingeben")) || (newVGName.equals("")))
+                    VGNameExist = true;
+            }
+            if (!VGNameExist){
+                adminServiceObj.createVirtualGroup(newVGName);
+                newVGNameInput.setText("VG erfolgreich erstellt");
+            }else{
+                JOptionPane.showMessageDialog(null,"Virtuelle Gruppe bereits vorhanden!","Warnung",JOptionPane.WARNING_MESSAGE);           
+            }
+            refreshAllLists();
+        } catch (COMM_FAILURE ex){
+            JOptionPane.showMessageDialog(null,"Server wurde nicht gefunden!","Warnung",JOptionPane.WARNING_MESSAGE);
         }
-        if (!VGNameExist){
-            adminServiceObj.createVirtualGroup(newVGName);
-            newVGNameInput.setText("VG erfolgreich erstellt");
-        }else{
-            JOptionPane.showMessageDialog(null,"Virtuelle Gruppe bereits vorhanden!","Warnung",JOptionPane.WARNING_MESSAGE);           
-        }
-        refreshAllLists();
     }//GEN-LAST:event_createVGButtonActionPerformed
 
     private void createUserButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createUserButtonActionPerformed
         boolean userAlreadyExist = false;
         User newUser = new User(newUserNameInput.getText());
-        refreshAllLists();
         try{
+            refreshAllLists();
             boardServiceObj.checkUser(newUser);
             JOptionPane.showMessageDialog(null,"Benutzer bereits vorhanden!","Warnung",JOptionPane.WARNING_MESSAGE);
             userAlreadyExist = true;
         }catch (UnknownUser e){
+        }catch (COMM_FAILURE ex){
+            JOptionPane.showMessageDialog(null,"Server wurde nicht gefunden!","Warnung",JOptionPane.WARNING_MESSAGE);
+            userAlreadyExist = true;
         }
+        
         if (!userAlreadyExist){
             try{
                 adminServiceObj.createUser(newUser);
                 newUserNameInput.setText("Nutzer erfolgreich erstellt");
+                refreshAllLists();
             }catch (Exception ex){
                 newUserNameInput.setText("Fehlgeschlagen");
             }
         }
-        refreshAllLists();
+        
         
     }//GEN-LAST:event_createUserButtonActionPerformed
 
@@ -631,7 +640,11 @@ public class AdminGUI extends javax.swing.JFrame {
 
     private void loginVGButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginVGButtonActionPerformed
         String virtualGrpName = (String) dropdownVirtualBoards.getSelectedItem();
+        try{
         adminServiceObj.loginToVirtualGroup(virtualGrpName);
+        } catch (COMM_FAILURE ex){
+            JOptionPane.showMessageDialog(null,"Server wurde nicht gefunden!","Warnung",JOptionPane.WARNING_MESSAGE);
+        }
     }//GEN-LAST:event_loginVGButtonActionPerformed
 
     private void transfereMessageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_transfereMessageActionPerformed
@@ -660,6 +673,8 @@ public class AdminGUI extends javax.swing.JFrame {
         }catch (NumberFormatException e) {
             transfereMsgNumberInput.setText("Ungültige Eingabe!");
             JOptionPane.showMessageDialog(null,"Fehlerhafte Eingabe Nachrichten-Nr!","Warnung",JOptionPane.WARNING_MESSAGE);
+        } catch (COMM_FAILURE ex){
+            JOptionPane.showMessageDialog(null,"Server wurde nicht gefunden!","Warnung",JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_transfereMessageActionPerformed
 
@@ -788,33 +803,37 @@ public class AdminGUI extends javax.swing.JFrame {
     private void refreshAllLists(){
         //String[] allBoardList;
         String[] allUsers;
-        virtualGrpList = adminServiceObj.getAllVirtualGroups();
+        try{
+            virtualGrpList = adminServiceObj.getAllVirtualGroups();
         
-        ArrayList<String> boardList = getAllBoardsAndVirtualGroups();       
-        String[] boardListArrayObject = boardList.toArray(new String[boardList.size()]);
+            ArrayList<String> boardList = getAllBoardsAndVirtualGroups();       
+            String[] boardListArrayObject = boardList.toArray(new String[boardList.size()]);
 
-        listModel = new DefaultListModel();
-        for (String boardname : boardList) {
-            listModel.addElement(boardname);
-        }
-        boardListOutput.setListData(boardListArrayObject);       
+            listModel = new DefaultListModel();
+            for (String boardname : boardList) {
+                listModel.addElement(boardname);
+            }
+            boardListOutput.setListData(boardListArrayObject);       
         
-        virtualBoardListOutput.setText("");
-        for (String boardname : virtualGrpList) {
-            virtualBoardListOutput.append(boardname);
-            virtualBoardListOutput.append("\n");
-        }
+            virtualBoardListOutput.setText("");
+            for (String boardname : virtualGrpList) {
+                virtualBoardListOutput.append(boardname);
+                virtualBoardListOutput.append("\n");
+            }
         
-        //Userausgabe
-        allUsers = adminServiceObj.getAllUsers();
-        userNamesOutput.setText("");
-        for(String userName : allUsers){
-            userNamesOutput.append(userName);
-            userNamesOutput.append("\n");
-        }
+            //Userausgabe
+            allUsers = adminServiceObj.getAllUsers();
+            userNamesOutput.setText("");
+            for(String userName : allUsers){
+                userNamesOutput.append(userName);
+                userNamesOutput.append("\n");
+            }
         
-        //allBoardList = boardList.toArray(new String[boardList.size()]);
-        dropdownVirtualBoards.setModel(new javax.swing.DefaultComboBoxModel<>(virtualGrpList));
+            //allBoardList = boardList.toArray(new String[boardList.size()]);
+            dropdownVirtualBoards.setModel(new javax.swing.DefaultComboBoxModel<>(virtualGrpList));
+        } catch (COMM_FAILURE ex){
+            JOptionPane.showMessageDialog(null,"Server wurde nicht gefunden!","Warnung",JOptionPane.WARNING_MESSAGE);
+        }
     }
 
 
@@ -825,8 +844,6 @@ public class AdminGUI extends javax.swing.JFrame {
             try{
         
                 boardServiceObj.sendMessage(admin, new Message(message, admin.name, new Date().toString()), tableID);
-            } catch (DestinationUnreachable ex) {
-                Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
             } catch (UnknownUser ex) {
                 Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
                 JOptionPane.showMessageDialog(null,"Unbekannter Nutzer!","Warnung",JOptionPane.WARNING_MESSAGE);           
