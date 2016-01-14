@@ -18,4 +18,11 @@ public class BoardConfiguration {
     public static final String BOARD_SERVICE_NAME = "BoardService";
     public static final String VIEW_SERVICE_NAME = "ViewService";
     public static final String VGROUP_SERVICE_NAME = "VirtualGroupService";
+    
+    /*
+     * Pfade zum Speichern von Usern und Messages 
+     */
+    public static final String COMMON_STORAGE_PATH = ".\\";
+    public static final String USER_STORAGE_PATH = "_User.xml";
+    public static final String MESSAGE_STORAGE_PATH = "_Message.xml";
 }
