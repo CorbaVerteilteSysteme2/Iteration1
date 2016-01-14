@@ -11,13 +11,18 @@ import BoardCore.AbstractCore;
 import BoardCore.ORBAccessControl;
 import BoardModules.AdvancedServices.VirtualGroupService;
 import BoardModules.AdvancedServices.VirtualGroupServiceHelper;
+import BoardModules.BasicServices.AdministrationService;
+import BoardModules.BasicServices.AdministrationServiceHelper;
 import BoardModules.BasicServices.AdministrationServicePOA;
 import BoardModules.BasicServices.BoardService;
 import BoardModules.BasicServices.BoardServiceHelper;
 import BoardModules.DestinationUnreachable;
 import BoardModules.Message;
+import BoardModules.MessageListHolder;
+import BoardModules.StringListHolder;
 import BoardModules.UnknownUser;
 import BoardModules.User;
+import BoardModules.UserListHolder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -51,23 +56,23 @@ public class AdministrationServiceImpl extends AdministrationServicePOA {
         // aktiviere Heartbeat zur virtuellen Gruppe (TODO: funktioniert noch nicht)
         Timer t = new Timer();
         t.schedule(new TimerTask() {
-            int i = 0;
+//            int i = 0;
             @Override
             public void run() {
-                System.err.println(i);
-                i++;
+//                System.err.println(i);
+//                i++;
                 for (Entry<String, VirtualGroupService> vgroup : virtualGroupRefs.entrySet()) {
                     try {
                         vgroup.getValue().heartbeat();
 
-                        System.out.println("." + vgroup.getKey());
+                        System.out.println("Heartbeat: " + vgroup.getKey());
                     } catch (COMM_FAILURE ex) {
                         System.out.println(vgroup.getKey() + " ist tot");
                     }
                 }
                 
             }
-        }, 100, 1000);
+        }, 1000, 1000);
         
     }
     
@@ -97,7 +102,7 @@ public class AdministrationServiceImpl extends AdministrationServicePOA {
             virtualGroupRefs.put(vgroupname, virtualGroupServiceObj);
             
             
-            /*
+            
             boolean containVGroupCore = false;
             
             for (VirtualGroupCore vgroupcore : virtualGroups) {
@@ -107,13 +112,21 @@ public class AdministrationServiceImpl extends AdministrationServicePOA {
             }
 
             if (!containVGroupCore) {
-                 StringListHolder membernames = new StringListHolder();
-                UserListHolder users = new UserListHolder();
-                MessageListHolder messages = new MessageListHolder();
+                String membernameList[] = new String[100];
+                StringListHolder membernames = new StringListHolder(membernameList);
+                User userList[] = new User[100];
+                UserListHolder users = new UserListHolder(userList);
+                Message[] messageList = new Message[100];
+                MessageListHolder messages = new MessageListHolder(messageList);
                 virtualGroupServiceObj.createBackupOfVirtualGroup(membernames, users, messages);
+                
+                for (String membername : membernameList) {
+                    System.out.println("->" + membername);
+                }
+                
                 this.virtualGroups.add(new VirtualGroupCore(vgroupname, membernames.value, users.value, messages.value));
             }
-            */
+            
             
         } catch (NotFound ex) {
             Logger.getLogger(AdministrationServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -191,6 +204,19 @@ public class AdministrationServiceImpl extends AdministrationServicePOA {
     public void createUser(User newuser) {
         if (!core.checkUser(newuser)) {
             core.addUser(newuser);
+            for (Entry<String, VirtualGroupService> vgroup : virtualGroupRefs.entrySet()) {
+                try {
+                    AdministrationService adminService = (AdministrationService) AdministrationServiceHelper.narrow(ORBAccessControl.getInstance().getNameService().resolve_str(vgroup.getKey() + "/" + BoardConfiguration.ADMIN_SERVICE_NAME));
+                    User vgroupuser = new User(core.getIdentifier() + "." + newuser.name);
+                    adminService.createUser(vgroupuser);
+                } catch (NotFound ex) {
+                    Logger.getLogger(AdministrationServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (CannotProceed ex) {
+                    Logger.getLogger(AdministrationServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (InvalidName ex) {
+                    Logger.getLogger(AdministrationServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
         }
     }
 
@@ -211,5 +237,18 @@ public class AdministrationServiceImpl extends AdministrationServicePOA {
         if (!core.removeUser(user)) {
             throw new UnknownUser(user.name);
         }
+        for (Entry<String, VirtualGroupService> vgroup : virtualGroupRefs.entrySet()) {
+                try {
+                    AdministrationService adminService = (AdministrationService) AdministrationServiceHelper.narrow(ORBAccessControl.getInstance().getNameService().resolve_str(vgroup.getKey() + "/" + BoardConfiguration.ADMIN_SERVICE_NAME));
+                    User vgroupuser = new User(core.getIdentifier() + "." + user.name);
+                    adminService.removeUser(vgroupuser);
+                } catch (NotFound ex) {
+                    Logger.getLogger(AdministrationServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (CannotProceed ex) {
+                    Logger.getLogger(AdministrationServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (InvalidName ex) {
+                    Logger.getLogger(AdministrationServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
     }
 }
