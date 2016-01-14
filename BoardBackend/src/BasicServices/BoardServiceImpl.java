@@ -7,7 +7,6 @@ package BasicServices;
 
 import BoardCore.AbstractCore;
 import BoardModules.BasicServices.BoardServicePOA;
-import BoardModules.DestinationUnreachable;
 import BoardModules.Message;
 import BoardModules.UnknownUser;
 import BoardModules.User;
