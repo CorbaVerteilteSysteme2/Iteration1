@@ -178,7 +178,16 @@ public class VirtualGroupCore extends AbstractCore {
 
     @Override
     public boolean removeUser(User user) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        for (String membername : getMembernames()) {
+            if (user.name.startsWith(membername)) {
+                for (VirtualGroupMember vgm : members) {
+                    if (vgm.getIdentifier().equals(membername)) {
+                        vgm.getUsers().remove(user);
+                        return true;
+                    }
+                }
+            }
+        }
         return false;
     }
 }

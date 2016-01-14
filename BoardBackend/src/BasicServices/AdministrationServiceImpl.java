@@ -238,17 +238,17 @@ public class AdministrationServiceImpl extends AdministrationServicePOA {
             throw new UnknownUser(user.name);
         }
         for (Entry<String, VirtualGroupService> vgroup : virtualGroupRefs.entrySet()) {
-                try {
-                    AdministrationService adminService = (AdministrationService) AdministrationServiceHelper.narrow(ORBAccessControl.getInstance().getNameService().resolve_str(vgroup.getKey() + "/" + BoardConfiguration.ADMIN_SERVICE_NAME));
-                    User vgroupuser = new User(core.getIdentifier() + "." + user.name);
-                    adminService.removeUser(vgroupuser);
-                } catch (NotFound ex) {
-                    Logger.getLogger(AdministrationServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (CannotProceed ex) {
-                    Logger.getLogger(AdministrationServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (InvalidName ex) {
-                    Logger.getLogger(AdministrationServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-                }
+            try {
+                AdministrationService adminService = (AdministrationService) AdministrationServiceHelper.narrow(ORBAccessControl.getInstance().getNameService().resolve_str(vgroup.getKey() + "/" + BoardConfiguration.ADMIN_SERVICE_NAME));
+                User vgroupuser = new User(core.getIdentifier() + "." + user.name);
+                adminService.removeUser(vgroupuser);
+            } catch (NotFound ex) {
+                Logger.getLogger(AdministrationServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (CannotProceed ex) {
+                Logger.getLogger(AdministrationServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (InvalidName ex) {
+                Logger.getLogger(AdministrationServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             }
+        }
     }
 }

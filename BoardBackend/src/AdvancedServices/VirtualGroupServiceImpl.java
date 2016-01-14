@@ -26,15 +26,19 @@ public class VirtualGroupServiceImpl extends VirtualGroupServicePOA {
 
     @Override
     public void addMember(String boardname, User[] users) {
-        ArrayList<User> userList = new ArrayList<>();
-        
-        for (User user : users) {
-            user.name = boardname + "." + user.name;
-            System.out.println(user.name);
-            userList.add(user);
+        if (!this.core.getMembernames().contains(boardname)) {
+            ArrayList<User> userList = new ArrayList<>();
+
+            for (User user : users) {
+                user.name = boardname + "." + user.name;
+                System.out.println(user.name);
+                userList.add(user);
+            }
+
+            this.core.addMember(boardname, userList);
+        } else {
+            System.out.println(boardname + " ist bereits Mitglied von " + this.core.getIdentifier());
         }
-        
-        this.core.addMember(boardname, userList);
     }
 
     @Override
@@ -42,6 +46,7 @@ public class VirtualGroupServiceImpl extends VirtualGroupServicePOA {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    // TODO
     @Override
     public void createBackupOfVirtualGroup(StringListHolder membernames, UserListHolder users, MessageListHolder messages) {
         core.getMembernames().toArray(membernames.value);
