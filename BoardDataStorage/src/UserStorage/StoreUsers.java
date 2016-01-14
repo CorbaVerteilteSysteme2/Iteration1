@@ -1,5 +1,6 @@
 package UserStorage;
 
+import BoardConfiguration.BoardConfiguration;
 import BoardModules.User;
 import Interfaces.IUserStorage;
 import java.beans.XMLDecoder;
@@ -40,11 +41,11 @@ public class StoreUsers implements IUserStorage{
     	@Override
 	public void storeUser(String identifier, User user) 
         {
-            
-            // mit relativer Pfad
-            String datname = identifier + "_Users.xml";
+            String datname = BoardConfiguration.COMMON_STORAGE_PATH + identifier
+                    + BoardConfiguration.USER_STORAGE_PATH;
             try 
-            (XMLEncoder enc = new XMLEncoder(new FileOutputStream(datname))) {
+            (XMLEncoder enc = new XMLEncoder(new FileOutputStream(datname,true))) 
+            {
                 enc.writeObject(user);
             } 
             catch (IOException e) 
@@ -61,11 +62,11 @@ public class StoreUsers implements IUserStorage{
     	@Override
 	public ArrayList<User> loadAllUsers(String identifier) 
         {
-            // mit relativer Pfad
-            String datname = identifier+ "_Users.xml";
+            String datname = BoardConfiguration.COMMON_STORAGE_PATH + identifier
+                + BoardConfiguration.USER_STORAGE_PATH;
             XMLDecoder dec = null;
             ArrayList<User> userList = new ArrayList<>();
-            User benutzer = null;   // Die Nachricht muss nicht vordeklariert werden
+            User benutzer = null;
             
                 try 
                 {
