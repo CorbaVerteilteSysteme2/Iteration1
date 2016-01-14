@@ -57,11 +57,12 @@ public class AdministrationServiceImpl extends AdministrationServicePOA {
                 for (int i = 0; i < virtualGroupRefs.size(); i++) {
                     
                 }
-                
+                /*
                 for (VirtualGroupService vgroupService : virtualGroupRefs) {
                     vgroupService.heartbeat();
                     System.out.println("Heartbeat  " + vgroupService);
                 }
+                */
             }
         }, 10000);
     }
