@@ -31,10 +31,12 @@ public class VirtualGroupCore extends AbstractCore {
     
     private ArrayList<VirtualGroupMember> members;
     private VirtualGroupServiceImpl _virtualGroupService;
-      
+    private boolean  isActive;
+    
     public VirtualGroupCore(String groupname) throws CannotProceed, InvalidName, NotFound, AlreadyBound {
         super(groupname);
         members = new ArrayList<>();
+        
         try {
             _virtualGroupService = new VirtualGroupServiceImpl(this);
             
@@ -50,7 +52,7 @@ public class VirtualGroupCore extends AbstractCore {
     public VirtualGroupCore(String vgroupname, String[] membernames, User[] users, Message[] messages) throws CannotProceed, InvalidName {
         super(vgroupname);
         _virtualGroupService = new VirtualGroupServiceImpl(this);
-        
+        this.isActive = false;
         for (Message msg : messages) {
             this.addMessage(msg);
         }
@@ -76,6 +78,7 @@ public class VirtualGroupCore extends AbstractCore {
             NameComponent path1[] = { boardNC, virtualGroupServiceNC };
             
             registerObjWithNameService(ORBAccessControl.getInstance().getNameService(), path1, virtualGroupServiceRef);
+            this.isActive = true;
     }
     
     public void addMember(String boardname, ArrayList<User> users) {
@@ -157,5 +160,9 @@ public class VirtualGroupCore extends AbstractCore {
         }
         
         return membernames;
+    }
+    
+    public void activate() throws ServantNotActive, WrongPolicy, NotFound, AlreadyBound, CannotProceed, InvalidName {
+        buildVirtualGroupService();
     }
 }

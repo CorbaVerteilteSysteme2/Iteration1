@@ -22,6 +22,9 @@ import BoardModules.User;
 import BoardModules.UserListHolder;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.omg.CosNaming.NamingContextPackage.CannotProceed;
@@ -36,14 +39,31 @@ import org.omg.CosNaming.NamingContextPackage.*;
 public class AdministrationServiceImpl extends AdministrationServicePOA {
 
     private final ArrayList<VirtualGroupCore> virtualGroups;
-    private final ArrayList<VirtualGroupService> virtualGroupRefs;
+    private final HashMap<String, VirtualGroupService> virtualGroupRefs;
     
     private final AbstractCore core;
     
     public AdministrationServiceImpl(AbstractCore core) {
         this.core = core;
         this.virtualGroups = new ArrayList<>();
-        this.virtualGroupRefs = new ArrayList<>();
+        this.virtualGroupRefs = new HashMap<>();
+        
+        // aktiviere Heartbeat zur virtuellen Gruppe
+        Timer t = new Timer();
+        t.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                
+                for (int i = 0; i < virtualGroupRefs.size(); i++) {
+                    
+                }
+                
+                for (VirtualGroupService vgroupService : virtualGroupRefs) {
+                    vgroupService.heartbeat();
+                    System.out.println("Heartbeat  " + vgroupService);
+                }
+            }
+        }, 10000);
     }
     
     @Override
@@ -69,7 +89,7 @@ public class AdministrationServiceImpl extends AdministrationServicePOA {
             VirtualGroupService virtualGroupServiceObj = (VirtualGroupService) VirtualGroupServiceHelper.narrow(ORBAccessControl.getInstance().getNameService().resolve_str(vgroupname + "/" + BoardConfiguration.VGROUP_SERVICE_NAME));
             
             virtualGroupServiceObj.addMember(core.getIdentifier(), core.getAllUsers());
-            virtualGroupRefs.add(virtualGroupServiceObj);
+            virtualGroupRefs.put(vgroupname, virtualGroupServiceObj);
             
             /*
             boolean containVGroupCore = false;

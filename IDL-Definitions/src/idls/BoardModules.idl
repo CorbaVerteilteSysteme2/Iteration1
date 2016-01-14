@@ -63,6 +63,7 @@ module BoardModules {
             void addMember(in string boardname, in UserList users);
             void removeMember(in string boardname);
             void createBackupOfVirtualGroup(out StringList membernames, out UserList users, out MessageList messages);
+            void heartbeat();
         };
     };
 };

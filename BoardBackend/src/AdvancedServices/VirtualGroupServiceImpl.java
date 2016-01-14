@@ -20,7 +20,7 @@ public class VirtualGroupServiceImpl extends VirtualGroupServicePOA {
 
     private final VirtualGroupCore core;
     
-    VirtualGroupServiceImpl(VirtualGroupCore core) {
+    public VirtualGroupServiceImpl(VirtualGroupCore core) {
         this.core = core;
     }
 
@@ -47,5 +47,10 @@ public class VirtualGroupServiceImpl extends VirtualGroupServicePOA {
         core.getMembernames().toArray(membernames.value);
         users.value = core.getAllUsers();
         messages.value = core.getAllMessages();
+    }
+
+    @Override
+    public void heartbeat() {
+        // leere Methode zum Prüfen, ob Virtuelle Gruppe noch aktiv ist
     }
 }
