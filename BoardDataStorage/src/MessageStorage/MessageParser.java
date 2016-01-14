@@ -182,7 +182,14 @@ public class MessageParser
 	for(Message m: testlist){
 		System.out.println(m.content);
 	}
-
+	
+	sm.removeMessage(tafelID, nachricht);
+	
+	testlist = sm.loadAllMessages(tafelID);
+	//sm.storeMessageList(tafelID, testlist);
+	for(Message m: testlist){
+		System.out.println(m.content);
+	}
 	
 }
 
