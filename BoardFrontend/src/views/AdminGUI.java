@@ -94,6 +94,7 @@ public class AdminGUI extends javax.swing.JFrame {
         userNamesOutput = new javax.swing.JTextArea();
         jLabel12 = new javax.swing.JLabel();
         refreshButton2 = new javax.swing.JButton();
+        createUserButton1 = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -370,6 +371,13 @@ public class AdminGUI extends javax.swing.JFrame {
             }
         });
 
+        createUserButton1.setText("Benutzer löschen");
+        createUserButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteUserButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -384,7 +392,8 @@ public class AdminGUI extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(newUserNameInput)
-                    .addComponent(createUserButton))
+                    .addComponent(createUserButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(createUserButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(393, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -401,7 +410,9 @@ public class AdminGUI extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(newUserNameInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(createUserButton))
+                        .addComponent(createUserButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(createUserButton1))
                     .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(refreshButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -690,6 +701,40 @@ public class AdminGUI extends javax.swing.JFrame {
         refreshAllLists();
     }//GEN-LAST:event_refreshButton2ActionPerformed
 
+    private void deleteUserButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteUserButtonActionPerformed
+        boolean userAlreadyExist = false;
+        User oldUser = new User(newUserNameInput.getText());
+        try
+        {
+            refreshAllLists();
+            boardServiceObj.checkUser(oldUser);
+            JOptionPane.showMessageDialog(null,"Benutzer wird gelöscht!");
+            userAlreadyExist = true;
+        }
+        catch (UnknownUser e)
+        {
+            JOptionPane.showMessageDialog(null,"Benutzer existiert nicht","Warnung",JOptionPane.WARNING_MESSAGE);
+        }
+        catch (COMM_FAILURE ex)
+        {
+            JOptionPane.showMessageDialog(null,"Server wurde nicht gefunden!","Warnung",JOptionPane.WARNING_MESSAGE);
+        }
+        
+        if (userAlreadyExist)
+        {
+            try
+            {
+                adminServiceObj.removeUser(oldUser);
+                newUserNameInput.setText("Benutzer erfolgreich gelöscht");
+                refreshAllLists();
+            }
+            catch (Exception UnknownUser)
+            {
+                newUserNameInput.setText("Fehlgeschlagen");
+            }
+        }
+    }//GEN-LAST:event_deleteUserButtonActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -934,6 +979,7 @@ public class AdminGUI extends javax.swing.JFrame {
     private javax.swing.JTextField adminNameInput;
     private javax.swing.JList<String> boardListOutput;
     private javax.swing.JButton createUserButton;
+    private javax.swing.JButton createUserButton1;
     private javax.swing.JButton createVGButton;
     private javax.swing.JComboBox<String> dropdownVirtualBoards;
     private javax.swing.JButton jButton1;

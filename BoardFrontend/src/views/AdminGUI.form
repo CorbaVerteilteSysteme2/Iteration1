@@ -421,7 +421,8 @@
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Component id="jLabel10" alignment="0" max="32767" attributes="0"/>
                           <Component id="newUserNameInput" max="32767" attributes="0"/>
-                          <Component id="createUserButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="createUserButton" alignment="0" max="32767" attributes="0"/>
+                          <Component id="createUserButton1" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace pref="393" max="32767" attributes="0"/>
                   </Group>
@@ -442,6 +443,8 @@
                               <Component id="newUserNameInput" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="createUserButton" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="createUserButton1" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Component id="jScrollPane5" min="-2" pref="168" max="-2" attributes="0"/>
                       </Group>
@@ -523,6 +526,14 @@
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="refreshButton2ActionPerformed"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JButton" name="createUserButton1">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Benutzer l&#xf6;schen"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="deleteUserButtonActionPerformed"/>
               </Events>
             </Component>
           </SubComponents>
