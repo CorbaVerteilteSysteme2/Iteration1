@@ -36,7 +36,7 @@ public class SaveMessage implements IMessageStorage {
 	@Override
 	public ArrayList<Message> loadAllMessages(String Identifier) {
             // mit relativer Pfad
-            String datname = "..\\"+Identifier+"Messages.xml";
+            String datname = "..\\"+Identifier+"_Messages.xml";
             XMLDecoder dec = null;
             ArrayList<Message> msglist = new ArrayList<>();
             Message nachricht = null;   // Die Nachricht muss nicht vordeklariert werden
@@ -126,6 +126,11 @@ public class SaveMessage implements IMessageStorage {
 
     @Override
     public void removeMessage(String identifier, Message message) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void storeMessageList(String identifier, ArrayList<Message> messages) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

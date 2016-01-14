@@ -27,4 +27,9 @@ public interface IMessageStorage {
         Entfernt eine Nachricht
     */
     void removeMessage(String identifier, Message message);
+    
+    /*
+        Speichert eine Liste von Nachrichten
+    */
+    void storeMessageList(String identifier, ArrayList<Message> messages);
 }
