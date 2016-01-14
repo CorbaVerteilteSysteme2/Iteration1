@@ -57,8 +57,6 @@ public class BoardServiceTestbench {
             Logger.getLogger(BoardServiceTestbench.class.getName()).log(Level.SEVERE, null, ex);
         } catch (org.omg.CosNaming.NamingContextPackage.InvalidName ex) {
             Logger.getLogger(BoardServiceTestbench.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (DestinationUnreachable ex) {
-            Logger.getLogger(BoardServiceTestbench.class.getName()).log(Level.SEVERE, null, ex);
         } catch (UnknownUser ex) {
             Logger.getLogger(BoardServiceTestbench.class.getName()).log(Level.SEVERE, null, ex);
         }

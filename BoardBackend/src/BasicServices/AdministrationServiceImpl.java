@@ -16,6 +16,7 @@ import BoardModules.BasicServices.BoardService;
 import BoardModules.BasicServices.BoardServiceHelper;
 import BoardModules.DestinationUnreachable;
 import BoardModules.Message;
+import BoardModules.UnknownUser;
 import BoardModules.User;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,6 +26,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.omg.CORBA.COMM_FAILURE;
 import org.omg.CosNaming.NamingContextPackage.CannotProceed;
 import org.omg.CosNaming.NamingContextPackage.InvalidName;
 import org.omg.CosNaming.* ;
@@ -49,20 +51,24 @@ public class AdministrationServiceImpl extends AdministrationServicePOA {
         // aktiviere Heartbeat zur virtuellen Gruppe (TODO: funktioniert noch nicht)
         Timer t = new Timer();
         t.schedule(new TimerTask() {
+            int i = 0;
             @Override
             public void run() {
-                
-                for (int i = 0; i < virtualGroupRefs.size(); i++) {
-                    
-                }
-                
+                System.err.println(i);
+                i++;
                 for (Entry<String, VirtualGroupService> vgroup : virtualGroupRefs.entrySet()) {
-                    vgroup.getValue().heartbeat();
-                    System.out.println(vgroup.getKey());
+                    try {
+                        vgroup.getValue().heartbeat();
+
+                        System.out.println("." + vgroup.getKey());
+                    } catch (COMM_FAILURE ex) {
+                        System.out.println(vgroup.getKey() + " ist tot");
+                    }
                 }
                 
             }
-        }, 10000);
+        }, 100, 1000);
+        
     }
     
     @Override
@@ -89,6 +95,7 @@ public class AdministrationServiceImpl extends AdministrationServicePOA {
             
             virtualGroupServiceObj.addMember(core.getIdentifier(), core.getAllUsers());
             virtualGroupRefs.put(vgroupname, virtualGroupServiceObj);
+            
             
             /*
             boolean containVGroupCore = false;
@@ -197,5 +204,12 @@ public class AdministrationServiceImpl extends AdministrationServicePOA {
         }
         
         return usernames;
+    }
+
+    @Override
+    public void removeUser(User user) throws UnknownUser {
+        if (!core.removeUser(user)) {
+            throw new UnknownUser(user.name);
+        }
     }
 }

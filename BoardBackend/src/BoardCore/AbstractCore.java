@@ -19,6 +19,7 @@ import BoardModules.Message;
 import BoardModules.User;
 import Interfaces.*;
 import MessageStorage.MessageParser;
+import MessageStorage.SaveMessage;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
@@ -54,15 +55,15 @@ public abstract class AbstractCore {
     public AbstractCore(String identifier) throws CannotProceed, InvalidName {
         try {
             this._identifier = identifier;
-            this.messageParser = new MessageParser(identifier);
+            //this.messageParser = new MessageParser(identifier);
             
-            if (_messageStorage == null) {
-                this.localMessages = new ArrayList<>();
-            } else {
+            this._messageStorage = new SaveMessage();
+            
+//            if (_messageStorage == null) {
+//                this.localMessages = new ArrayList<>();
+//            } else {
                 this.localMessages = _messageStorage.loadAllMessages(_identifier);
-            }
-            //this.receivedForwardedMessages = new HashMap<String, ArrayList<Message>>();
-            //getAllMessagesFromMessageParser();
+//            }
             
             this._boardService = new BoardServiceImpl(this);
             this._adminService = new AdministrationServiceImpl(this);
@@ -134,8 +135,8 @@ public abstract class AbstractCore {
         //messageParser.WriteMessageToTextfile(msg);
         _viewService.setState(true);
         
-        if (this._messageStorage != null)
-            this._messageStorage.storeMessage(_identifier, msg);
+//        if (this._messageStorage != null)
+//            this._messageStorage.storeMessage(_identifier, msg);
     }
     
     protected void closeCore() {
@@ -176,11 +177,17 @@ public abstract class AbstractCore {
                 Logger.getLogger(AbstractCore.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        
+        this._messageStorage.storeMessageList(_identifier, localMessages);
     }
     
      public synchronized void removeMessage(Message msg) {
         this.localMessages.remove(msg);
         _viewService.setState(true);
+//        if (_messageStorage != null) {
+//            _messageStorage.removeMessage(_identifier, msg);
+//        }
+        
     }
      
     public synchronized Message[] getAllMessages() {
@@ -193,7 +200,9 @@ public abstract class AbstractCore {
         return msgs;
     }
     
-    public abstract void addUser(User user);    
+    public abstract void addUser(User user);   
+    
+    public abstract boolean removeUser(User user);
     
     public abstract boolean checkUser(User user);
     

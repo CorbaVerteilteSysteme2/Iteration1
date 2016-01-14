@@ -29,11 +29,10 @@ public class BoardServiceImpl extends BoardServicePOA {
      * @param user
      * @param message
      * @param source (ehemals destination) gibt die Quelle der nachricht an
-     * @throws DestinationUnreachable
      * @throws UnknownUser 
      */
     @Override
-    public void sendMessage(User user, Message message, String source) throws DestinationUnreachable, UnknownUser {
+    public void sendMessage(User user, Message message, String source) throws UnknownUser {
         System.out.println("Einkommende Nachricht...");
         if (source.equals(core.getIdentifier())) {
             // in diesem Fall überträgt ein Benutzer der lokalen Tafel eine Nachricht 
@@ -62,6 +61,11 @@ public class BoardServiceImpl extends BoardServicePOA {
         if (!core.checkUser(user)) {
             throw new UnknownUser(user.name);
         }
+    }
+
+    @Override
+    public void removeMessage(User user, Message message, String source) throws UnknownUser {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

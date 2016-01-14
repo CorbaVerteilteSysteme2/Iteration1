@@ -76,4 +76,9 @@ public class BoardCore extends AbstractCore {
             Logger.getLogger(BoardCore.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+    @Override
+    public boolean removeUser(User user) {
+        return this.users.remove(user);
+    }
 }

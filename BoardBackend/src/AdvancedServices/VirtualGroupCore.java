@@ -99,7 +99,7 @@ public class VirtualGroupCore extends AbstractCore {
 
     @Override
     public void addUser(User user) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
@@ -164,5 +164,11 @@ public class VirtualGroupCore extends AbstractCore {
     
     public void activate() throws ServantNotActive, WrongPolicy, NotFound, AlreadyBound, CannotProceed, InvalidName {
         buildVirtualGroupService();
+    }
+
+    @Override
+    public boolean removeUser(User user) {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return false;
     }
 }
