@@ -5,94 +5,114 @@ import BoardModules.User;
 import Interfaces.IUserStorage;
 import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
-import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+
 
 /**
  *
  * @author Matthäus Piechowiak
+ * übernnomen aus StoreMessage
  * 
  */
-public class StoreUsers implements IUserStorage{
-    
-    User _name;
-    String user_id;
-    String identifier;
-    File user_file;
-    FileWriter filewriter;
- 
-    StoreUsers(){}
-    
-    StoreUsers(String identifier, String user_id)
-        {
-            this.identifier = identifier;
-            this.user_id = user_id;
-        }
-    
-    /**
-     * Schreibt eine bestimmte Tafel und fügt Benutzer hinzu
-     * @param identifier
-     * @param user 
-     */
-    	@Override
-	public void storeUser(String identifier, User user) 
-        {
-            String datname = BoardConfiguration.COMMON_STORAGE_PATH + identifier
-                    + BoardConfiguration.USER_STORAGE_PATH;
-            try 
-            (XMLEncoder enc = new XMLEncoder(new FileOutputStream(datname,true))) 
-            {
-                enc.writeObject(user);
-            } 
-            catch (IOException e) 
-            {
-                System.out.println("Fehler: Konnte nicht gespeichert werden!");
-                e.printStackTrace();
-            }
-	}
-    /**
-     * Lädt Usernamen aus bestimmten Tafeln.
-     * @param identifier
-     * @return 
-     */
-    	@Override
-	public ArrayList<User> loadAllUsers(String identifier) 
-        {
-            String datname = BoardConfiguration.COMMON_STORAGE_PATH + identifier
+public class StoreUsers implements IUserStorage
+{
+    @Override
+    public void storeUser(String identifier, User user)
+    {
+        String file_name = BoardConfiguration.COMMON_STORAGE_PATH + identifier
                 + BoardConfiguration.USER_STORAGE_PATH;
-            XMLDecoder dec = null;
-            ArrayList<User> userList = new ArrayList<>();
-            User benutzer = null;
-            
-                try 
-                {
-                dec = new XMLDecoder(new FileInputStream(datname));
-                benutzer = (User)dec.readObject();
-                } 
-                catch (IOException e) 
-                {
-                        System.out.println("Fehler: Konnte nicht laden!");
-                        e.printStackTrace();
-                } 
-                finally 
-                {
-                    if(dec != null) 
-                    {
-                        dec.close();
-                    }
-                }
-            userList.add(benutzer);
-            return userList;
-	}
+        XMLEncoder enc = null;
+        
+        try
+        {
+            enc = new XMLEncoder(new FileOutputStream(file_name, true));
+            ArrayList<User> usrs = this.loadAllUsers(identifier);
+            usrs.add(user);
+            enc.writeObject(usrs);          
+        }
+        catch (IOException e)
+        {
+            System.out.println("Fehler: User konnte nicht gespeichert werden");
+            e.printStackTrace();
+        }
+        finally
+        {
+            if(enc != null)
+            {
+                enc.close();
+            }
+        }
+        
+    }
 
     @Override
-    public void removeUser(String identifier, User user) {
-        System.out.println("Wird noch implementiert");
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public ArrayList<User> loadAllUsers(String Identifier) 
+    {
+        String file_name = BoardConfiguration.COMMON_STORAGE_PATH + Identifier
+                + BoardConfiguration.USER_STORAGE_PATH;
+        XMLDecoder dec = null;
+        ArrayList<User> usr_list = null;
+        
+        try
+        {
+            dec = new XMLDecoder(new FileInputStream(file_name));
+            usr_list = (ArrayList<User>) dec.readObject();
+        }
+        catch (FileNotFoundException ex)
+        {
+            usr_list = new ArrayList<>();
+        }
+        
+        return usr_list;
+    }
+
+    @Override
+    public void removeUser(String identifier, User user) 
+    {
+        String file_name = BoardConfiguration.COMMON_STORAGE_PATH + identifier
+                + BoardConfiguration.USER_STORAGE_PATH;
+        ArrayList<User> usr_list = null;
+        
+        usr_list = this.loadAllUsers(identifier);
+        for(User benutzer : usr_list)
+        {
+            if(benutzer.equals(user))
+            {
+                usr_list.remove(benutzer);
+            }
+        }
+        this.storeUserList(identifier, usr_list);
+        
+    }
+
+    public void storeUserList(String identifier, ArrayList<User> usr_list) 
+    {
+        String file_name = BoardConfiguration.COMMON_STORAGE_PATH + identifier
+                + BoardConfiguration.USER_STORAGE_PATH;
+        XMLEncoder enc = null;
+        
+        try
+        {
+            enc = new XMLEncoder(new FileOutputStream(file_name, true));
+            enc.writeObject(usr_list);
+        }
+        catch (IOException e)
+        {
+            System.out.println("Fehler: Liste konnte nicht gespeichert werden");
+            e.printStackTrace();
+        }
+        finally
+        {
+            if(enc != null)
+            {
+                enc.close();
+            }
+        }
+        
     }
     
 }
