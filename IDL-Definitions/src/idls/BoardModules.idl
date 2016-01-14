@@ -45,11 +45,14 @@ module BoardModules {
             void forwardMessageToBoards(in StringList boards, in Message message) raises (DestinationUnreachable);
             void createUser(in User newuser);
             StringList getAllUsers();
+
+            void removeUser(in User user) raises (UnknownUser);
         };
 
         interface BoardService {
-            void sendMessage(in User user, in Message message, in string destination) raises (DestinationUnreachable, UnknownUser);
+            void sendMessage(in User user, in Message message, in string source) raises (UnknownUser);
             void checkUser(in User user) raises (UnknownUser);
+            void removeMessage(in User user, in Message message, in string source) raises (UnknownUser);
         };
 
         interface ViewService {
