@@ -65,8 +65,11 @@ public class SaveMessage implements IMessageStorage {
                 Logger.getLogger(SaveMessage.class.getName()).log(Level.SEVERE, null, ex);
             }
             msglist = (ArrayList<Message>) dec.readObject();
-
-        return msglist;
+            if (msglist == null) {
+                return new ArrayList<Message>();
+            } else {
+                return msglist;
+            }
 	}
 	
     @Override
