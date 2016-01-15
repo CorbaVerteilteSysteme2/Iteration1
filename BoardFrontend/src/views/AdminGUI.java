@@ -1027,7 +1027,6 @@ public class AdminGUI extends javax.swing.JFrame {
         }catch (UnknownUser ex){
             JOptionPane.showMessageDialog(null,"Nur eigene Nachrichten löschbar!","Warnung",JOptionPane.WARNING_MESSAGE);
         }catch (NumberFormatException e) {
-            transfereMsgNumberInput.setText("Ungültige Eingabe!");
             JOptionPane.showMessageDialog(null,"Fehlerhafte Eingabe Nachrichten-Nr!","Warnung",JOptionPane.WARNING_MESSAGE);
         } catch (COMM_FAILURE ex){
             JOptionPane.showMessageDialog(null,"Server wurde nicht gefunden!","Warnung",JOptionPane.WARNING_MESSAGE);
