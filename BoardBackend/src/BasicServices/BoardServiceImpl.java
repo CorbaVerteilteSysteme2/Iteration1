@@ -64,7 +64,7 @@ public class BoardServiceImpl extends BoardServicePOA {
 
     @Override
     public void removeMessage(User user, Message message, String source) throws UnknownUser {
-        if (!core.checkUser(user)) {
+        if (core.checkUser(user)) {
             if (!user.name.equals(message.author)) {
                 throw new UnknownUser("Nicht authorisierter Zugriff!");
             }
