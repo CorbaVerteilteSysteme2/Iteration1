@@ -255,7 +255,7 @@ public class UserGUI extends javax.swing.JFrame {
         }else{
             try{
         
-                boardServiceObj.sendMessage(user, new Message(message, user.name, new Date().toString()), tableID);
+                _boardFrontend.sendMessage(user, new Message(message, user.name, new Date().toString()), tableID);
             } catch (UnknownUser ex) {
                 Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
                 JOptionPane.showMessageDialog(null,"Unbekannter Nutzer!","Warnung",JOptionPane.WARNING_MESSAGE);           
@@ -266,7 +266,6 @@ public class UserGUI extends javax.swing.JFrame {
                 readMessageField.append(sendMessageField.getText());
                 readMessageField.append("\n");
                 sendMessageField.setText("");
-                startMessagePuffer(message);
             }
         }        
     }//GEN-LAST:event_sendMessageActionPerformed
@@ -279,7 +278,7 @@ public class UserGUI extends javax.swing.JFrame {
         
             //GUI
             this.setEnabled(true);
-            t.start();
+//            t.start();
             loginDialog.setVisible(false);
         }
     }//GEN-LAST:event_loginButtonActionPerformed
@@ -345,23 +344,11 @@ public class UserGUI extends javax.swing.JFrame {
         boolean worked = false;
         this.tableID = tableID;
         try {
-            ORB _orb;
-            Properties props = new Properties();
-            
-            props.put("org.omg.CORBA.ORBInitialPort", BoardConfiguration.ORB_PORT);
-            props.put("org.omg.CORBA.ORBInitialHost", ipAddress);
-            
-            _orb = ORB.init(new String[0], props);
-            
-            org.omg.CORBA.Object objRef = _orb.resolve_initial_references(BoardConfiguration.NAMESERVICE);
-            nameService = NamingContextExtHelper.narrow(objRef);
-        
-            this.boardServiceObj = (BoardService) BoardServiceHelper.narrow(nameService.resolve_str(tableID + "/" + BoardConfiguration.BOARD_SERVICE_NAME));
-            this.viewServiceObj = (ViewService) ViewServiceHelper.narrow(nameService.resolve_str(tableID + "/" + BoardConfiguration.VIEW_SERVICE_NAME));
-  
             this.user = new User(username);
-            this.boardServiceObj.checkUser(user);
+            this._boardFrontend = new BoardFrontend(this.tableID, ipAddress, user);
+            this._boardFrontend.checkUser(user);
             worked = true;
+            this._boardFrontend.addListener(new NewMessageListListenerImpl(this));
         } catch (UnknownUser ex){
             JOptionPane.showMessageDialog(null,"Benutzer wurde nicht gefunden!","Warnung",JOptionPane.WARNING_MESSAGE);     
         } catch (InvalidName | CannotProceed | org.omg.CosNaming.NamingContextPackage.InvalidName ex) {
@@ -375,43 +362,25 @@ public class UserGUI extends javax.swing.JFrame {
 
         return worked;
     }    
-    /**
-     * Puffer für Messages wenn Server nicht verfügbar ist
-     * @param message String der Nachricht
-     */   
-    private void startMessagePuffer(String backupMessage) {
-        messagePuffer.add(backupMessage);
-    }
 
-     /**
-     * sendPuffer sendet Messages wenn Server wieder verfügbar ist
-     */ 
-    private void sendPuffer() {
-        if ((!messagePuffer.isEmpty()) || (messagePuffer != null)) {
-            for (String msgPuffer : messagePuffer){
-                sendMessage(msgPuffer);
-            }
-            messagePuffer.clear();
-        }
-    }  
     private void deleteMessage(int msgNr) {
-        try{
-            if ((msgNr < message.length) && (msgNr >= 0) && (message != null)){
-                boardServiceObj.removeMessage(user,message[msgNr],"noetig?");
-                JOptionPane.showMessageDialog(null,"Nachricht Entfernt!","Warnung",JOptionPane.WARNING_MESSAGE);
-            }else{;
-                JOptionPane.showMessageDialog(null,"Fehlerhafte Eingabe!","Warnung",JOptionPane.WARNING_MESSAGE);
+        try {
+            if ((msgNr < message.length) && (msgNr >= 0) && (message != null)) {
+                this._boardFrontend.removeMessage(user, message[msgNr]);
+                JOptionPane.showMessageDialog(null, "Nachricht Entfernt!", "Warnung", JOptionPane.WARNING_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(null, "Fehlerhafte Eingabe!", "Warnung", JOptionPane.WARNING_MESSAGE);
             }
-        
-        }catch (UnknownUser ex){
-            JOptionPane.showMessageDialog(null,"Nur eigene Nachrichten löschbar!","Warnung",JOptionPane.WARNING_MESSAGE);
-        }catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(null,"Fehlerhafte Eingabe Nachrichten-Nr!","Warnung",JOptionPane.WARNING_MESSAGE);
-        } catch (COMM_FAILURE ex){
-            JOptionPane.showMessageDialog(null,"Server wurde nicht gefunden!","Warnung",JOptionPane.WARNING_MESSAGE);
+
+        } catch (UnknownUser ex) {
+            JOptionPane.showMessageDialog(null, "Nur eigene Nachrichten löschbar!", "Warnung", JOptionPane.WARNING_MESSAGE);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Fehlerhafte Eingabe Nachrichten-Nr!", "Warnung", JOptionPane.WARNING_MESSAGE);
+        } catch (COMM_FAILURE ex) {
+            JOptionPane.showMessageDialog(null, "Server wurde nicht gefunden!", "Warnung", JOptionPane.WARNING_MESSAGE);
         }
     }
- 
+ /*
     javax.swing.Timer t = new javax.swing.Timer(1000, new ActionListener() {  
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -423,9 +392,9 @@ public class UserGUI extends javax.swing.JFrame {
                     if (localState != viewServiceObj.getState()) {
                         message = viewServiceObj.getAllMessageByDestination("");
                         readMessageField.setText("");
-                        for (Message message1 : message) {
+                        for (Message msg : message) {
                             readMessageField.append(Integer.toString(counter) + ": ");
-                            readMessageField.append(message1.toString());
+                            readMessageField.append(msg.toString());
                             readMessageField.append("\n");
                             counter++;
                         }
@@ -433,9 +402,9 @@ public class UserGUI extends javax.swing.JFrame {
                 } else {
                     localState = viewServiceObj.getState();
                     message = viewServiceObj.getAllMessageByDestination("");
-                    for (Message message1 : message) {
+                    for (Message msg : message) {
                         readMessageField.append(Integer.toString(counter) + ": ");
-                        readMessageField.append(message1.toString());
+                        readMessageField.append(msg.toString());
                         readMessageField.append("\n");
                         counter++;
                     }
@@ -457,7 +426,19 @@ public class UserGUI extends javax.swing.JFrame {
             }
         }
     });
-
+*/
+    private void printMessageList(Message[] messages) {
+        int counter = 0;
+        
+        this.message = messages;
+        readMessageField.setText("");
+        for (Message msg : messages) {
+            readMessageField.append(Integer.toString(counter) + ": ");
+            readMessageField.append(msg.toString());
+            readMessageField.append("\n");
+            counter++;
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField IPInput;
@@ -479,14 +460,24 @@ public class UserGUI extends javax.swing.JFrame {
     private javax.swing.JTextField userBoardInput;
     private javax.swing.JTextField userNameInput;
     // End of variables declaration//GEN-END:variables
-    private NamingContextExt nameService = null; // Referenz auf den NameService
-    private BoardService boardServiceObj = null;
-    private ViewService viewServiceObj = null;
+//    private NamingContextExt nameService = null; // Referenz auf den NameService
     private User user = null;
     private Message[] message = null;
     //private boolean firstRun = true;
     private String tableID = "";
-    private ArrayList<String> messagePuffer = new ArrayList<>();
-    private int localState = -1;
-    
+    private BoardFrontend _boardFrontend;
+
+    private class NewMessageListListenerImpl implements BoardFrontend.NewMessageListListener {
+
+        private final UserGUI parent;
+       
+        private NewMessageListListenerImpl(UserGUI parent) {
+            this.parent = parent;
+        }
+
+        @Override
+        public void displayMessageList(BoardFrontend.NewMessageListEvent e) {
+            this.parent.printMessageList(e.getMessages());
+        }
+    }
 }
