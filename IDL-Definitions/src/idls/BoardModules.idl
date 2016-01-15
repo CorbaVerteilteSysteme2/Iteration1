@@ -57,7 +57,7 @@ module BoardModules {
 
         interface ViewService {
             MessageList getAllMessageByDestination(in string destination) raises (DestinationUnreachable);
-            boolean getState();
+            long getState();
         };
     };
 
