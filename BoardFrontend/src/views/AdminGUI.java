@@ -279,7 +279,15 @@ public class AdminGUI extends javax.swing.JFrame {
         });
 
         delMsgNrInput.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        delMsgNrInput.setText("Msg-Nr");
+        delMsgNrInput.setText("Nachrichten-Nr");
+        delMsgNrInput.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                delMsgNrInputFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                delMsgNrInputFocusLost(evt);
+            }
+        });
 
         jLabel13.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel13.setText("Nachricht Nummer:");
@@ -774,8 +782,19 @@ public class AdminGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_transfereMsgNumberInputActionPerformed
 
     private void deleteMessageButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteMessageButtonActionPerformed
-        deleteMessage(Integer.parseInt(delMsgNrInput.getText()));       
+        deleteMessage(Integer.parseInt(delMsgNrInput.getText()));  
+        delMsgNrInput.setText("");
     }//GEN-LAST:event_deleteMessageButtonActionPerformed
+
+    private void delMsgNrInputFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_delMsgNrInputFocusGained
+        delMsgNrInput.setText("");
+    }//GEN-LAST:event_delMsgNrInputFocusGained
+
+    private void delMsgNrInputFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_delMsgNrInputFocusLost
+    if ("".equals(delMsgNrInput.getText())){
+            delMsgNrInput.setText("Nachrichten-Nr");
+        }
+    }//GEN-LAST:event_delMsgNrInputFocusLost
 
     /**
      * @param args the command line arguments
@@ -1000,9 +1019,8 @@ public class AdminGUI extends javax.swing.JFrame {
         try{
             if ((msgNr < message.length) && (msgNr >= 0) && (message != null)){
                 boardServiceObj.removeMessage(admin,message[msgNr],"noetig?");
-                transfereMsgNumberInput.setText("Erfolgreich");
-            }else{
-                transfereMsgNumberInput.setText("");
+                JOptionPane.showMessageDialog(null,"Nachricht Entfernt!","Warnung",JOptionPane.WARNING_MESSAGE);
+            }else{;
                 JOptionPane.showMessageDialog(null,"Fehlerhafte Eingabe!","Warnung",JOptionPane.WARNING_MESSAGE);
             }
         

@@ -454,13 +454,17 @@
             <Component class="javax.swing.JTextField" name="delMsgNrInput">
               <Properties>
                 <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" value="Msg-Nr"/>
+                <Property name="text" type="java.lang.String" value="Nachrichten-Nr"/>
               </Properties>
               <AccessibilityProperties>
                 <Property name="AccessibleContext.accessibleParent" type="javax.accessibility.Accessible" editor="org.netbeans.modules.form.ComponentChooserEditor">
                   <ComponentRef name="null"/>
                 </Property>
               </AccessibilityProperties>
+              <Events>
+                <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="delMsgNrInputFocusGained"/>
+                <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="delMsgNrInputFocusLost"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel13">
               <Properties>
