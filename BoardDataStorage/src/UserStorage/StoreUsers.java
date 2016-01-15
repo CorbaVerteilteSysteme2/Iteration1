@@ -29,10 +29,11 @@ public class StoreUsers implements IUserStorage
         
         try
         {
-            enc = new XMLEncoder(new FileOutputStream(file_name, true));
+            enc = new XMLEncoder(new FileOutputStream(file_name));
             ArrayList<User> usrs = this.loadAllUsers(identifier);
             usrs.add(user);
-            enc.writeObject(usrs);          
+            //enc.writeObject(usrs);
+            this.storeUserList(identifier, usrs);
         }
         catch (IOException e)
         {
@@ -65,8 +66,17 @@ public class StoreUsers implements IUserStorage
         catch (FileNotFoundException ex)
         {
             usr_list = new ArrayList<>();
+        } catch (ArrayIndexOutOfBoundsException ex) {
+            usr_list = new ArrayList<>();
         }
         
+        if (usr_list == null) {
+            usr_list = new ArrayList<>();
+        }
+        
+        if (dec != null) {
+            dec.close();
+        }
         return usr_list;
     }
 
@@ -89,6 +99,7 @@ public class StoreUsers implements IUserStorage
         
     }
 
+    @Override
     public void storeUserList(String identifier, ArrayList<User> usr_list) 
     {
         String file_name = BoardConfiguration.COMMON_STORAGE_PATH + identifier
@@ -97,7 +108,7 @@ public class StoreUsers implements IUserStorage
         
         try
         {
-            enc = new XMLEncoder(new FileOutputStream(file_name, true));
+            enc = new XMLEncoder(new FileOutputStream(file_name));
             enc.writeObject(usr_list);
         }
         catch (IOException e)

@@ -27,4 +27,6 @@ public interface IUserStorage {
         Entfernt einen Benutzer
     */
     void removeUser(String identifier, User user);
+    
+    void storeUserList(String identifier, ArrayList<User> usr_list);
 }

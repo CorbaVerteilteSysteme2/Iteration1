@@ -48,7 +48,7 @@ public class SaveMessage implements IMessageStorage {
                     //Wenn Datei leer oder nicht existiert --> Leere ArrayList zurückgeben
 			msglist = new ArrayList<>();
 		}
-
+                
 		return msglist;
 		}
 	
