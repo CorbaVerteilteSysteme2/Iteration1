@@ -552,13 +552,13 @@
                   <Font name="Tahoma" size="11" style="1"/>
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" value="Name des neuen Nutzers:"/>
+                <Property name="text" type="java.lang.String" value="Name des Nutzers:"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="newUserNameInput">
               <Properties>
                 <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" value="Name des neuen Benutzers"/>
+                <Property name="text" type="java.lang.String" value="Name des Benutzers"/>
               </Properties>
               <Events>
                 <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="newUserNameInputFocusGained"/>

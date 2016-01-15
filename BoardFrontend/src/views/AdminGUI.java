@@ -378,10 +378,10 @@ public class AdminGUI extends javax.swing.JFrame {
 
         jLabel10.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel10.setText("Name des neuen Nutzers:");
+        jLabel10.setText("Name des Nutzers:");
 
         newUserNameInput.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        newUserNameInput.setText("Name des neuen Benutzers");
+        newUserNameInput.setText("Name des Benutzers");
         newUserNameInput.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 newUserNameInputFocusGained(evt);
@@ -671,7 +671,8 @@ public class AdminGUI extends javax.swing.JFrame {
         if (!userAlreadyExist){
             try{
                 adminServiceObj.createUser(newUser);
-                newUserNameInput.setText("Nutzer erfolgreich erstellt");
+                JOptionPane.showMessageDialog(null,"Nutzer erfolgreich erstellt","Warnung",JOptionPane.WARNING_MESSAGE);
+                newUserNameInput.setText("Name des Nutzers");
                 refreshAllLists();
             }catch (Exception ex){
                 newUserNameInput.setText("Fehlgeschlagen");
@@ -687,7 +688,7 @@ public class AdminGUI extends javax.swing.JFrame {
 
     private void newUserNameInputFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_newUserNameInputFocusLost
         if ("".equals(newUserNameInput.getText())){
-            newUserNameInput.setText("Name des neuen Benutzers");
+            newUserNameInput.setText("Name des Benutzers");
         }
     }//GEN-LAST:event_newUserNameInputFocusLost
 
@@ -750,7 +751,7 @@ public class AdminGUI extends javax.swing.JFrame {
         {
             refreshAllLists();
             boardServiceObj.checkUser(oldUser);
-            JOptionPane.showMessageDialog(null,"Benutzer wird gelöscht!");
+            JOptionPane.showMessageDialog(null,"Benutzer wird gelöscht!","Warnung",JOptionPane.WARNING_MESSAGE);
             userAlreadyExist = true;
         }
         catch (UnknownUser e)
@@ -1006,6 +1007,9 @@ public class AdminGUI extends javax.swing.JFrame {
         messagePuffer.add(backupMessage);
     }
     
+    /**
+     * senden aller PufferNachrichten wenn Server wieder verfügbar ist
+     */      
     private void sendPuffer() {
         if ((!messagePuffer.isEmpty()) || (messagePuffer != null)) {
             for (String msgPuffer : messagePuffer){
@@ -1014,7 +1018,11 @@ public class AdminGUI extends javax.swing.JFrame {
             messagePuffer.clear();
         }
     }
-    
+
+    /**
+     * löschen einer eigenen Nachricht.
+     * @param mdgNr position der zu löschenden Nachricht im MessageArray
+     */     
     private void deleteMessage(int msgNr) {
         try{
             if ((msgNr < message.length) && (msgNr >= 0) && (message != null)){
