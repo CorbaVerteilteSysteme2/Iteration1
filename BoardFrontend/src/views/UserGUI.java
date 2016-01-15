@@ -418,49 +418,48 @@ public class UserGUI extends javax.swing.JFrame {
     javax.swing.Timer t = new javax.swing.Timer(1000, new ActionListener() {  
         @Override
         public void actionPerformed(ActionEvent e) {
-              int counter = 0;
-              System.out.println("check");
-              try{
-              if (message != null){
-                messageCheck = viewServiceObj.getAllMessageByDestination("");
-                if (message.length != messageCheck.length){
-                    message = messageCheck;  
-                    readMessageField.setText("");
+            int counter = 0;
+            System.out.println("check");
+            try {
+                if (message != null) {
+                    // die Nachrichtenliste wird nun nur noch heruntergeladen, wenn sie ihr Status verändert hat
+                    if (localState != viewServiceObj.getState()) {
+                        message = viewServiceObj.getAllMessageByDestination("");
+                        readMessageField.setText("");
+                        for (Message message1 : message) {
+                            readMessageField.append(Integer.toString(counter) + ": ");
+                            readMessageField.append(message1.toString());
+                            readMessageField.append("\n");
+                            counter++;
+                        }
+                    }
+                } else {
+                    localState = viewServiceObj.getState();
+                    message = viewServiceObj.getAllMessageByDestination("");
                     for (Message message1 : message) {
-                        readMessageField.append(Integer.toString(counter)+": ");
+                        readMessageField.append(Integer.toString(counter) + ": ");
                         readMessageField.append(message1.toString());
                         readMessageField.append("\n");
                         counter++;
                     }
                 }
-              }else{
-                  message = viewServiceObj.getAllMessageByDestination("");
-                  for (Message message1 : message) {
-                      readMessageField.append(Integer.toString(counter)+": ");
-                      readMessageField.append(message1.toString());
-                      readMessageField.append("\n");
-                      counter++;
-                  }
-              }
-              
-              sendPuffer();
-              t.setDelay(1000);
-              }catch (DestinationUnreachable ex){
-                  
-              } catch (COMM_FAILURE ex){
-                    t.setDelay(10000);
-                    try {
-                        boardServiceObj = (BoardService) BoardServiceHelper.narrow(nameService.resolve_str(tableID + "/" + BoardConfiguration.BOARD_SERVICE_NAME));
-                        viewServiceObj = (ViewService) ViewServiceHelper.narrow(nameService.resolve_str(tableID + "/" + BoardConfiguration.VIEW_SERVICE_NAME));
 
-                  } catch (NotFound | CannotProceed | org.omg.CosNaming.NamingContextPackage.InvalidName ex1) {
-                      //Logger.getLogger(UserGUI.class.getName()).log(Level.SEVERE, null, ex1);
-                  }
-               
-              }
-          }
-    }
-    );
+                sendPuffer();
+                t.setDelay(1000);
+            } catch (DestinationUnreachable ex) {
+
+            } catch (COMM_FAILURE ex) {
+                t.setDelay(10000);
+                try {
+                    boardServiceObj = (BoardService) BoardServiceHelper.narrow(nameService.resolve_str(tableID + "/" + BoardConfiguration.BOARD_SERVICE_NAME));
+                    viewServiceObj = (ViewService) ViewServiceHelper.narrow(nameService.resolve_str(tableID + "/" + BoardConfiguration.VIEW_SERVICE_NAME));
+
+                } catch (NotFound | CannotProceed | org.omg.CosNaming.NamingContextPackage.InvalidName ex1) {
+                    //Logger.getLogger(UserGUI.class.getName()).log(Level.SEVERE, null, ex1);
+                }
+            }
+        }
+    });
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -489,9 +488,9 @@ public class UserGUI extends javax.swing.JFrame {
     private ViewService viewServiceObj = null;
     private User user = null;
     private Message[] message = null;
-    private Message[] messageCheck = null;
     //private boolean firstRun = true;
     private String tableID = "";
     private ArrayList<String> messagePuffer = new ArrayList<>();
+    private int localState = -1;
     
 }

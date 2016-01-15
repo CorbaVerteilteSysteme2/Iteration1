@@ -1051,51 +1051,51 @@ public class AdminGUI extends javax.swing.JFrame {
         @Override
         public void actionPerformed(ActionEvent e) {
               int counter = 0;
-              System.out.println("check");
-              
-              try{             
-              if (message != null){
-                messageCheck = viewServiceObj.getAllMessageByDestination("");
-                if (message.length != messageCheck.length){
-                    message = messageCheck;  
-                    readMessageField.setText("");
+            System.out.println("check");
+
+            try {
+                if (message != null) {
+                    // die Nachrichtenliste wird nun nur noch heruntergeladen, wenn sie ihr Status verändert hat
+                    if (localState != viewServiceObj.getState()) {
+                        message = viewServiceObj.getAllMessageByDestination("");
+                        readMessageField.setText("");
+                        for (Message message1 : message) {
+                            readMessageField.append(Integer.toString(counter) + ": ");
+                            readMessageField.append(message1.toString());
+                            readMessageField.append("\n");
+                            counter++;
+                        }
+                    }
+                } else {
+                    localState = viewServiceObj.getState();
+                    message = viewServiceObj.getAllMessageByDestination("");
                     for (Message message1 : message) {
-                        readMessageField.append(Integer.toString(counter)+": ");
+                        readMessageField.append(Integer.toString(counter) + ": ");
                         readMessageField.append(message1.toString());
                         readMessageField.append("\n");
                         counter++;
                     }
                 }
-              }else{
-                  message = viewServiceObj.getAllMessageByDestination("");
-                  for (Message message1 : message) {
-                      readMessageField.append(Integer.toString(counter)+": ");
-                      readMessageField.append(message1.toString());
-                      readMessageField.append("\n");
-                      counter++;
-                  }
-              }
-              
-              sendPuffer();
-              t.setDelay(1000);
-              }catch (DestinationUnreachable ex){
-                  
-              } catch (COMM_FAILURE ex){
-                  try {
+
+                sendPuffer();
+                t.setDelay(1000);
+            } catch (DestinationUnreachable ex) {
+
+            } catch (COMM_FAILURE ex) {
+                try {
                     t.setDelay(10000);
                     adminServiceObj = (AdministrationService) AdministrationServiceHelper.narrow(nameService.resolve_str(tableID + "/" + BoardConfiguration.ADMIN_SERVICE_NAME));
                     boardServiceObj = (BoardService) BoardServiceHelper.narrow(nameService.resolve_str(tableID + "/" + BoardConfiguration.BOARD_SERVICE_NAME));
                     viewServiceObj = (ViewService) ViewServiceHelper.narrow(nameService.resolve_str(tableID + "/" + BoardConfiguration.VIEW_SERVICE_NAME));
-                    
+
                     //sendPuffer();
-                  } catch (NotFound | CannotProceed | org.omg.CosNaming.NamingContextPackage.InvalidName | COMM_FAILURE ex1) {
-                      //Logger.getLogger(AdminGUI.class.getName()).log(Level.SEVERE, null, ex1);
-                  }
-               
-              }
-          }
-    }
-    );
+                } catch (NotFound | CannotProceed | org.omg.CosNaming.NamingContextPackage.InvalidName | COMM_FAILURE ex1) {
+                    //Logger.getLogger(AdminGUI.class.getName()).log(Level.SEVERE, null, ex1);
+                }
+            }
+        }
+    });
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField IPInput;
     private javax.swing.JTextField adminBoardInput;
@@ -1153,12 +1153,11 @@ public class AdminGUI extends javax.swing.JFrame {
     private ViewService viewServiceObj = null;
     private User admin = null;
     private Message[] message = null;
-    private Message[] messageCheck = null;
     private String[] virtualGrpList = {"Bitte Tafeln aktuallisieren"};
     private String tableID = null;
     private String loginIP = null;
     private DefaultListModel listModel;
-    
+    private int localState = -1;
     private ArrayList<String> messagePuffer = new ArrayList<>();
 
     
