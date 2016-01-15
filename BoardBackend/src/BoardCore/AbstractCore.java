@@ -125,11 +125,7 @@ public abstract class AbstractCore {
     
     public synchronized void addMessage(Message msg) {
         localMessages.add(msg);
-        //messageParser.WriteMessageToTextfile(msg);
-        _viewService.setState(true);
-        
-//        if (this._messageStorage != null)
-//            this._messageStorage.storeMessage(_identifier, msg);
+        this._viewService.incrementState();
     }
     
     protected void closeCore() {
@@ -176,11 +172,7 @@ public abstract class AbstractCore {
     
      public synchronized void removeMessage(Message msg) {
         this.localMessages.remove(msg);
-        _viewService.setState(true);
-//        if (_messageStorage != null) {
-//            _messageStorage.removeMessage(_identifier, msg);
-//        }
-        
+        this._viewService.incrementState();
     }
      
     public synchronized Message[] getAllMessages() {

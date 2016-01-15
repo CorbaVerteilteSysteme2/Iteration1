@@ -22,12 +22,17 @@ public class ViewServiceImpl extends ViewServicePOA {
         super();
         
         this.core = core;
+        this.state = 0;
     }
     
-    private boolean state;
+    /**
+     * Diese Variable wird bei jeder Änderung der Nachrichtenliste um 1 inkrementiert.
+     * Sie zeigt die Anzahl an Änderungen an.
+     */
+    private int state;
     
-    public void setState(boolean messages_changed) {
-        this.state = messages_changed;
+    public void incrementState() {
+        this.state++;
     }
     
     @Override
@@ -36,14 +41,12 @@ public class ViewServiceImpl extends ViewServicePOA {
     }
 
     /**
-     * Methode gibt zurück, ob sich die Nachrichten verändert haben:
-     * true - Nachrichten wurden verändert
-     * false - Nachrichten wurden nicht verändert
+     * Mithilfe dieser Methode können Clients prüfen, ob die Nachrichtenliste verändert wurde
      * @return 
      */
     @Override
-    public boolean getState() {
-        return this.state;
+    public int getState() {
+        return state;
     }
     
 }
