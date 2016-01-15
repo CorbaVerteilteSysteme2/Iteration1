@@ -31,12 +31,12 @@ import BoardModules.BasicServices.*;
 public class BoardServiceTestbench {
     public static void main(String[] args) {
         try {
-            String tableID = "Test-Tafel";
+            String tableID = "Test-Tafel2";
             ORB _orb;
             Properties props = new Properties();
             
             props.put("org.omg.CORBA.ORBInitialPort", "1050");
-            props.put("org.omg.CORBA.ORBInitialHost", "localhost");
+            props.put("org.omg.CORBA.ORBInitialHost", "192.168.2.20");
             
             _orb = ORB.init(new String[0], props);
             
@@ -46,7 +46,7 @@ public class BoardServiceTestbench {
         
             BoardService boardServiceObj = (BoardService) BoardServiceHelper.narrow(ncRef.resolve_str(tableID + "/BoardService"));
             
-            User _user1 = new User("Username1");
+            User _user1 = new User("Yumo");
             boardServiceObj.sendMessage(_user1, new Message("Hallo Test-Tafel no. 1", _user1.name, new Date().toString()), tableID);
         
         } catch (InvalidName ex) {
