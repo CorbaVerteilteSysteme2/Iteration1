@@ -4,6 +4,8 @@
 package BoardCore;
 
 import BoardModules.User;
+import Interfaces.IUserStorage;
+import UserStorage.StoreUsers;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,8 +27,8 @@ import org.omg.CosNaming.NamingContextPackage.NotFound;
  */
 public class BoardCore extends AbstractCore {
     
-    private final ArrayList<User> users;
-    
+    private ArrayList<User> users;
+    private final IUserStorage _userStorage;
     /**
      * Konstruktor
      * 
@@ -36,13 +38,28 @@ public class BoardCore extends AbstractCore {
      */
     public BoardCore(String boardID) throws RuntimeException, CannotProceed, org.omg.CosNaming.NamingContextPackage.InvalidName {
         super(boardID); 
-        this.users = new ArrayList<>();
-        this.users.add(new User("user1"));
+        this._userStorage = new StoreUsers();
+        this.users = _userStorage.loadAllUsers(boardID);
+        
+        if (this.users.isEmpty()) {
+            User root = new User("root");
+            this.users.add(root);
+            System.out.println("Kein Benutzer gespeichert! Benutzer root wurde hinzugefügt!");
+            this._userStorage.storeUserList(_identifier, users);
+        } else {
+            System.out.println("Verfügbare Benutzer:");
+            for (User user : this.users) {
+                System.out.println("- " + user.name);
+            }
+        }
+//        this.users = new ArrayList<>();
+//        this.users.add(new User("user1"));
     }
     
     @Override
     public synchronized void addUser(User user) {
         users.add(user);
+        this._userStorage.storeUserList(_identifier, users);
     }
     
     @Override
@@ -79,6 +96,12 @@ public class BoardCore extends AbstractCore {
 
     @Override
     public boolean removeUser(User user) {
-        return this.users.remove(user);
+        if (this.users.remove(user)) {
+            
+            this._userStorage.storeUserList(_identifier, users);
+            return true;
+        } else {
+            return false;
+        }
     }
 }

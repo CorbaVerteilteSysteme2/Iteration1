@@ -39,6 +39,7 @@ public class BoardCoreApplication {
             //core.run();
         } catch (Exception ex) {
             System.err.println("Fehler: " + ex.getMessage());
+            ex.printStackTrace();
         } 
     }
 

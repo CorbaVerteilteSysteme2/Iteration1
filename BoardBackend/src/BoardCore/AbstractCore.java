@@ -48,22 +48,15 @@ public abstract class AbstractCore {
     
     private ArrayList<Message> localMessages;
     
-    private MessageParser messageParser;
-    
     private IMessageStorage _messageStorage;
     
     public AbstractCore(String identifier) throws CannotProceed, InvalidName {
         try {
             this._identifier = identifier;
-            //this.messageParser = new MessageParser(identifier);
             
             this._messageStorage = new SaveMessage();
             
-//            if (_messageStorage == null) {
-//                this.localMessages = new ArrayList<>();
-//            } else {
-                this.localMessages = _messageStorage.loadAllMessages(_identifier);
-//            }
+            this.localMessages = _messageStorage.loadAllMessages(_identifier);
             
             this._boardService = new BoardServiceImpl(this);
             this._adminService = new AdministrationServiceImpl(this);
@@ -205,11 +198,7 @@ public abstract class AbstractCore {
     public abstract boolean removeUser(User user);
     
     public abstract boolean checkUser(User user);
-    
-    private void getAllMessagesFromMessageParser() {
-        localMessages = messageParser.ReadMessageLogFromTextfile(_identifier);
-    }
-    
+       
     public String getIdentifier() {
         return _identifier;
     }
