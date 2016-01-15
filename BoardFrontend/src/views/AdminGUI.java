@@ -217,10 +217,9 @@ public class AdminGUI extends javax.swing.JFrame {
         readMessageField.setColumns(20);
         readMessageField.setRows(5);
         jScrollPane2.setViewportView(readMessageField);
-        readMessageField.getAccessibleContext().setAccessibleParent(null);
 
         refreshButton.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        refreshButton.setText("Aktuallisieren");
+        refreshButton.setText("Aktualisieren");
         refreshButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 refreshButtonActionPerformed(evt);
@@ -229,11 +228,11 @@ public class AdminGUI extends javax.swing.JFrame {
 
         jLabel8.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel8.setText("Nachricht an Tafel weiterleiten:");
+        jLabel8.setText("Nachricht an Tafeln weiterleiten:");
 
         jLabel11.setText("Nummer aus eigener Tafel:");
 
-        transfereMsgNumberInput.setText("Nachrichten-Nr");
+        transfereMsgNumberInput.setText("Nachrichten-Nr.");
         transfereMsgNumberInput.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 transfereMsgNumberInputFocusGained(evt);
@@ -248,14 +247,14 @@ public class AdminGUI extends javax.swing.JFrame {
             }
         });
 
-        transfereMessage.setText("Nachricht an Tafel weiterleiten");
+        transfereMessage.setText("Weiterleiten");
         transfereMessage.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 transfereMessageActionPerformed(evt);
             }
         });
 
-        jButton1.setLabel("senden");
+        jButton1.setText("Senden");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -265,13 +264,11 @@ public class AdminGUI extends javax.swing.JFrame {
         sendMessageField.setColumns(20);
         sendMessageField.setRows(5);
         jScrollPane3.setViewportView(sendMessageField);
-        sendMessageField.getAccessibleContext().setAccessibleParent(null);
 
         boardListOutput.setLayoutOrientation(javax.swing.JList.HORIZONTAL_WRAP);
         jScrollPane6.setViewportView(boardListOutput);
-        boardListOutput.getAccessibleContext().setAccessibleParent(null);
 
-        deleteMessageButton.setText("löschen");
+        deleteMessageButton.setText("Löschen");
         deleteMessageButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 deleteMessageButtonActionPerformed(evt);
@@ -279,7 +276,7 @@ public class AdminGUI extends javax.swing.JFrame {
         });
 
         delMsgNrInput.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        delMsgNrInput.setText("Nachrichten-Nr");
+        delMsgNrInput.setText("Nachrichten-Nr.");
         delMsgNrInput.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 delMsgNrInputFocusGained(evt);
@@ -290,7 +287,7 @@ public class AdminGUI extends javax.swing.JFrame {
         });
 
         jLabel13.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel13.setText("Nachricht Nummer:");
+        jLabel13.setText("Nachricht-Nummer:");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -310,17 +307,17 @@ public class AdminGUI extends javax.swing.JFrame {
                     .addComponent(jScrollPane2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane6, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(refreshButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(12, 12, 12)
+                        .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, 252, Short.MAX_VALUE))
+                    .addComponent(transfereMessage, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel11)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(transfereMsgNumberInput, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(refreshButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(transfereMessage, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(26, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(transfereMsgNumberInput, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -334,8 +331,8 @@ public class AdminGUI extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(refreshButton, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(refreshButton)
+                        .addGap(3, 3, 3)
                         .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -360,16 +357,6 @@ public class AdminGUI extends javax.swing.JFrame {
                         .addGap(70, 70, 70))))
         );
 
-        refreshButton.getAccessibleContext().setAccessibleParent(null);
-        jLabel8.getAccessibleContext().setAccessibleParent(null);
-        jLabel11.getAccessibleContext().setAccessibleParent(null);
-        transfereMsgNumberInput.getAccessibleContext().setAccessibleParent(null);
-        transfereMessage.getAccessibleContext().setAccessibleParent(null);
-        jButton1.getAccessibleContext().setAccessibleParent(null);
-        deleteMessageButton.getAccessibleContext().setAccessibleParent(null);
-        delMsgNrInput.getAccessibleContext().setAccessibleParent(null);
-        jLabel13.getAccessibleContext().setAccessibleParent(null);
-
         jTabbedPane2.addTab("Nachrichten", jPanel1);
 
         jLabel9.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
@@ -378,7 +365,7 @@ public class AdminGUI extends javax.swing.JFrame {
 
         jLabel10.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel10.setText("Name des Nutzers:");
+        jLabel10.setText("Name des Benutzers:");
 
         newUserNameInput.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         newUserNameInput.setText("Name des Benutzers");
@@ -391,7 +378,7 @@ public class AdminGUI extends javax.swing.JFrame {
             }
         });
 
-        createUserButton.setText("neuen Benutzer anlegen");
+        createUserButton.setText("Erstellen");
         createUserButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 createUserButtonActionPerformed(evt);
@@ -408,14 +395,14 @@ public class AdminGUI extends javax.swing.JFrame {
         jLabel12.setText("Benutzerliste:");
 
         refreshButton2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        refreshButton2.setText("Aktuallisieren");
+        refreshButton2.setText("Aktualisieren");
         refreshButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 refreshButton2ActionPerformed(evt);
             }
         });
 
-        createUserButton1.setText("Benutzer löschen");
+        createUserButton1.setText("Löschen");
         createUserButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 deleteUserButtonActionPerformed(evt);
@@ -438,7 +425,7 @@ public class AdminGUI extends javax.swing.JFrame {
                     .addComponent(newUserNameInput)
                     .addComponent(createUserButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(createUserButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(413, Short.MAX_VALUE))
+                .addContainerGap(441, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -459,8 +446,8 @@ public class AdminGUI extends javax.swing.JFrame {
                         .addComponent(createUserButton1))
                     .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(refreshButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(179, Short.MAX_VALUE))
+                .addComponent(refreshButton2)
+                .addContainerGap(171, Short.MAX_VALUE))
         );
 
         jTabbedPane2.addTab("Nutzerverwaltung", jPanel2);
@@ -471,7 +458,7 @@ public class AdminGUI extends javax.swing.JFrame {
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel3.setText("Name der neuen VG Grp:");
+        jLabel3.setText("Virtuelle Gruppe:");
 
         newVGNameInput.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         newVGNameInput.setText("VG-Namen eingeben");
@@ -484,7 +471,7 @@ public class AdminGUI extends javax.swing.JFrame {
             }
         });
 
-        createVGButton.setText("erstelle VG");
+        createVGButton.setText("Erstellen");
         createVGButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 createVGButtonActionPerformed(evt);
@@ -495,9 +482,9 @@ public class AdminGUI extends javax.swing.JFrame {
         jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel7.setText("In virtuelle Gruppe einloggen:");
 
-        dropdownVirtualBoards.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Bitte Tafel aktuallisieren" }));
+        dropdownVirtualBoards.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Bitte Tafel aktualisieren" }));
 
-        loginVGButton.setText("einloggen in Virtuelle Gruppe");
+        loginVGButton.setText("Login");
         loginVGButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 loginVGButtonActionPerformed(evt);
@@ -510,7 +497,7 @@ public class AdminGUI extends javax.swing.JFrame {
         jScrollPane4.setViewportView(virtualBoardListOutput);
 
         refreshButton1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        refreshButton1.setText("Aktuallisieren");
+        refreshButton1.setText("Aktualisieren");
         refreshButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 refreshButton1ActionPerformed(evt);
@@ -535,7 +522,7 @@ public class AdminGUI extends javax.swing.JFrame {
                     .addComponent(createVGButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(dropdownVirtualBoards, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(258, Short.MAX_VALUE))
+                .addContainerGap(250, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -545,26 +532,25 @@ public class AdminGUI extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(newVGNameInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(createVGButton)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(jLabel7)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(dropdownVirtualBoards, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(loginVGButton))
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(refreshButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(153, 153, 153))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jLabel7)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(dropdownVirtualBoards, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(8, 8, 8)))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(refreshButton1)
+                    .addComponent(loginVGButton))
+                .addGap(149, 149, 149))
         );
 
         jTabbedPane2.addTab("Virtuelle Gruppen", jPanel3);

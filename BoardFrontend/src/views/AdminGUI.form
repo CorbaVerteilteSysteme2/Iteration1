@@ -208,20 +208,20 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="jLabel1" max="32767" attributes="0"/>
+                          <Component id="jScrollPane6" alignment="1" max="32767" attributes="0"/>
+                          <Component id="refreshButton" alignment="1" max="32767" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace min="12" pref="12" max="-2" attributes="0"/>
+                              <Component id="jLabel8" pref="252" max="32767" attributes="0"/>
+                          </Group>
+                          <Component id="transfereMessage" alignment="1" max="32767" attributes="0"/>
                           <Group type="102" attributes="0">
                               <Component id="jLabel11" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
                               <Component id="transfereMsgNumberInput" min="-2" pref="116" max="-2" attributes="0"/>
                           </Group>
-                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="jScrollPane6" pref="250" max="32767" attributes="0"/>
-                              <Component id="jLabel1" max="32767" attributes="0"/>
-                              <Component id="refreshButton" alignment="0" max="32767" attributes="0"/>
-                              <Component id="jLabel8" max="32767" attributes="0"/>
-                          </Group>
-                          <Component id="transfereMessage" min="-2" pref="249" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="26" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -238,8 +238,8 @@
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="jScrollPane6" min="-2" pref="214" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="refreshButton" min="-2" pref="19" max="-2" attributes="0"/>
-                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <Component id="refreshButton" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="3" max="-2" attributes="0"/>
                               <Component id="jLabel8" min="-2" pref="23" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
@@ -304,11 +304,6 @@
                     <Property name="columns" type="int" value="20"/>
                     <Property name="rows" type="int" value="5"/>
                   </Properties>
-                  <AccessibilityProperties>
-                    <Property name="AccessibleContext.accessibleParent" type="javax.accessibility.Accessible" editor="org.netbeans.modules.form.ComponentChooserEditor">
-                      <ComponentRef name="null"/>
-                    </Property>
-                  </AccessibilityProperties>
                 </Component>
               </SubComponents>
             </Container>
@@ -317,13 +312,8 @@
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Tahoma" size="14" style="0"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Aktuallisieren"/>
+                <Property name="text" type="java.lang.String" value="Aktualisieren"/>
               </Properties>
-              <AccessibilityProperties>
-                <Property name="AccessibleContext.accessibleParent" type="javax.accessibility.Accessible" editor="org.netbeans.modules.form.ComponentChooserEditor">
-                  <ComponentRef name="null"/>
-                </Property>
-              </AccessibilityProperties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="refreshButtonActionPerformed"/>
               </Events>
@@ -334,33 +324,18 @@
                   <Font name="Tahoma" size="14" style="1"/>
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" value="Nachricht an Tafel weiterleiten:"/>
+                <Property name="text" type="java.lang.String" value="Nachricht an Tafeln weiterleiten:"/>
               </Properties>
-              <AccessibilityProperties>
-                <Property name="AccessibleContext.accessibleParent" type="javax.accessibility.Accessible" editor="org.netbeans.modules.form.ComponentChooserEditor">
-                  <ComponentRef name="null"/>
-                </Property>
-              </AccessibilityProperties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel11">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Nummer aus eigener Tafel:"/>
               </Properties>
-              <AccessibilityProperties>
-                <Property name="AccessibleContext.accessibleParent" type="javax.accessibility.Accessible" editor="org.netbeans.modules.form.ComponentChooserEditor">
-                  <ComponentRef name="null"/>
-                </Property>
-              </AccessibilityProperties>
             </Component>
             <Component class="javax.swing.JTextField" name="transfereMsgNumberInput">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Nachrichten-Nr"/>
+                <Property name="text" type="java.lang.String" value="Nachrichten-Nr."/>
               </Properties>
-              <AccessibilityProperties>
-                <Property name="AccessibleContext.accessibleParent" type="javax.accessibility.Accessible" editor="org.netbeans.modules.form.ComponentChooserEditor">
-                  <ComponentRef name="null"/>
-                </Property>
-              </AccessibilityProperties>
               <Events>
                 <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="transfereMsgNumberInputFocusGained"/>
                 <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="transfereMsgNumberInputFocusLost"/>
@@ -369,26 +344,16 @@
             </Component>
             <Component class="javax.swing.JButton" name="transfereMessage">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Nachricht an Tafel weiterleiten"/>
+                <Property name="text" type="java.lang.String" value="Weiterleiten"/>
               </Properties>
-              <AccessibilityProperties>
-                <Property name="AccessibleContext.accessibleParent" type="javax.accessibility.Accessible" editor="org.netbeans.modules.form.ComponentChooserEditor">
-                  <ComponentRef name="null"/>
-                </Property>
-              </AccessibilityProperties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="transfereMessageActionPerformed"/>
               </Events>
             </Component>
             <Component class="javax.swing.JButton" name="jButton1">
               <Properties>
-                <Property name="label" type="java.lang.String" value="senden"/>
+                <Property name="text" type="java.lang.String" value="Senden"/>
               </Properties>
-              <AccessibilityProperties>
-                <Property name="AccessibleContext.accessibleParent" type="javax.accessibility.Accessible" editor="org.netbeans.modules.form.ComponentChooserEditor">
-                  <ComponentRef name="null"/>
-                </Property>
-              </AccessibilityProperties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton1ActionPerformed"/>
               </Events>
@@ -405,11 +370,6 @@
                     <Property name="columns" type="int" value="20"/>
                     <Property name="rows" type="int" value="5"/>
                   </Properties>
-                  <AccessibilityProperties>
-                    <Property name="AccessibleContext.accessibleParent" type="javax.accessibility.Accessible" editor="org.netbeans.modules.form.ComponentChooserEditor">
-                      <ComponentRef name="null"/>
-                    </Property>
-                  </AccessibilityProperties>
                 </Component>
               </SubComponents>
             </Container>
@@ -427,11 +387,6 @@
                     </Property>
                     <Property name="layoutOrientation" type="int" value="2"/>
                   </Properties>
-                  <AccessibilityProperties>
-                    <Property name="AccessibleContext.accessibleParent" type="javax.accessibility.Accessible" editor="org.netbeans.modules.form.ComponentChooserEditor">
-                      <ComponentRef name="null"/>
-                    </Property>
-                  </AccessibilityProperties>
                   <AuxValues>
                     <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
                   </AuxValues>
@@ -440,13 +395,8 @@
             </Container>
             <Component class="javax.swing.JButton" name="deleteMessageButton">
               <Properties>
-                <Property name="text" type="java.lang.String" value="l&#xf6;schen"/>
+                <Property name="text" type="java.lang.String" value="L&#xf6;schen"/>
               </Properties>
-              <AccessibilityProperties>
-                <Property name="AccessibleContext.accessibleParent" type="javax.accessibility.Accessible" editor="org.netbeans.modules.form.ComponentChooserEditor">
-                  <ComponentRef name="null"/>
-                </Property>
-              </AccessibilityProperties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="deleteMessageButtonActionPerformed"/>
               </Events>
@@ -454,13 +404,8 @@
             <Component class="javax.swing.JTextField" name="delMsgNrInput">
               <Properties>
                 <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" value="Nachrichten-Nr"/>
+                <Property name="text" type="java.lang.String" value="Nachrichten-Nr."/>
               </Properties>
-              <AccessibilityProperties>
-                <Property name="AccessibleContext.accessibleParent" type="javax.accessibility.Accessible" editor="org.netbeans.modules.form.ComponentChooserEditor">
-                  <ComponentRef name="null"/>
-                </Property>
-              </AccessibilityProperties>
               <Events>
                 <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="delMsgNrInputFocusGained"/>
                 <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="delMsgNrInputFocusLost"/>
@@ -469,13 +414,8 @@
             <Component class="javax.swing.JLabel" name="jLabel13">
               <Properties>
                 <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" value="Nachricht Nummer:"/>
+                <Property name="text" type="java.lang.String" value="Nachricht-Nummer:"/>
               </Properties>
-              <AccessibilityProperties>
-                <Property name="AccessibleContext.accessibleParent" type="javax.accessibility.Accessible" editor="org.netbeans.modules.form.ComponentChooserEditor">
-                  <ComponentRef name="null"/>
-                </Property>
-              </AccessibilityProperties>
             </Component>
           </SubComponents>
         </Container>
@@ -505,7 +445,7 @@
                           <Component id="createUserButton" alignment="0" max="32767" attributes="0"/>
                           <Component id="createUserButton1" max="32767" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="413" max="32767" attributes="0"/>
+                      <EmptySpace pref="441" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -530,8 +470,8 @@
                           <Component id="jScrollPane5" min="-2" pref="168" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="refreshButton2" min="-2" pref="19" max="-2" attributes="0"/>
-                      <EmptySpace pref="179" max="32767" attributes="0"/>
+                      <Component id="refreshButton2" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace pref="171" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -552,7 +492,7 @@
                   <Font name="Tahoma" size="11" style="1"/>
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" value="Name des Nutzers:"/>
+                <Property name="text" type="java.lang.String" value="Name des Benutzers:"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="newUserNameInput">
@@ -567,7 +507,7 @@
             </Component>
             <Component class="javax.swing.JButton" name="createUserButton">
               <Properties>
-                <Property name="text" type="java.lang.String" value="neuen Benutzer anlegen"/>
+                <Property name="text" type="java.lang.String" value="Erstellen"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="createUserButtonActionPerformed"/>
@@ -603,7 +543,7 @@
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Tahoma" size="14" style="0"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Aktuallisieren"/>
+                <Property name="text" type="java.lang.String" value="Aktualisieren"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="refreshButton2ActionPerformed"/>
@@ -611,7 +551,7 @@
             </Component>
             <Component class="javax.swing.JButton" name="createUserButton1">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Benutzer l&#xf6;schen"/>
+                <Property name="text" type="java.lang.String" value="L&#xf6;schen"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="deleteUserButtonActionPerformed"/>
@@ -647,7 +587,7 @@
                           <Component id="dropdownVirtualBoards" max="32767" attributes="0"/>
                           <Component id="jLabel7" alignment="0" min="-2" pref="230" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="258" max="32767" attributes="0"/>
+                      <EmptySpace pref="250" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -659,32 +599,30 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
+                              <Component id="jScrollPane4" pref="210" max="32767" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
                               <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="newVGNameInput" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="createVGButton" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
                           </Group>
-                          <Group type="102" alignment="1" attributes="0">
-                              <Group type="103" groupAlignment="1" attributes="0">
-                                  <Group type="102" attributes="0">
-                                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                                      <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="dropdownVirtualBoards" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="loginVGButton" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Group type="102" attributes="0">
-                                      <Component id="jScrollPane4" pref="210" max="32767" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="refreshButton1" min="-2" pref="23" max="-2" attributes="0"/>
-                                  </Group>
-                              </Group>
-                              <EmptySpace min="-2" pref="153" max="-2" attributes="0"/>
+                          <Group type="102" attributes="0">
+                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                              <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="dropdownVirtualBoards" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
                           </Group>
                       </Group>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="refreshButton1" min="-2" max="-2" attributes="0"/>
+                          <Component id="loginVGButton" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" pref="149" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -705,7 +643,7 @@
                   <Font name="Tahoma" size="11" style="1"/>
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" value="Name der neuen VG Grp:"/>
+                <Property name="text" type="java.lang.String" value="Virtuelle Gruppe:"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="newVGNameInput">
@@ -720,7 +658,7 @@
             </Component>
             <Component class="javax.swing.JButton" name="createVGButton">
               <Properties>
-                <Property name="text" type="java.lang.String" value="erstelle VG"/>
+                <Property name="text" type="java.lang.String" value="Erstellen"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="createVGButtonActionPerformed"/>
@@ -739,7 +677,7 @@
               <Properties>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                   <StringArray count="1">
-                    <StringItem index="0" value="Bitte Tafel aktuallisieren"/>
+                    <StringItem index="0" value="Bitte Tafel aktualisieren"/>
                   </StringArray>
                 </Property>
               </Properties>
@@ -749,7 +687,7 @@
             </Component>
             <Component class="javax.swing.JButton" name="loginVGButton">
               <Properties>
-                <Property name="text" type="java.lang.String" value="einloggen in Virtuelle Gruppe"/>
+                <Property name="text" type="java.lang.String" value="Login"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="loginVGButtonActionPerformed"/>
@@ -776,7 +714,7 @@
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Tahoma" size="14" style="0"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Aktuallisieren"/>
+                <Property name="text" type="java.lang.String" value="Aktualisieren"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="refreshButton1ActionPerformed"/>
