@@ -746,34 +746,38 @@ public class AdminGUI extends javax.swing.JFrame {
 
     private void deleteUserButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteUserButtonActionPerformed
         boolean userAlreadyExist = false;
-        User oldUser = new User(newUserNameInput.getText());
-        try
-        {
-            refreshAllLists();
-            boardServiceObj.checkUser(oldUser);
-            JOptionPane.showMessageDialog(null,"Benutzer wird gelöscht!","Warnung",JOptionPane.WARNING_MESSAGE);
-            userAlreadyExist = true;
-        }
-        catch (UnknownUser e)
-        {
-            JOptionPane.showMessageDialog(null,"Benutzer existiert nicht!","Warnung",JOptionPane.WARNING_MESSAGE);
-        }
-        catch (COMM_FAILURE ex)
-        {
-            JOptionPane.showMessageDialog(null,"Server wurde nicht gefunden!","Warnung",JOptionPane.WARNING_MESSAGE);
-        }
-        
-        if (userAlreadyExist)
-        {
+        if ("root".equals(newUserNameInput.getText())){
+            JOptionPane.showMessageDialog(null,"root kann nicht gelöscht werden!","Warnung",JOptionPane.WARNING_MESSAGE);
+        }else{
+            User oldUser = new User(newUserNameInput.getText());
             try
             {
-                adminServiceObj.removeUser(oldUser);
-                newUserNameInput.setText("Benutzer erfolgreich gelöscht");
                 refreshAllLists();
+                boardServiceObj.checkUser(oldUser);
+                JOptionPane.showMessageDialog(null,"Benutzer wird gelöscht!","Warnung",JOptionPane.WARNING_MESSAGE);
+                userAlreadyExist = true;
             }
-            catch (Exception UnknownUser)
+            catch (UnknownUser e)
             {
-                newUserNameInput.setText("Fehlgeschlagen");
+                JOptionPane.showMessageDialog(null,"Benutzer existiert nicht!","Warnung",JOptionPane.WARNING_MESSAGE);
+            }
+            catch (COMM_FAILURE ex)
+            {
+                JOptionPane.showMessageDialog(null,"Server wurde nicht gefunden!","Warnung",JOptionPane.WARNING_MESSAGE);
+            }
+        
+            if (userAlreadyExist)
+            {
+                try
+                {
+                    adminServiceObj.removeUser(oldUser);
+                    newUserNameInput.setText("Benutzer erfolgreich gelöscht");
+                    refreshAllLists();
+                }
+                catch (Exception UnknownUser)
+                {
+                    newUserNameInput.setText("Fehlgeschlagen");
+                }
             }
         }
     }//GEN-LAST:event_deleteUserButtonActionPerformed
