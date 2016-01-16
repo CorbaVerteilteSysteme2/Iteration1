@@ -29,10 +29,14 @@ import org.omg.CosNaming.NamingContextExtHelper;
 import org.omg.CosNaming.NamingContextPackage.CannotProceed;
 import org.omg.CosNaming.NamingContextPackage.NotFound;
 import BoardModules.BasicServices.*;
+import java.awt.EventQueue;
 import java.awt.event.*;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
 import org.omg.CORBA.COMM_FAILURE;
 import org.omg.PortableServer.POAManagerPackage.AdapterInactive;
 
@@ -205,15 +209,16 @@ public class UserGUI extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addComponent(destinationList, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                    .addGroup(layout.createSequentialGroup()
                         .addGap(12, 12, 12)
                         .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(6, 6, 6)
-                        .addComponent(delMsgNrInput)
-                        .addGap(18, 18, 18)
+                        .addComponent(delMsgNrInput, javax.swing.GroupLayout.DEFAULT_SIZE, 41, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton1)
-                        .addGap(33, 33, 33))
-                    .addComponent(destinationList, 0, 306, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(58, 58, 58)))
                 .addComponent(sendMessage)
                 .addContainerGap())
         );
@@ -248,26 +253,32 @@ public class UserGUI extends javax.swing.JFrame {
         sendMessageField.setText("");
     }
 
-
     private void sendMessage(String message) {
-        if ("".equals(message)){
-            JOptionPane.showMessageDialog(null,"Nachrichten müssen einen Inhalt haben!","Warnung",JOptionPane.WARNING_MESSAGE);           
-        }else{
-            try{
-        
-                _boardFrontend.sendMessage(user, new Message(message, user.name, new Date().toString()), tableID);
-            } catch (UnknownUser ex) {
-                Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
-                JOptionPane.showMessageDialog(null,"Unbekannter Nutzer!","Warnung",JOptionPane.WARNING_MESSAGE);           
-
-            } catch (COMM_FAILURE ex){
-                JOptionPane.showMessageDialog(null,"Server wurde nicht gefunden! Nachrichten werden zur nächsten Gelegenheit gesendet!","Warnung",JOptionPane.WARNING_MESSAGE);
-                //Verruebergehende Ausgabe
-                readMessageField.append(sendMessageField.getText());
-                readMessageField.append("\n");
-                sendMessageField.setText("");
-            }
-        }        
+        if ("".equals(message)) {
+            JOptionPane.showMessageDialog(null, "Nachrichten müssen einen Inhalt haben!", "Warnung", JOptionPane.WARNING_MESSAGE);
+        } else {
+            SendMessageWorker worker = new SendMessageWorker();
+            worker.SetMessageContent(message);
+            worker.execute();
+//            SwingUtilities.invokeLater(new Runnable() {
+//                @Override
+//                public void run() {
+//                    try {
+//                        _boardFrontend.sendMessage(user, new Message(message, user.name, new Date().toString()), tableID);
+//                    } catch (UnknownUser ex) {
+//                        Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
+//                        //JOptionPane.showMessageDialog(null, "Unbekannter Nutzer!", "Warnung", JOptionPane.WARNING_MESSAGE);
+//                    } catch (COMM_FAILURE ex) {
+//                        JOptionPane.showMessageDialog(null, "Server wurde nicht gefunden! Nachrichten werden zur nächsten Gelegenheit gesendet!", "Warnung", JOptionPane.WARNING_MESSAGE);
+//                        //Verruebergehende Ausgabe
+////                        readMessageField.append(sendMessageField.getText());
+////                        readMessageField.append("\n");
+////                        sendMessageField.setText("");
+//                        
+//                    }
+//                }
+//            });
+        }
     }//GEN-LAST:event_sendMessageActionPerformed
 
     private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
@@ -480,4 +491,31 @@ public class UserGUI extends javax.swing.JFrame {
             this.parent.printMessageList(e.getMessages());
         }
     }
+    class SendMessageWorker extends SwingWorker<Boolean, Message> {
+        private String msgContent;
+        public void SetMessageContent(String content) {
+            this.msgContent = content;
+        }
+        
+        @Override
+        protected Boolean doInBackground() throws Exception {
+            try {
+                _boardFrontend.sendMessage(user, new Message(msgContent, user.name, new Date().toString()), tableID);
+            } catch (UnknownUser ex) {
+                Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
+                //JOptionPane.showMessageDialog(null, "Unbekannter Nutzer!", "Warnung", JOptionPane.WARNING_MESSAGE);
+            } catch (COMM_FAILURE ex) {
+                //JOptionPane.showMessageDialog(null, "Server wurde nicht gefunden! Nachrichten werden zur nächsten Gelegenheit gesendet!", "Warnung", JOptionPane.WARNING_MESSAGE);
+                //Verruebergehende Ausgabe
+//                        readMessageField.append(sendMessageField.getText());
+//                        readMessageField.append("\n");
+//                        sendMessageField.setText("");
+
+            }
+            return true;
+        }
+
+    }
 }
+
+

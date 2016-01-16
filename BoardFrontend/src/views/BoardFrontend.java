@@ -114,6 +114,7 @@ public class BoardFrontend {
     }
     
     void sendMessage(User user, Message message, String tableID) throws UnknownUser {
+        
         try {
             this.boardServiceObj.sendMessage(user, message, tableID);
         } catch (COMM_FAILURE ex) {
