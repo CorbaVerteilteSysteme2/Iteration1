@@ -20,8 +20,6 @@ import java.util.EventObject;
 import java.util.Properties;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.event.EventListenerList;
 import org.omg.CORBA.COMM_FAILURE;
 import org.omg.CORBA.ORB;
@@ -84,14 +82,11 @@ public class BoardFrontend {
                         try {
                             boardServiceObj = (BoardService) BoardServiceHelper.narrow(nameService.resolve_str(tableID + "/" + BoardConfiguration.BOARD_SERVICE_NAME));
                             viewServiceObj = (ViewService) ViewServiceHelper.narrow(nameService.resolve_str(tableID + "/" + BoardConfiguration.VIEW_SERVICE_NAME));
-                            isWorking = true;
+                            
                             sendPufferedMessages();
-                        } catch (NotFound | CannotProceed | org.omg.CosNaming.NamingContextPackage.InvalidName ex1) {
-                            try {
-                                Thread.sleep(1000);
-                            } catch (InterruptedException ex2) {
-                                Logger.getLogger(BoardFrontend.class.getName()).log(Level.SEVERE, null, ex2);
-                            }
+                            isWorking = true;
+                        } catch (NotFound | CannotProceed | org.omg.CosNaming.NamingContextPackage.InvalidName | COMM_FAILURE ex1) {
+
                         }
                     }
                 }
@@ -99,13 +94,15 @@ public class BoardFrontend {
         }, 0, 500);
     }
     
+    // Puffer ist noch nicht threadsicher
     public void sendPufferedMessages() {
         if ((!pufferedMessages.isEmpty()) || (pufferedMessages != null)) {
             for (Message msg : pufferedMessages){
                 try {
-                    sendMessage(user, msg, tableID);
+                    this.boardServiceObj.sendMessage(user, msg, tableID);
                 } catch (UnknownUser ex) {
-                    
+                    // wenn dies passiert, dann hat sich der Client 
+                    // mit einer Tafel mit der gleichen ID, aber anderen Nutzern angemeldet
                 }
             }
             pufferedMessages.clear();
