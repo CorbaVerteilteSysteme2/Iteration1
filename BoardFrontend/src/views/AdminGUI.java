@@ -5,33 +5,17 @@
  */
 package views;
 
-import BoardConfiguration.BoardConfiguration;
-import BoardModules.BasicServices.AdministrationService;
-import BoardModules.BasicServices.AdministrationServiceHelper;
 import BoardModules.BasicServices.BoardService;
-import BoardModules.BasicServices.BoardServiceHelper;
-import BoardModules.BasicServices.ViewService;
-import BoardModules.BasicServices.ViewServiceHelper;
 import BoardModules.DestinationUnreachable;
 import BoardModules.Message;
 import BoardModules.UnknownUser;
 import BoardModules.User;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
-import org.omg.CORBA.ORB;
 import org.omg.CORBA.ORBPackage.InvalidName;
-import org.omg.CosNaming.Binding;
-import org.omg.CosNaming.BindingIteratorHolder;
-import org.omg.CosNaming.BindingListHolder;
-import org.omg.CosNaming.NamingContextExt;
-import org.omg.CosNaming.NamingContextExtHelper;
 import org.omg.CosNaming.NamingContextPackage.CannotProceed;
 import org.omg.CosNaming.NamingContextPackage.NotFound;
 import javax.swing.JOptionPane;
@@ -583,7 +567,7 @@ public class AdminGUI extends javax.swing.JFrame {
 
             //GUI
             this.setEnabled(true);
-            t.start();
+           
             refreshAllLists();
             loginDialog.setVisible(false);
         }
@@ -629,14 +613,14 @@ public class AdminGUI extends javax.swing.JFrame {
                     VGNameExist = true;
             }
             if (!VGNameExist){
-                adminServiceObj.createVirtualGroup(newVGName);
+                this._boardFrontend.createVirtualGroup(newVGName);
                 newVGNameInput.setText("VG erfolgreich erstellt");
             }else{
                 JOptionPane.showMessageDialog(null,"Virtuelle Gruppe bereits vorhanden!","Warnung",JOptionPane.WARNING_MESSAGE);           
             }
             refreshAllLists();
         } catch (COMM_FAILURE ex){
-            JOptionPane.showMessageDialog(null,"Server wurde nicht gefunden!","Warnung",JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null,BoardFrontendConfiguration.SERVER_NOT_FOUND,"Warnung",JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_createVGButtonActionPerformed
 
@@ -645,18 +629,18 @@ public class AdminGUI extends javax.swing.JFrame {
         User newUser = new User(newUserNameInput.getText());
         try{
             refreshAllLists();
-            boardServiceObj.checkUser(newUser);
+            this._boardFrontend.checkUser(newUser);
             JOptionPane.showMessageDialog(null,"Benutzer bereits vorhanden!","Warnung",JOptionPane.WARNING_MESSAGE);
             userAlreadyExist = true;
         }catch (UnknownUser e){
         }catch (COMM_FAILURE ex){
-            JOptionPane.showMessageDialog(null,"Server wurde nicht gefunden!","Warnung",JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null,BoardFrontendConfiguration.SERVER_NOT_FOUND,"Warnung",JOptionPane.WARNING_MESSAGE);
             userAlreadyExist = true;
         }
         
         if (!userAlreadyExist){
             try{
-                adminServiceObj.createUser(newUser);
+                this._boardFrontend.createUser(newUser);
                 JOptionPane.showMessageDialog(null,"Nutzer erfolgreich erstellt","Warnung",JOptionPane.WARNING_MESSAGE);
                 newUserNameInput.setText("Name des Nutzers");
                 refreshAllLists();
@@ -681,9 +665,9 @@ public class AdminGUI extends javax.swing.JFrame {
     private void loginVGButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginVGButtonActionPerformed
         String virtualGrpName = (String) dropdownVirtualBoards.getSelectedItem();
         try{
-        adminServiceObj.loginToVirtualGroup(virtualGrpName);
+        this._boardFrontend.loginToVirtualGroup(virtualGrpName);
         } catch (COMM_FAILURE ex){
-            JOptionPane.showMessageDialog(null,"Server wurde nicht gefunden!","Warnung",JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null,BoardFrontendConfiguration.SERVER_NOT_FOUND,"Warnung",JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_loginVGButtonActionPerformed
 
@@ -701,20 +685,20 @@ public class AdminGUI extends javax.swing.JFrame {
         try{
             int msgNr = Integer.parseInt(transfereMsgNumberInput.getText());
             if ((msgNr < message.length) && (msgNr >= 0) && (message != null)){
-                adminServiceObj.forwardMessageToBoards(boardName,message[msgNr]);
+                this._boardFrontend.forwardMessageToBoards(boardName,message[msgNr]);
                 transfereMsgNumberInput.setText("Erfolgreich");
             }else{
                 transfereMsgNumberInput.setText("");
-                JOptionPane.showMessageDialog(null,"Fehlerhafte Eingabe!","Warnung",JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(null,BoardFrontendConfiguration.INPUT_FAILURE,"Warnung",JOptionPane.WARNING_MESSAGE);
             }
         
         }catch (DestinationUnreachable ex){
             transfereMsgNumberInput.setText("Fehlgeschlagen");
         }catch (NumberFormatException e) {
             transfereMsgNumberInput.setText("Ungültige Eingabe!");
-            JOptionPane.showMessageDialog(null,"Fehlerhafte Eingabe Nachrichten-Nr!","Warnung",JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null,BoardFrontendConfiguration.MESSAGE_NUMBER_FAILURE,"Warnung",JOptionPane.WARNING_MESSAGE);
         } catch (COMM_FAILURE ex){
-            JOptionPane.showMessageDialog(null,"Server wurde nicht gefunden!","Warnung",JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null,BoardFrontendConfiguration.SERVER_NOT_FOUND,"Warnung",JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_transfereMessageActionPerformed
 
@@ -739,7 +723,7 @@ public class AdminGUI extends javax.swing.JFrame {
             try
             {
                 refreshAllLists();
-                boardServiceObj.checkUser(oldUser);
+                this._boardFrontend.checkUser(oldUser);
                 JOptionPane.showMessageDialog(null,"Benutzer wird gelöscht!","Warnung",JOptionPane.WARNING_MESSAGE);
                 userAlreadyExist = true;
             }
@@ -749,14 +733,14 @@ public class AdminGUI extends javax.swing.JFrame {
             }
             catch (COMM_FAILURE ex)
             {
-                JOptionPane.showMessageDialog(null,"Server wurde nicht gefunden!","Warnung",JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(null,BoardFrontendConfiguration.SERVER_NOT_FOUND,"Warnung",JOptionPane.WARNING_MESSAGE);
             }
         
             if (userAlreadyExist)
             {
                 try
                 {
-                    adminServiceObj.removeUser(oldUser);
+                    this._boardFrontend.removeUser(oldUser);
                     newUserNameInput.setText("Benutzer erfolgreich gelöscht");
                     refreshAllLists();
                 }
@@ -832,78 +816,38 @@ public class AdminGUI extends javax.swing.JFrame {
     public boolean startAdminBoardService(String adminname, String tableID, String ipAddress){
         boolean worked = false;
         this.tableID = tableID;
-        this.loginIP = ipAddress;
         try {
-            ORB _orb;
-            Properties props = new Properties();
-            
-            props.put("org.omg.CORBA.ORBInitialPort", BoardConfiguration.ORB_PORT);
-            props.put("org.omg.CORBA.ORBInitialHost", ipAddress);
-            
-            _orb = ORB.init(new String[0], props);
-            
-            org.omg.CORBA.Object objRef = _orb.resolve_initial_references(BoardConfiguration.NAMESERVICE);
-            nameService = NamingContextExtHelper.narrow(objRef);
-        
-            this.adminServiceObj = (AdministrationService) AdministrationServiceHelper.narrow(nameService.resolve_str(tableID + "/" + BoardConfiguration.ADMIN_SERVICE_NAME));
-            this.boardServiceObj = (BoardService) BoardServiceHelper.narrow(nameService.resolve_str(tableID + "/" + BoardConfiguration.BOARD_SERVICE_NAME));
-            this.viewServiceObj = (ViewService) ViewServiceHelper.narrow(nameService.resolve_str(tableID + "/" + BoardConfiguration.VIEW_SERVICE_NAME));
-            
             
             this.admin = new User(adminname);
-            this.boardServiceObj.checkUser(admin);
+            this._boardFrontend = new BoardFrontend(this.tableID, ipAddress, admin, BoardFrontend.FrontendMode.Admin);
+            this._boardFrontend.checkUser(admin);
             worked = true;
+            this._boardFrontend.addListener(new AdminGUI.NewMessageListListenerImpl(this));
+            SendMessageWorker.setBoardFrontend(_boardFrontend);
         } catch (UnknownUser ex){
-            JOptionPane.showMessageDialog(null,"Benutzer wurde nicht gefunden!","Warnung",JOptionPane.WARNING_MESSAGE);     
+            JOptionPane.showMessageDialog(null,BoardFrontendConfiguration.USER_NOT_FOUND,"Warnung",JOptionPane.WARNING_MESSAGE);     
         } catch (InvalidName | CannotProceed | org.omg.CosNaming.NamingContextPackage.InvalidName ex) {
             Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null,BoardFrontendConfiguration.SERVER_NOT_FOUND,"Warnung",JOptionPane.WARNING_MESSAGE);
         } catch (NotFound ex) {
             Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
-            JOptionPane.showMessageDialog(null,"Tafel wurde nicht gefunden!","Warnung",JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null,BoardFrontendConfiguration.TABLE_NOT_FOUND,"Warnung",JOptionPane.WARNING_MESSAGE);
         } catch (COMM_FAILURE ex){
-            JOptionPane.showMessageDialog(null,"Server wurde nicht gefunden!","Warnung",JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null,BoardFrontendConfiguration.SERVER_NOT_FOUND,"Warnung",JOptionPane.WARNING_MESSAGE);
         }
         return worked;
-    }
-    
-    /**
-     * Diese Methode erstellt eine Liste von allen Boards und VGroups.
-     * Zu erkennen sind diese am BoardService.
-     * @return 
-     */
-    private ArrayList<String> getAllBoardsAndVirtualGroups() {
-        int batchSize = 100;
-        ArrayList<String> boardList = new ArrayList<>();
-        BindingListHolder bList = new BindingListHolder();
-        BindingIteratorHolder bIterator = new BindingIteratorHolder();
-
-        nameService.list(batchSize, bList, bIterator);
-        
-        for (Binding value : bList.value) {
-            String boardname = value.binding_name[0].id;
-            //System.err.println(boardname);
-            try {
-                BoardService boardService = (BoardService) BoardServiceHelper.narrow(nameService.resolve_str(boardname + "/" + BoardConfiguration.BOARD_SERVICE_NAME));
-                
-                //VirtualGroupService virtualGroupServiceObj = (VirtualGroupService) VirtualGroupServiceHelper.narrow(nameService.resolve_str(boardname + "/VirtualGroupService"));
-                boardList.add(boardname);
-            } catch (NotFound | CannotProceed | org.omg.CosNaming.NamingContextPackage.InvalidName ex) {
-                      
-            }
-        }
-        return boardList;
     }
     
      /**
      * Aktuallisieren der Tafelliste und beider Comboboxen
      */
     private void refreshAllLists(){
-        //String[] allBoardList;
+  
         String[] allUsers;
         try{
-            virtualGrpList = adminServiceObj.getAllVirtualGroups();
+            virtualGrpList = this._boardFrontend.getAllVirtualGroups();
         
-            ArrayList<String> boardList = getAllBoardsAndVirtualGroups();       
+            ArrayList<String> boardList = this._boardFrontend.getAllBoardsAndVirtualGroups();
             String[] boardListArrayObject = boardList.toArray(new String[boardList.size()]);
 
             listModel = new DefaultListModel();
@@ -919,7 +863,7 @@ public class AdminGUI extends javax.swing.JFrame {
             }
         
             //Userausgabe
-            allUsers = adminServiceObj.getAllUsers();
+            allUsers = this._boardFrontend.getAllUsers();
             userNamesOutput.setText("");
             for(String userName : allUsers){
                 userNamesOutput.append(userName);
@@ -929,83 +873,18 @@ public class AdminGUI extends javax.swing.JFrame {
             //allBoardList = boardList.toArray(new String[boardList.size()]);
             dropdownVirtualBoards.setModel(new javax.swing.DefaultComboBoxModel<>(virtualGrpList));
         } catch (COMM_FAILURE ex){
-            JOptionPane.showMessageDialog(null,"Server wurde nicht gefunden!","Warnung",JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null,BoardFrontendConfiguration.SERVER_NOT_FOUND,"Warnung",JOptionPane.WARNING_MESSAGE);
         }
     }
 
 
     private void sendMessage(String message) {
         if ("".equals(message)){
-            JOptionPane.showMessageDialog(null,"Nachrichten müssen einen Inhalt haben!","Warnung",JOptionPane.WARNING_MESSAGE);           
-        }else{
-            try{
-        
-                boardServiceObj.sendMessage(admin, new Message(message, admin.name, new Date().toString()), tableID);
-            } catch (UnknownUser ex) {
-                Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
-                JOptionPane.showMessageDialog(null,"Unbekannter Nutzer!","Warnung",JOptionPane.WARNING_MESSAGE);           
-
-            } catch (COMM_FAILURE ex){
-                JOptionPane.showMessageDialog(null,"Server wurde nicht gefunden! Nachrichten werden zur nächsten Gelegenheit gesendet!","Warnung",JOptionPane.WARNING_MESSAGE);
-                //Verruebergehende Ausgabe
-                readMessageField.append(sendMessageField.getText());
-                readMessageField.append("\n");
-                sendMessageField.setText("");
-                startMessagePuffer(message);
-            }
-        }
-        
-
-    }
-    
-    /*    private void removeMessage(String message) 
-        {
-        if ("".equals(message))
-        {
-            JOptionPane.showMessageDialog(null,"Nachrichten müssen einen Inhalt haben!","Warnung",JOptionPane.WARNING_MESSAGE);           
-        }
-        else
-        {
-            try
-            {
-                boardServiceObj.removeMessage(admin, new Message(message, admin.name, new Date().toString()), tableID);
-            }
-            catch (UnknownUser ex) 
-            {
-                Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
-                JOptionPane.showMessageDialog(null,"Unbekannter Nutzer!","Warnung",JOptionPane.WARNING_MESSAGE);           
-
-            }
-            catch (COMM_FAILURE ex)
-            {
-                JOptionPane.showMessageDialog(null,"Server wurde nicht gefunden! Nachrichten werden zur nächsten Gelegenheit gesendet!","Warnung",JOptionPane.WARNING_MESSAGE);
-                //Verruebergehende Ausgabe
-                readMessageField.append("\n");
-                sendMessageField.setText("");
-                startMessagePuffer(message);
-            }
-        }
-        
-
-    }/*
-        
-    /**
-     * Puffer für Messages wenn Server nicht verfügbar ist
-     * @param message String der Nachricht
-     */   
-    private void startMessagePuffer(String backupMessage) {
-        messagePuffer.add(backupMessage);
-    }
-    
-    /**
-     * senden aller PufferNachrichten wenn Server wieder verfügbar ist
-     */      
-    private void sendPuffer() {
-        if ((!messagePuffer.isEmpty()) || (messagePuffer != null)) {
-            for (String msgPuffer : messagePuffer){
-                sendMessage(msgPuffer);
-            }
-            messagePuffer.clear();
+            JOptionPane.showMessageDialog(null,BoardFrontendConfiguration.MESSAGE_EMPTY,"Warnung",JOptionPane.WARNING_MESSAGE);           
+        }else {
+            SendMessageWorker worker = new SendMessageWorker();
+            worker.SetMessageContent(message);
+            worker.execute();
         }
     }
 
@@ -1014,73 +893,23 @@ public class AdminGUI extends javax.swing.JFrame {
      * @param mdgNr position der zu löschenden Nachricht im MessageArray
      */     
     private void deleteMessage(int msgNr) {
-        try{
-            if ((msgNr < message.length) && (msgNr >= 0) && (message != null)){
-                boardServiceObj.removeMessage(admin,message[msgNr],"noetig?");
-                JOptionPane.showMessageDialog(null,"Nachricht Entfernt!","Warnung",JOptionPane.WARNING_MESSAGE);
-            }else{;
-                JOptionPane.showMessageDialog(null,"Fehlerhafte Eingabe!","Warnung",JOptionPane.WARNING_MESSAGE);
+        try {
+            if ((msgNr < message.length) && (msgNr >= 0) && (message != null)) {
+                this._boardFrontend.removeMessage(admin, message[msgNr]);
+                JOptionPane.showMessageDialog(null, "Nachricht Entfernt!", "Warnung", JOptionPane.WARNING_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(null, "Fehlerhafte Eingabe!", "Warnung", JOptionPane.WARNING_MESSAGE);
             }
-        
-        }catch (UnknownUser ex){
-            JOptionPane.showMessageDialog(null,"Nur eigene Nachrichten löschbar!","Warnung",JOptionPane.WARNING_MESSAGE);
-        }catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(null,"Fehlerhafte Eingabe Nachrichten-Nr!","Warnung",JOptionPane.WARNING_MESSAGE);
-        } catch (COMM_FAILURE ex){
-            JOptionPane.showMessageDialog(null,"Server wurde nicht gefunden!","Warnung",JOptionPane.WARNING_MESSAGE);
+
+        } catch (UnknownUser ex) {
+            JOptionPane.showMessageDialog(null, "Nur eigene Nachrichten löschbar!", "Warnung", JOptionPane.WARNING_MESSAGE);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Fehlerhafte Eingabe Nachrichten-Nr!", "Warnung", JOptionPane.WARNING_MESSAGE);
+        } catch (COMM_FAILURE ex) {
+            JOptionPane.showMessageDialog(null, BoardFrontendConfiguration.SERVER_NOT_FOUND, "Warnung", JOptionPane.WARNING_MESSAGE);
         }
     }
-     /**
-     * Timer zum regelmäßigen Aktuallisieren der eigenen Tafelanzeige
-     */
-    javax.swing.Timer t = new javax.swing.Timer(1000, new ActionListener() {  
-        @Override
-        public void actionPerformed(ActionEvent e) {
-              int counter = 0;
-            System.out.println("check");
 
-            try {
-                if (message != null) {
-                    // die Nachrichtenliste wird nun nur noch heruntergeladen, wenn sie ihr Status verändert hat
-                    if (localState != viewServiceObj.getState()) {
-                        message = viewServiceObj.getAllMessageByDestination("");
-                        readMessageField.setText("");
-                        for (Message message1 : message) {
-                            readMessageField.append(Integer.toString(counter) + ": ");
-                            readMessageField.append(message1.toString());
-                            readMessageField.append("\n");
-                            counter++;
-                        }
-                    }
-                } else {
-                    localState = viewServiceObj.getState();
-                    message = viewServiceObj.getAllMessageByDestination("");
-                    for (Message message1 : message) {
-                        readMessageField.append(Integer.toString(counter) + ": ");
-                        readMessageField.append(message1.toString());
-                        readMessageField.append("\n");
-                        counter++;
-                    }
-                }
-
-                sendPuffer();
-                t.setDelay(1000);
-            } catch (DestinationUnreachable ex) {
-
-            } catch (COMM_FAILURE ex) {
-                try {
-                    t.setDelay(10000);
-                    adminServiceObj = (AdministrationService) AdministrationServiceHelper.narrow(nameService.resolve_str(tableID + "/" + BoardConfiguration.ADMIN_SERVICE_NAME));
-                    boardServiceObj = (BoardService) BoardServiceHelper.narrow(nameService.resolve_str(tableID + "/" + BoardConfiguration.BOARD_SERVICE_NAME));
-                    viewServiceObj = (ViewService) ViewServiceHelper.narrow(nameService.resolve_str(tableID + "/" + BoardConfiguration.VIEW_SERVICE_NAME));
-
-                    //sendPuffer();
-                } catch (NotFound | CannotProceed | org.omg.CosNaming.NamingContextPackage.InvalidName | COMM_FAILURE ex1) {
-                    //Logger.getLogger(AdminGUI.class.getName()).log(Level.SEVERE, null, ex1);
-                }
-            }
-        }
-    });
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField IPInput;
@@ -1133,23 +962,39 @@ public class AdminGUI extends javax.swing.JFrame {
     private javax.swing.JTextArea userNamesOutput;
     private javax.swing.JTextArea virtualBoardListOutput;
     // End of variables declaration//GEN-END:variables
-    private NamingContextExt nameService = null; // Referenz auf den NameService
-    private AdministrationService adminServiceObj = null;
-    private BoardService boardServiceObj = null;
-    private ViewService viewServiceObj = null;
     private User admin = null;
     private Message[] message = null;
-    private String[] virtualGrpList = {"Bitte Tafeln aktuallisieren"};
+    private String[] virtualGrpList = {"Bitte Tafeln aktualisieren"};
     private String tableID = null;
-    private String loginIP = null;
     private DefaultListModel listModel;
-    private int localState = -1;
-    private ArrayList<String> messagePuffer = new ArrayList<>();
 
-    
+    private BoardFrontend _boardFrontend;
 
+    private void printMessageList(Message[] messages) {
+        int counter = 0;
 
+        this.message = messages;
+        readMessageField.setText("");
+        for (Message msg : messages) {
+            readMessageField.append(Integer.toString(counter) + ": ");
+            readMessageField.append(msg.toString());
+            readMessageField.append("\n");
+            counter++;
+        }
+        readMessageField.setCaretPosition(readMessageField.getText().length());
+    }
 
-    
-    
+    private static class NewMessageListListenerImpl implements BoardFrontend.NewMessageListListener {
+
+        private final AdminGUI parent;
+       
+        private NewMessageListListenerImpl(AdminGUI parent) {
+            this.parent = parent;
+        }
+
+        @Override
+        public void displayMessageList(BoardFrontend.NewMessageListEvent e) {
+            this.parent.printMessageList(e.getMessages());
+        }
+    }
 }

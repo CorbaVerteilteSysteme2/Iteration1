@@ -11,34 +11,18 @@ package views;
  * @version 0.1
  * @date 08.01.2016
  */
-import BoardConfiguration.BoardConfiguration;
 import BoardModules.BasicServices.BoardService;
-import BoardModules.BasicServices.BoardServiceHelper;
 import BoardModules.DestinationUnreachable;
 import BoardModules.Message;
 import BoardModules.UnknownUser;
 import BoardModules.User;
-import java.util.Date;
-import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.omg.CORBA.ORB;
 import org.omg.CORBA.ORBPackage.InvalidName;
-import org.omg.CosNaming.NamingContextExt;
-import org.omg.CosNaming.NamingContextExtHelper;
 import org.omg.CosNaming.NamingContextPackage.CannotProceed;
 import org.omg.CosNaming.NamingContextPackage.NotFound;
-import BoardModules.BasicServices.*;
-import java.awt.EventQueue;
-import java.awt.event.*;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
-import javax.swing.SwingWorker;
 import org.omg.CORBA.COMM_FAILURE;
-import org.omg.PortableServer.POAManagerPackage.AdapterInactive;
 
 public class UserGUI extends javax.swing.JFrame {
 
@@ -73,7 +57,6 @@ public class UserGUI extends javax.swing.JFrame {
         sendMessage = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
         readMessageField = new javax.swing.JTextArea();
-        destinationList = new javax.swing.JComboBox<>();
         delMsgNrInput = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
@@ -188,8 +171,6 @@ public class UserGUI extends javax.swing.JFrame {
         readMessageField.setRows(5);
         jScrollPane3.setViewportView(readMessageField);
 
-        destinationList.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "eigene Tafel" }));
-
         jLabel4.setText("Nachricht-Nummer:");
 
         jButton1.setText("Löschen");
@@ -203,41 +184,37 @@ public class UserGUI extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2)
             .addComponent(jScrollPane3)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(125, 125, 125)
+                        .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 116, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(delMsgNrInput, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(destinationList, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                        .addGap(19, 19, 19)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(12, 12, 12)
-                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(6, 6, 6)
-                        .addComponent(delMsgNrInput, javax.swing.GroupLayout.DEFAULT_SIZE, 41, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1)
-                        .addGap(58, 58, 58)))
-                .addComponent(sendMessage)
-                .addContainerGap())
+                        .addGap(18, 18, 18)
+                        .addComponent(sendMessage, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(sendMessage, javax.swing.GroupLayout.DEFAULT_SIZE, 43, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(sendMessage)
-                    .addComponent(destinationList, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
+                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(delMsgNrInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4))
-                .addGap(0, 11, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
@@ -255,29 +232,11 @@ public class UserGUI extends javax.swing.JFrame {
 
     private void sendMessage(String message) {
         if ("".equals(message)) {
-            JOptionPane.showMessageDialog(null, "Nachrichten müssen einen Inhalt haben!", "Warnung", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, BoardFrontendConfiguration.MESSAGE_EMPTY, "Warnung", JOptionPane.WARNING_MESSAGE);
         } else {
             SendMessageWorker worker = new SendMessageWorker();
             worker.SetMessageContent(message);
             worker.execute();
-//            SwingUtilities.invokeLater(new Runnable() {
-//                @Override
-//                public void run() {
-//                    try {
-//                        _boardFrontend.sendMessage(user, new Message(message, user.name, new Date().toString()), tableID);
-//                    } catch (UnknownUser ex) {
-//                        Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
-//                        //JOptionPane.showMessageDialog(null, "Unbekannter Nutzer!", "Warnung", JOptionPane.WARNING_MESSAGE);
-//                    } catch (COMM_FAILURE ex) {
-//                        JOptionPane.showMessageDialog(null, "Server wurde nicht gefunden! Nachrichten werden zur nächsten Gelegenheit gesendet!", "Warnung", JOptionPane.WARNING_MESSAGE);
-//                        //Verruebergehende Ausgabe
-////                        readMessageField.append(sendMessageField.getText());
-////                        readMessageField.append("\n");
-////                        sendMessageField.setText("");
-//                        
-//                    }
-//                }
-//            });
         }
     }//GEN-LAST:event_sendMessageActionPerformed
 
@@ -285,12 +244,13 @@ public class UserGUI extends javax.swing.JFrame {
         
         if (startUserBoardService(userNameInput.getText(),userBoardInput.getText(), IPInput.getText())){
             //TODO Anpassen wenn mehrere Tafeln auswaehlbar werden
-            destinationList.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] {userBoardInput.getText()}));
+            //destinationList.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] {userBoardInput.getText()}));
         
             //GUI
             this.setEnabled(true);
 //            t.start();
             loginDialog.setVisible(false);
+            
         }
     }//GEN-LAST:event_loginButtonActionPerformed
 
@@ -356,19 +316,20 @@ public class UserGUI extends javax.swing.JFrame {
         this.tableID = tableID;
         try {
             this.user = new User(username);
-            this._boardFrontend = new BoardFrontend(this.tableID, ipAddress, user);
+            this._boardFrontend = new BoardFrontend(this.tableID, ipAddress, user, BoardFrontend.FrontendMode.User);
             this._boardFrontend.checkUser(user);
             worked = true;
             this._boardFrontend.addListener(new NewMessageListListenerImpl(this));
+            SendMessageWorker.setBoardFrontend(_boardFrontend);
         } catch (UnknownUser ex){
-            JOptionPane.showMessageDialog(null,"Benutzer wurde nicht gefunden!","Warnung",JOptionPane.WARNING_MESSAGE);     
+            JOptionPane.showMessageDialog(null,BoardFrontendConfiguration.USER_NOT_FOUND,"Warnung",JOptionPane.WARNING_MESSAGE);     
         } catch (InvalidName | CannotProceed | org.omg.CosNaming.NamingContextPackage.InvalidName ex) {
             Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
         }catch (COMM_FAILURE ex){
-            JOptionPane.showMessageDialog(null,"Server wurde nicht gefunden!","Warnung",JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null,BoardFrontendConfiguration.SERVER_NOT_FOUND,"Warnung",JOptionPane.WARNING_MESSAGE);
         } catch (NotFound ex) {
             Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
-            JOptionPane.showMessageDialog(null,"Tafel wurde nicht gefunden!","Warnung",JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null,BoardFrontendConfiguration.TABLE_NOT_FOUND,"Warnung",JOptionPane.WARNING_MESSAGE);
         }
 
         return worked;
@@ -378,66 +339,20 @@ public class UserGUI extends javax.swing.JFrame {
         try {
             if ((msgNr < message.length) && (msgNr >= 0) && (message != null)) {
                 this._boardFrontend.removeMessage(user, message[msgNr]);
-                JOptionPane.showMessageDialog(null, "Nachricht Entfernt!", "Warnung", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(null, BoardFrontendConfiguration.MESSAGE_DELETED, "Warnung", JOptionPane.WARNING_MESSAGE);
             } else {
-                JOptionPane.showMessageDialog(null, "Fehlerhafte Eingabe!", "Warnung", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(null, BoardFrontendConfiguration.INPUT_FAILURE, "Warnung", JOptionPane.WARNING_MESSAGE);
             }
 
         } catch (UnknownUser ex) {
-            JOptionPane.showMessageDialog(null, "Nur eigene Nachrichten löschbar!", "Warnung", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, BoardFrontendConfiguration.MESSAGE_DELETE_NOT_ALLOWED, "Warnung", JOptionPane.WARNING_MESSAGE);
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(null, "Fehlerhafte Eingabe Nachrichten-Nr!", "Warnung", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, BoardFrontendConfiguration.MESSAGE_NUMBER_FAILURE, "Warnung", JOptionPane.WARNING_MESSAGE);
         } catch (COMM_FAILURE ex) {
-            JOptionPane.showMessageDialog(null, "Server wurde nicht gefunden!", "Warnung", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, BoardFrontendConfiguration.SERVER_NOT_FOUND, "Warnung", JOptionPane.WARNING_MESSAGE);
         }
     }
- /*
-    javax.swing.Timer t = new javax.swing.Timer(1000, new ActionListener() {  
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            int counter = 0;
-            System.out.println("check");
-            try {
-                if (message != null) {
-                    // die Nachrichtenliste wird nun nur noch heruntergeladen, wenn sie ihr Status verändert hat
-                    if (localState != viewServiceObj.getState()) {
-                        message = viewServiceObj.getAllMessageByDestination("");
-                        readMessageField.setText("");
-                        for (Message msg : message) {
-                            readMessageField.append(Integer.toString(counter) + ": ");
-                            readMessageField.append(msg.toString());
-                            readMessageField.append("\n");
-                            counter++;
-                        }
-                    }
-                } else {
-                    localState = viewServiceObj.getState();
-                    message = viewServiceObj.getAllMessageByDestination("");
-                    for (Message msg : message) {
-                        readMessageField.append(Integer.toString(counter) + ": ");
-                        readMessageField.append(msg.toString());
-                        readMessageField.append("\n");
-                        counter++;
-                    }
-                }
-
-                sendPuffer();
-                t.setDelay(1000);
-            } catch (DestinationUnreachable ex) {
-
-            } catch (COMM_FAILURE ex) {
-                t.setDelay(10000);
-                try {
-                    boardServiceObj = (BoardService) BoardServiceHelper.narrow(nameService.resolve_str(tableID + "/" + BoardConfiguration.BOARD_SERVICE_NAME));
-                    viewServiceObj = (ViewService) ViewServiceHelper.narrow(nameService.resolve_str(tableID + "/" + BoardConfiguration.VIEW_SERVICE_NAME));
-
-                } catch (NotFound | CannotProceed | org.omg.CosNaming.NamingContextPackage.InvalidName ex1) {
-                    //Logger.getLogger(UserGUI.class.getName()).log(Level.SEVERE, null, ex1);
-                }
-            }
-        }
-    });
-*/
+ 
     private void printMessageList(Message[] messages) {
         int counter = 0;
         
@@ -449,12 +364,12 @@ public class UserGUI extends javax.swing.JFrame {
             readMessageField.append("\n");
             counter++;
         }
+        readMessageField.setCaretPosition(readMessageField.getText().length());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField IPInput;
     private javax.swing.JTextField delMsgNrInput;
-    private javax.swing.JComboBox<String> destinationList;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -471,10 +386,8 @@ public class UserGUI extends javax.swing.JFrame {
     private javax.swing.JTextField userBoardInput;
     private javax.swing.JTextField userNameInput;
     // End of variables declaration//GEN-END:variables
-//    private NamingContextExt nameService = null; // Referenz auf den NameService
     private User user = null;
     private Message[] message = null;
-    //private boolean firstRun = true;
     private String tableID = "";
     private BoardFrontend _boardFrontend;
 
@@ -491,31 +404,7 @@ public class UserGUI extends javax.swing.JFrame {
             this.parent.printMessageList(e.getMessages());
         }
     }
-    class SendMessageWorker extends SwingWorker<Boolean, Message> {
-        private String msgContent;
-        public void SetMessageContent(String content) {
-            this.msgContent = content;
-        }
-        
-        @Override
-        protected Boolean doInBackground() throws Exception {
-            try {
-                _boardFrontend.sendMessage(user, new Message(msgContent, user.name, new Date().toString()), tableID);
-            } catch (UnknownUser ex) {
-                Logger.getLogger(BoardService.class.getName()).log(Level.SEVERE, null, ex);
-                //JOptionPane.showMessageDialog(null, "Unbekannter Nutzer!", "Warnung", JOptionPane.WARNING_MESSAGE);
-            } catch (COMM_FAILURE ex) {
-                //JOptionPane.showMessageDialog(null, "Server wurde nicht gefunden! Nachrichten werden zur nächsten Gelegenheit gesendet!", "Warnung", JOptionPane.WARNING_MESSAGE);
-                //Verruebergehende Ausgabe
-//                        readMessageField.append(sendMessageField.getText());
-//                        readMessageField.append("\n");
-//                        sendMessageField.setText("");
-
-            }
-            return true;
-        }
-
-    }
+    
 }
 
 
