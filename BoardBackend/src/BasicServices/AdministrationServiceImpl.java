@@ -65,7 +65,7 @@ public class AdministrationServiceImpl extends AdministrationServicePOA {
                     try {
                         vgroup.getValue().heartbeat();
 
-                        System.out.println("Heartbeat: " + vgroup.getKey());
+                        //System.out.println("Heartbeat: " + vgroup.getKey());
                     } catch (COMM_FAILURE ex) {
                         System.out.println(vgroup.getKey() + " ist tot");
                     }
@@ -173,11 +173,10 @@ public class AdministrationServiceImpl extends AdministrationServicePOA {
     @Override
     public void forwardMessageToBoards(String[] boards, Message message) throws DestinationUnreachable {
 	try {
-	    int batchSize = 100;
 	    BindingListHolder bList = new BindingListHolder();
 	    BindingIteratorHolder bIterator = new BindingIteratorHolder();
 	    
-	    ORBAccessControl.getInstance().getNameService().list(batchSize, bList, bIterator);
+	    ORBAccessControl.getInstance().getNameService().list(Integer.MAX_VALUE, bList, bIterator);
 	    /*      boards.length in der 2.Schleife ist soll die Anzahl der aktiven Namen
 	    im NameService sein
 	    equals(boards), boards soll hier ein aktiver Name im NameService sein
