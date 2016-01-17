@@ -192,7 +192,6 @@ public class AdministrationServiceImpl extends AdministrationServicePOA {
     @Override
     public void createUser(User newuser) {
         if (!core.checkUser(newuser)) {
-            System.out.println("Erstelle Benutzer " + newuser.name);
             core.addUser(newuser);
             System.out.println("Erstelle Benutzer " + newuser.name);
             for (Entry<String, VirtualGroupService> vgroup : virtualGroupRefs.entrySet()) {
