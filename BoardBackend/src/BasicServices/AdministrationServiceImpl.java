@@ -5,24 +5,13 @@
  */
 package BasicServices;
 
-import AdvancedServices.VirtualGroupCore;
+import AdvancedServices.*;
 import BoardConfiguration.BoardConfiguration;
 import BoardCore.AbstractCore;
 import BoardCore.ORBAccessControl;
-import BoardModules.AdvancedServices.VirtualGroupService;
-import BoardModules.AdvancedServices.VirtualGroupServiceHelper;
-import BoardModules.BasicServices.AdministrationService;
-import BoardModules.BasicServices.AdministrationServiceHelper;
-import BoardModules.BasicServices.AdministrationServicePOA;
-import BoardModules.BasicServices.BoardService;
-import BoardModules.BasicServices.BoardServiceHelper;
-import BoardModules.DestinationUnreachable;
-import BoardModules.Message;
-import BoardModules.MessageListHolder;
-import BoardModules.StringListHolder;
-import BoardModules.UnknownUser;
-import BoardModules.User;
-import BoardModules.UserListHolder;
+import BoardModules.*;
+import BoardModules.BasicServices.*;
+import BoardModules.AdvancedServices.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -67,7 +56,7 @@ public class AdministrationServiceImpl extends AdministrationServicePOA {
 
                         //System.out.println("Heartbeat: " + vgroup.getKey());
                     } catch (COMM_FAILURE ex) {
-                        System.out.println(vgroup.getKey() + " ist tot");
+                        //System.out.println(vgroup.getKey() + " ist tot");
                     }
                 }
                 
@@ -187,8 +176,9 @@ public class AdministrationServiceImpl extends AdministrationServicePOA {
             for (Binding value : bList.value) {
                 String boardname = value.binding_name[0].id;
                 if (strListBoards.contains(boardname)) {
-                    System.out.println(value.binding_name[0].id);
+                    //System.out.println(value.binding_name[0].id);
                     BoardService boardServiceObj = (BoardService) BoardServiceHelper.narrow(ORBAccessControl.getInstance().getNameService().resolve_str(boardname + "/" + BoardConfiguration.BOARD_SERVICE_NAME));
+                    System.out.println("Leite Nachricht weiter an ...");
                     boardServiceObj.sendMessage(new User("."), message, core.getIdentifier()); 
                 } else {
                     System.err.println("Tafel existiert nicht: " + boardname + "!");
@@ -202,7 +192,9 @@ public class AdministrationServiceImpl extends AdministrationServicePOA {
     @Override
     public void createUser(User newuser) {
         if (!core.checkUser(newuser)) {
+            System.out.println("Erstelle Benutzer " + newuser.name);
             core.addUser(newuser);
+            System.out.println("Erstelle Benutzer " + newuser.name);
             for (Entry<String, VirtualGroupService> vgroup : virtualGroupRefs.entrySet()) {
                 try {
                     AdministrationService adminService = (AdministrationService) AdministrationServiceHelper.narrow(ORBAccessControl.getInstance().getNameService().resolve_str(vgroup.getKey() + "/" + BoardConfiguration.ADMIN_SERVICE_NAME));
@@ -236,6 +228,7 @@ public class AdministrationServiceImpl extends AdministrationServicePOA {
         if (!core.removeUser(user)) {
             throw new UnknownUser(user.name);
         }
+        System.out.println("Entferne Benutzer " + user.name);
         for (Entry<String, VirtualGroupService> vgroup : virtualGroupRefs.entrySet()) {
             try {
                 AdministrationService adminService = (AdministrationService) AdministrationServiceHelper.narrow(ORBAccessControl.getInstance().getNameService().resolve_str(vgroup.getKey() + "/" + BoardConfiguration.ADMIN_SERVICE_NAME));
