@@ -440,12 +440,12 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="jLabel10" alignment="0" max="32767" attributes="0"/>
+                          <Component id="jLabel10" pref="181" max="32767" attributes="0"/>
                           <Component id="newUserNameInput" max="32767" attributes="0"/>
                           <Component id="createUserButton" alignment="0" max="32767" attributes="0"/>
-                          <Component id="createUserButton1" max="32767" attributes="0"/>
+                          <Component id="createUserButton1" alignment="0" max="32767" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="441" max="32767" attributes="0"/>
+                      <EmptySpace pref="378" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -461,7 +461,7 @@
                           <Group type="102" attributes="0">
                               <Component id="jLabel10" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="newUserNameInput" min="-2" max="-2" attributes="0"/>
+                              <Component id="newUserNameInput" min="-2" pref="19" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="createUserButton" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
