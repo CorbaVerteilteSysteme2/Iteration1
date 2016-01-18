@@ -123,13 +123,11 @@ public class AdminGUI extends javax.swing.JFrame {
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel5.setText("Benutzername:");
 
-        adminBoardInput.setText("Test-Tafel2");
-
         jLabel6.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel6.setText("IP-Adresse");
 
-        IPInput.setText("localhost");
+        IPInput.setText(BoardConfiguration.BoardConfiguration.ORB_HOST);
 
         javax.swing.GroupLayout loginPanelLayout = new javax.swing.GroupLayout(loginPanel);
         loginPanel.setLayout(loginPanelLayout);

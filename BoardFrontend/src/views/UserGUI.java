@@ -88,13 +88,11 @@ public class UserGUI extends javax.swing.JFrame {
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel3.setText("Benutzername:");
 
-        userBoardInput.setText("Test-Tafel2");
-
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2.setText("IP-Adresse");
 
-        IPInput.setText("localhost");
+        IPInput.setText(BoardConfiguration.BoardConfiguration.ORB_HOST);
 
         javax.swing.GroupLayout loginPanelLayout = new javax.swing.GroupLayout(loginPanel);
         loginPanel.setLayout(loginPanelLayout);

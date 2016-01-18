@@ -115,9 +115,6 @@
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="adminBoardInput">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Test-Tafel2"/>
-              </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="adminNameInput">
             </Component>
@@ -132,7 +129,9 @@
             </Component>
             <Component class="javax.swing.JTextField" name="IPInput">
               <Properties>
-                <Property name="text" type="java.lang.String" value="localhost"/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="BoardConfiguration.BoardConfiguration.ORB_HOST" type="code"/>
+                </Property>
               </Properties>
             </Component>
           </SubComponents>
