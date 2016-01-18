@@ -11,7 +11,6 @@ import BoardModules.UnknownUser;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import javax.swing.JProgressBar;
 import javax.swing.SwingWorker;
 import org.omg.CORBA.COMM_FAILURE;
 

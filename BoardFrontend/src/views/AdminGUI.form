@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<Form version="1.3" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
+<Form version="1.9" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
   <NonVisualComponents>
     <Container class="javax.swing.JDialog" name="loginDialog">
       <Properties>
@@ -117,6 +117,9 @@
             <Component class="javax.swing.JTextField" name="adminBoardInput">
             </Component>
             <Component class="javax.swing.JTextField" name="adminNameInput">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="root"/>
+              </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel6">
               <Properties>
