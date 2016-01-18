@@ -8,6 +8,9 @@ package views;
 import BoardConfiguration.BoardConfiguration;
 import BoardModules.BasicServices.*;
 import BoardModules.*;
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.EventListener;
@@ -33,6 +36,17 @@ import org.omg.CosNaming.NamingContextPackage.NotFound;
  */
 public class BoardFrontend {
 
+    private void testConnection(String ipAddress) throws COMM_FAILURE {
+        try(Socket soc = new Socket()){
+            soc.connect(new InetSocketAddress(ipAddress, Integer.parseInt(BoardConfiguration.ORB_PORT)),500);
+            //System.out.println("true");
+           
+        } catch (IOException ex) {
+            //System.out.println("false");
+            throw new COMM_FAILURE(ex.getMessage());
+        }
+    }
+
     public enum FrontendMode {
         User,
         Admin
@@ -56,6 +70,9 @@ public class BoardFrontend {
         this.user = user;
         this.tableID = tableID;
         this.mode = mode;
+        
+        testConnection(ipAddress);
+        
         ORB _orb;
         Properties props = new Properties();
 
@@ -63,7 +80,7 @@ public class BoardFrontend {
         props.put("org.omg.CORBA.ORBInitialHost", ipAddress);
 
         _orb = ORB.init(new String[0], props);
-
+        
         org.omg.CORBA.Object objRef = _orb.resolve_initial_references(BoardConfiguration.NAMESERVICE);
         this.nameService = NamingContextExtHelper.narrow(objRef);
 
