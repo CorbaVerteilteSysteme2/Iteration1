@@ -108,7 +108,7 @@ public class AdministrationServiceImpl extends AdministrationServicePOA {
                     containVGroupCore = true;
                 }
             }
-
+            /*
             if (!containVGroupCore) {
                 String membernameList[] = new String[100];
                 StringListHolder membernames = new StringListHolder(membernameList);
@@ -124,7 +124,7 @@ public class AdministrationServiceImpl extends AdministrationServicePOA {
                 
                 this.virtualGroups.add(new VirtualGroupCore(vgroupname, membernames.value, users.value, messages.value));
             }
-            
+            */
             
         } catch (NotFound ex) {
             Logger.getLogger(AdministrationServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
