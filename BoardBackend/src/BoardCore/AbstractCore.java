@@ -9,6 +9,7 @@ import BasicServices.AdministrationServiceImpl;
 import BasicServices.BoardServiceImpl;
 import BasicServices.ViewServiceImpl;
 import BoardConfiguration.BoardConfiguration;
+import BoardCore.Helper.MessageComparator;
 import BoardModules.BasicServices.AdministrationService;
 import BoardModules.BasicServices.AdministrationServiceHelper;
 import BoardModules.BasicServices.BoardService;
@@ -18,10 +19,8 @@ import BoardModules.BasicServices.ViewServiceHelper;
 import BoardModules.Message;
 import BoardModules.User;
 import Interfaces.*;
-import MessageStorage.MessageParser;
 import MessageStorage.SaveMessage;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.omg.CosNaming.NameComponent;
@@ -125,6 +124,7 @@ public abstract class AbstractCore {
     
     public synchronized void addMessage(Message msg) {
         localMessages.add(msg);
+        sortMessages();
         this._viewService.incrementState();
     }
     
@@ -183,6 +183,10 @@ public abstract class AbstractCore {
         }
         
         return msgs;
+    }
+    
+    protected void sortMessages() {
+        this.localMessages.sort(new MessageComparator());
     }
     
     public abstract void addUser(User user);   

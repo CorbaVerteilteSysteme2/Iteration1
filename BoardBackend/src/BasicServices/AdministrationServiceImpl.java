@@ -20,6 +20,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.print.Collation;
 import org.omg.CORBA.COMM_FAILURE;
 import org.omg.CosNaming.NamingContextPackage.CannotProceed;
 import org.omg.CosNaming.NamingContextPackage.InvalidName;
@@ -67,8 +68,16 @@ public class AdministrationServiceImpl extends AdministrationServicePOA {
     
     @Override
     public void createVirtualGroup(String vgroupname) {
-        System.out.println("Erstelle " + vgroupname);
+        ArrayList<String> vgroupList = getAllVirtualGroupsAsArrayList();
+        
+        
+        
         try {
+            if (vgroupList.contains(vgroupname)) {
+                System.out.println("VG " + vgroupname + " existiert bereits!");
+                throw new AlreadyBound();
+            }
+            System.out.println("Erstelle " + vgroupname);
             virtualGroups.add(new VirtualGroupCore(vgroupname));
         } catch (CannotProceed ex) {
             Logger.getLogger(AdministrationServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -128,13 +137,22 @@ public class AdministrationServiceImpl extends AdministrationServicePOA {
 
     @Override
     public String[] getAllVirtualGroups() {
-        int batchSize = 100;
+        ArrayList<String> vgroupList = getAllVirtualGroupsAsArrayList();
+        
+        String result[] = new String[vgroupList.size()];
+        
+        vgroupList.toArray(result);
+            
+        return result;
+    }
+    
+    private ArrayList<String> getAllVirtualGroupsAsArrayList() {
         ArrayList<String> vgroupList = new ArrayList<>();
         
         BindingListHolder bList = new BindingListHolder();
         BindingIteratorHolder bIterator = new BindingIteratorHolder();
 
-        ORBAccessControl.getInstance().getNameService().list(batchSize, bList, bIterator);
+        ORBAccessControl.getInstance().getNameService().list(Integer.MAX_VALUE, bList, bIterator);
         
         for (Binding value : bList.value) {
             String boardname = value.binding_name[0].id;
@@ -152,11 +170,7 @@ public class AdministrationServiceImpl extends AdministrationServicePOA {
             }
         }
         
-        String result[] = new String[vgroupList.size()];
-        
-        vgroupList.toArray(result);
-            
-        return result;
+        return vgroupList;
     }
 
     @Override
