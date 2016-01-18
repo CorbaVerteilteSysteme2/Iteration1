@@ -11,6 +11,7 @@ package BoardConfiguration;
  */
 public class BoardConfiguration {
     public static final String ORB_PORT = "1050";
+    public static final String ORB_HOST = "192.168.2.20";
     
     public static final String NAMESERVICE = "NameService";
     
