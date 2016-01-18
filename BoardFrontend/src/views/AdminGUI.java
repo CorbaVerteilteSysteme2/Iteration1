@@ -816,6 +816,7 @@ public class AdminGUI extends javax.swing.JFrame {
     public boolean startAdminBoardService(String adminname, String tableID, String ipAddress){
         boolean worked = false;
         this.tableID = tableID;
+        this.setTitle("AdminApp: " + tableID);
         try {
             
             this.admin = new User(adminname);

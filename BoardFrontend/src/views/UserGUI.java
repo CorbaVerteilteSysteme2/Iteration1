@@ -314,6 +314,7 @@ public class UserGUI extends javax.swing.JFrame {
     public boolean startUserBoardService(String username, String tableID, String ipAddress){
         boolean worked = false;
         this.tableID = tableID;
+        this.setTitle("UserApp: " + tableID + "/" + username);
         try {
             this.user = new User(username);
             this._boardFrontend = new BoardFrontend(this.tableID, ipAddress, user, BoardFrontend.FrontendMode.User);
